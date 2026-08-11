@@ -44,13 +44,12 @@ export const Disabled: Story = {
 };
 
 // Proves the shared preview loaded globals.css: the primary button's
-// background resolves to --color-accent (--blue-600, oklch(0.546 0.245 262.881)).
+// background resolves to --color-accent (Ledger brand.ink, #000000).
 export const CssCheck: Story = {
   args: { children: 'Css check' },
   play: async ({ canvas }) => {
     const button = canvas.getByRole('button', { name: /css check/i });
     const bg = getComputedStyle(button).backgroundColor;
-    await expect(bg).toContain('oklch');
-    await expect(bg).toContain('0.546');
+    await expect(bg).toBe('rgb(0, 0, 0)');
   },
 };

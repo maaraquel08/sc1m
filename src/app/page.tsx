@@ -11,9 +11,12 @@ const colorTokens = [
   { name: "fg-subtle", class: "bg-fg-subtle", role: "Hints, placeholders" },
   { name: "line", class: "bg-line", role: "Borders, dividers" },
   { name: "line-strong", class: "bg-line-strong", role: "Emphasized borders" },
-  { name: "accent", class: "bg-accent", role: "Primary actions" },
+  { name: "accent", class: "bg-accent", role: "Primary actions — brand ink" },
   { name: "accent-hover", class: "bg-accent-hover", role: "Action hover" },
-  { name: "danger", class: "bg-danger", role: "Destructive actions" },
+  { name: "highlight", class: "bg-highlight", role: "The add action. Nothing else." },
+  { name: "positive", class: "bg-positive", role: "Money in, gains, headroom" },
+  { name: "danger", class: "bg-danger", role: "Money out, destructive actions" },
+  { name: "ai", class: "bg-ai", role: "AI-authored content" },
   { name: "ring", class: "bg-ring", role: "Focus indicator" },
 ];
 
@@ -62,7 +65,7 @@ export default function Home() {
         {/* Hero */}
         <section className="flex flex-col items-start gap-5 py-20">
           <p className="rounded-full border border-line bg-surface px-3 py-1 text-xs font-medium text-fg-muted">
-            Base UI · Tailwind v4 · Next.js
+            Base UI · Tailwind v4 · Next.js · Brand: Ledger
           </p>
           <h1 className="max-w-2xl text-4xl font-semibold tracking-tight text-balance sm:text-5xl">
             A design system built from unstyled primitives.
@@ -89,8 +92,9 @@ export default function Home() {
         <section id="foundations" className="scroll-mt-16 border-t border-line py-16">
           <h2 className="text-base font-semibold">Foundations</h2>
           <p className="mt-1 max-w-xl text-sm text-fg-muted">
-            Primitive values feed semantic tokens; semantic tokens feed
-            Tailwind utilities. Components never reference a raw color.
+            The active brand file assigns primitives to semantic tokens;
+            semantic tokens feed Tailwind utilities. Components never
+            reference a raw color, so a rebrand swaps one import.
           </p>
 
           <h3 className="mt-10 text-sm font-medium text-fg-muted">Color</h3>

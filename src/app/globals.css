@@ -1,72 +1,15 @@
 @import "tailwindcss";
 
 /* ------------------------------------------------------------------
- * Design tokens — the single source of truth for the design system.
- *
- * Layer 1: primitive tokens (raw values) live on :root.
- * Layer 2: semantic tokens (role-based aliases) also live on :root and
- *          flip in dark mode.
- * Layer 3: @theme inline exposes semantic tokens to Tailwind, generating
- *          utilities like bg-surface, text-fg-muted, border-line, etc.
+ * Active brand. Semantic token names below are the stable contract;
+ * the brand file assigns values to them (light + dark). To rebrand,
+ * swap this import for another file in src/styles/brands/.
  * ------------------------------------------------------------------ */
+@import "../styles/brands/ledger.css";
 
-:root {
-  /* -- primitives ----------------------------------------------- */
-  --gray-50: oklch(0.985 0 0);
-  --gray-100: oklch(0.967 0 0);
-  --gray-200: oklch(0.922 0 0);
-  --gray-300: oklch(0.87 0 0);
-  --gray-400: oklch(0.708 0 0);
-  --gray-500: oklch(0.556 0 0);
-  --gray-600: oklch(0.439 0 0);
-  --gray-700: oklch(0.371 0 0);
-  --gray-800: oklch(0.269 0 0);
-  --gray-900: oklch(0.205 0 0);
-  --gray-950: oklch(0.145 0 0);
-
-  --blue-500: oklch(0.623 0.214 259.815);
-  --blue-600: oklch(0.546 0.245 262.881);
-  --blue-700: oklch(0.488 0.243 264.376);
-
-  --red-500: oklch(0.637 0.237 25.331);
-  --red-600: oklch(0.577 0.245 27.325);
-
-  /* -- semantic: surfaces & text ---------------------------------- */
-  --color-bg: #ffffff;
-  --color-surface: var(--gray-50);
-  --color-surface-raised: #ffffff;
-  --color-fg: var(--gray-950);
-  --color-fg-muted: var(--gray-600);
-  --color-fg-subtle: var(--gray-400);
-  --color-line: var(--gray-200);
-  --color-line-strong: var(--gray-300);
-
-  /* -- semantic: interactive -------------------------------------- */
-  --color-accent: var(--blue-600);
-  --color-accent-hover: var(--blue-700);
-  --color-accent-fg: #ffffff;
-  --color-danger: var(--red-600);
-  --color-danger-fg: #ffffff;
-  --color-ring: var(--blue-500);
-}
-
-.dark {
-  --color-bg: var(--gray-950);
-  --color-surface: var(--gray-900);
-  --color-surface-raised: var(--gray-800);
-  --color-fg: var(--gray-50);
-  --color-fg-muted: var(--gray-400);
-  --color-fg-subtle: var(--gray-500);
-  --color-line: var(--gray-800);
-  --color-line-strong: var(--gray-700);
-
-  --color-accent: var(--blue-500);
-  --color-accent-hover: var(--blue-600);
-  --color-danger: var(--red-500);
-}
-
+/* Expose semantic tokens to Tailwind → bg-bg, text-fg-muted,
+ * border-line, bg-highlight, rounded-md, font-mono, … */
 @theme inline {
-  /* colors → bg-bg, bg-surface, text-fg, text-fg-muted, border-line, … */
   --color-bg: var(--color-bg);
   --color-surface: var(--color-surface);
   --color-surface-raised: var(--color-surface-raised);
@@ -78,21 +21,25 @@
   --color-accent: var(--color-accent);
   --color-accent-hover: var(--color-accent-hover);
   --color-accent-fg: var(--color-accent-fg);
+  --color-highlight: var(--color-highlight);
+  --color-highlight-fg: var(--color-highlight-fg);
+  --color-positive: var(--color-positive);
   --color-danger: var(--color-danger);
   --color-danger-fg: var(--color-danger-fg);
+  --color-ai: var(--color-ai);
   --color-ring: var(--color-ring);
 
-  /* typography */
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* typography — brand-driven, Geist as fallback */
+  --font-sans: var(--brand-font-sans, var(--font-geist-sans));
+  --font-mono: var(--brand-font-mono, var(--font-geist-mono));
 
-  /* radii → rounded-sm/md/lg/xl */
-  --radius-sm: 0.25rem;
-  --radius-md: 0.375rem;
-  --radius-lg: 0.5rem;
-  --radius-xl: 0.75rem;
+  /* radii — brand-driven */
+  --radius-sm: var(--brand-radius-sm, 0.25rem);
+  --radius-md: var(--brand-radius-md, 0.375rem);
+  --radius-lg: var(--brand-radius-lg, 0.5rem);
+  --radius-xl: var(--brand-radius-xl, 0.75rem);
 
-  /* elevation → shadow-raised, shadow-overlay */
+  /* elevation */
   --shadow-raised: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-overlay:
     0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
@@ -114,9 +61,6 @@
 /* Base UI: required for correct backdrop behavior in iOS Safari 26+ */
 body {
   position: relative;
-}
-
-body {
   background: var(--color-bg);
   color: var(--color-fg);
   font-family: var(--font-sans), system-ui, sans-serif;
