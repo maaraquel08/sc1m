@@ -1,11 +1,14 @@
 @import "tailwindcss";
 
 /* ------------------------------------------------------------------
- * Active brand. Semantic token names below are the stable contract;
- * the brand file assigns values to them (light + dark). To rebrand,
- * swap this import for another file in src/styles/brands/.
+ * Brand registry. Semantic token names below are the stable contract;
+ * each brand file assigns values to them (light + dark). Ledger owns
+ * :root and is the default; other brands scope to [data-brand="…"]
+ * and activate via that attribute on <html> — set it in layout.tsx to
+ * rebrand, or flip it at runtime (Storybook's brand switcher does).
  * ------------------------------------------------------------------ */
 @import "../styles/brands/ledger.css";
+@import "../styles/brands/jbl.css";
 
 /* Expose semantic tokens to Tailwind → bg-bg, text-fg-muted,
  * border-line, bg-highlight, rounded-md, font-mono, … */

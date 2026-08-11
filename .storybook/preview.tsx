@@ -14,14 +14,30 @@ const preview: Preview = {
         dynamicTitle: true,
       },
     },
+    brand: {
+      description: 'Active brand token set',
+      toolbar: {
+        title: 'Brand',
+        icon: 'paintbrush',
+        items: ['ledger', 'jbl'],
+        dynamicTitle: true,
+      },
+    },
   },
   initialGlobals: {
     theme: 'light',
+    brand: 'ledger',
   },
   decorators: [
     (Story, { globals }) => {
-      // .dark lives on <html> so portalled popups (in <body>) also theme
+      // .dark and data-brand live on <html> so portalled popups (in
+      // <body>) also pick up theme and brand
       document.documentElement.classList.toggle('dark', globals.theme === 'dark')
+      if (globals.brand && globals.brand !== 'ledger') {
+        document.documentElement.dataset.brand = globals.brand
+      } else {
+        delete document.documentElement.dataset.brand
+      }
       return (
         <TooltipProvider>
           <div className="root bg-bg p-8 text-fg">

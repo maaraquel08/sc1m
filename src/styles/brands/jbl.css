@@ -1,0 +1,67 @@
+/* ==================================================================
+ * Brand: JBL (demo) — orange-first, industrial
+ *
+ * Scoped to [data-brand="jbl"] on <html>: the default brand (Ledger)
+ * owns :root, additional brands activate via the attribute. A brand
+ * must assign the full semantic set; anything it skips falls back to
+ * the default brand's :root values.
+ *
+ * Brand orange ≈ Pantone 021 C. Fonts intentionally omitted → falls
+ * back to Geist via the @theme fallback chain.
+ * ================================================================== */
+
+[data-brand="jbl"] {
+  /* -- primitives -------------------------------------------------- */
+  --jbl-orange: #ff5a00;
+
+  /* -- semantic assignments ---------------------------------------- */
+  --color-bg: #ffffff;
+  --color-surface: #f5f5f5;
+  --color-surface-raised: #ffffff;
+  --color-fg: #0a0a0a;
+  --color-fg-muted: #525252;
+  --color-fg-subtle: #8f8f8f;
+  --color-line: #e5e5e5;
+  --color-line-strong: #d4d4d4;
+
+  --color-accent: var(--jbl-orange);
+  --color-accent-hover: #d94c00;
+  --color-accent-fg: #ffffff;
+  --color-highlight: #0a0a0a;
+  --color-highlight-fg: #ffffff;
+  --color-positive: #16a34a;
+  --color-danger: #dc2626;
+  --color-danger-fg: #ffffff;
+  --color-ai: #2563eb;
+  --color-ring: var(--jbl-orange);
+
+  /* -- shape: sharper, industrial ---------------------------------- */
+  --brand-radius-sm: 2px;
+  --brand-radius-md: 4px;
+  --brand-radius-lg: 8px;
+  --brand-radius-xl: 12px;
+  --brand-font-sans: var(--font-geist-sans);
+  --brand-font-mono: var(--font-geist-mono);
+}
+
+[data-brand="jbl"].dark {
+  --color-bg: #0a0a0a;
+  --color-surface: #171717;
+  --color-surface-raised: #1f1f1f;
+  --color-fg: #f5f5f5;
+  --color-fg-muted: #a3a3a3;
+  --color-fg-subtle: #737373;
+  --color-line: #262626;
+  --color-line-strong: #333333;
+
+  --color-accent: #ff6a1a; /* lifted to hold on near-black */
+  --color-accent-hover: #ff8547;
+  --color-accent-fg: #0a0a0a;
+  --color-highlight: #f5f5f5;
+  --color-highlight-fg: #0a0a0a;
+  --color-positive: #4ade80;
+  --color-danger: #f87171;
+  --color-danger-fg: #0a0a0a;
+  --color-ai: #60a5fa;
+  --color-ring: #ff6a1a;
+}
