@@ -2,41 +2,56 @@
  * Brand: JBL (demo) — orange-first, industrial
  *
  * Scoped to [data-brand="jbl"] on <html>: the default brand (Ledger)
- * owns :root, additional brands activate via the attribute. A brand
- * must assign the full semantic set; anything it skips falls back to
- * the default brand's :root values.
- *
- * Brand orange ≈ Pantone 021 C. Fonts intentionally omitted → falls
- * back to Geist via the @theme fallback chain.
+ * owns :root, additional brands activate via the attribute. Tokens a
+ * brand skips fall back to the default. All brand files follow the
+ * same template: primitives → surfaces & text → interactive → status
+ * → shape & type.
  * ================================================================== */
 
 [data-brand="jbl"] {
-  /* -- primitives -------------------------------------------------- */
-  --jbl-orange: #ff5a00;
+  /* -- 1. primitives: neutral ramp (named by lightness) ------------ */
+  --n-0: #ececec;   /* canvas */
+  --n-50: #f5f5f5;  /* weak */
+  --n-100: #ebebeb; /* fill */
+  --n-200: #e5e5e5; /* line */
+  --n-300: #d4d4d4; /* edge */
+  --n-400: #a3a3a3; /* mute */
+  --n-500: #8f8f8f; /* quiet */
+  --n-700: #525252; /* body */
+  --n-900: #0a0a0a; /* ink */
 
-  /* -- semantic assignments ---------------------------------------- */
-  --color-bg: #ffffff;
-  --color-surface: #f5f5f5;
-  --color-surface-raised: #ffffff;
-  --color-fg: #0a0a0a;
-  --color-fg-muted: #525252;
-  --color-fg-subtle: #8f8f8f;
-  --color-line: #e5e5e5;
-  --color-line-strong: #d4d4d4;
+  /* -- 1. primitives: brand hues ----------------------------------- */
+  --jbl-orange: #ff5a00; /* ≈ Pantone 021 C: CTAs, focus, the brand voice */
+  --jbl-paper: #ffffff;  /* page and card fills */
 
-  --color-accent: var(--jbl-orange);
+  /* -- 2. surfaces & text ------------------------------------------ */
+  --color-bg: var(--jbl-paper);
+  --color-surface: var(--n-50);
+  --color-surface-raised: var(--jbl-paper);
+  --color-fg: var(--n-900);
+  --color-fg-muted: var(--n-700);
+  --color-fg-subtle: var(--n-500);
+  --color-line: var(--n-200);
+  --color-line-strong: var(--n-300);
+
+  /* -- 3. interactive ----------------------------------------------- */
+  --color-accent: var(--jbl-orange); /* orange is the product's voice */
   --color-accent-hover: #d94c00;
   --color-accent-fg: #ffffff;
-  --color-highlight: #0a0a0a;
+  --color-highlight: var(--n-900);   /* inverse of Ledger: ink chip */
   --color-highlight-fg: #ffffff;
+  --color-ring: var(--jbl-orange);
+
+  /* -- 4. status ----------------------------------------------------
+   * Generic roles; no product-specific meaning attached — plain
+   * green / red / blue. */
   --color-success: #16a34a;
   --color-danger: #dc2626;
   --color-danger-fg: #ffffff;
   --color-info: #2563eb;
-  --color-ring: var(--jbl-orange);
 
-  /* -- shape: sharper, industrial ---------------------------------- */
-  --brand-radius-sm: 2px;
+  /* -- 5. shape & type ---------------------------------------------- */
+  --brand-radius-sm: 2px;  /* sharper, industrial */
   --brand-radius-md: 4px;
   --brand-radius-lg: 8px;
   --brand-radius-xl: 12px;
@@ -44,24 +59,31 @@
   --brand-font-mono: var(--font-geist-mono);
 }
 
+/* Dark: paper flips to near-black; the ramp reverses by role, cool
+ * throughout; orange lifts so it holds on near-black. Only tokens
+ * that change are listed. */
 [data-brand="jbl"].dark {
-  --color-bg: #0a0a0a;
-  --color-surface: #171717;
-  --color-surface-raised: #1f1f1f;
-  --color-fg: #f5f5f5;
-  --color-fg-muted: #a3a3a3;
-  --color-fg-subtle: #737373;
-  --color-line: #262626;
-  --color-line-strong: #333333;
+  /* -- 1. primitives ------------------------------------------------ */
+  --n-0: #0a0a0a;
+  --n-50: #171717;
+  --n-100: #1f1f1f;
+  --n-200: #262626;
+  --n-300: #333333;
+  --n-400: #6b6b6b;
+  --n-500: #8a8a8a;
+  --n-700: #a3a3a3;
+  --n-900: #f5f5f5;
 
-  --color-accent: #ff6a1a; /* lifted to hold on near-black */
+  --jbl-orange: #ff6a1a; /* lifted to hold on near-black */
+  --jbl-paper: #0a0a0a;
+
+  /* -- 2–4. semantic overrides -------------------------------------- */
+  --color-surface-raised: var(--n-100);
   --color-accent-hover: #ff8547;
-  --color-accent-fg: #0a0a0a;
-  --color-highlight: #f5f5f5;
-  --color-highlight-fg: #0a0a0a;
+  --color-accent-fg: #0a0a0a; /* lifted orange takes dark text */
+  --color-highlight-fg: #0a0a0a; /* ink chip flips light, glyph flips dark */
+  --color-danger-fg: #0a0a0a; /* lifted hue takes dark text */
   --color-success: #4ade80;
   --color-danger: #f87171;
-  --color-danger-fg: #0a0a0a;
   --color-info: #60a5fa;
-  --color-ring: #ff6a1a;
 }
