@@ -1,4 +1,24 @@
 "use client";
 
-// Unstyled Base UI primitive — style its parts with design tokens as needed.
-export { Input } from "@base-ui/react/input";
+import * as React from "react";
+import { Input as BaseInput } from "@base-ui/react/input";
+import { cn } from "@/lib/cn";
+
+export function Input({
+  className,
+  ...props
+}: React.ComponentProps<typeof BaseInput>) {
+  return (
+    <BaseInput
+      className={cn(
+        "h-9 w-full rounded-md border border-line bg-surface-raised px-3 text-sm text-fg",
+        "transition-colors duration-fast ease-out-quad",
+        "placeholder:text-fg-subtle",
+        "focus:bg-surface focus:outline-2 focus:outline-offset-2 focus:outline-ring",
+        "disabled:pointer-events-none disabled:opacity-50",
+        className,
+      )}
+      {...props}
+    />
+  );
+}

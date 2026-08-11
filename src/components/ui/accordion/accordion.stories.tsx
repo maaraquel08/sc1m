@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
-import { Accordion } from './accordion';
+import { Accordion, AccordionItem, AccordionTrigger, AccordionPanel } from './accordion';
 
 const meta = {
-  component: Accordion.Root,
+  component: Accordion,
   tags: ['ai-generated'],
-} satisfies Meta<typeof Accordion.Root>;
+} satisfies Meta<typeof Accordion>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -30,27 +30,14 @@ const items = [
 
 export const Default: Story = {
   render: () => (
-    <Accordion.Root className="w-96 rounded-lg border border-line">
+    <Accordion className="w-96">
       {items.map((item) => (
-        <Accordion.Item
-          key={item.value}
-          value={item.value}
-          className="border-b border-line last:border-b-0"
-        >
-          <Accordion.Header>
-            <Accordion.Trigger className="flex w-full items-center justify-between px-4 py-3 text-left text-sm font-medium transition-colors duration-fast hover:bg-surface">
-              {item.title}
-              <span aria-hidden className="text-fg-subtle">
-                +
-              </span>
-            </Accordion.Trigger>
-          </Accordion.Header>
-          <Accordion.Panel className="px-4 pb-3 text-sm text-fg-muted">
-            {item.body}
-          </Accordion.Panel>
-        </Accordion.Item>
+        <AccordionItem key={item.value} value={item.value}>
+          <AccordionTrigger>{item.title}</AccordionTrigger>
+          <AccordionPanel>{item.body}</AccordionPanel>
+        </AccordionItem>
       ))}
-    </Accordion.Root>
+    </Accordion>
   ),
   play: async ({ canvas, userEvent }) => {
     await userEvent.click(

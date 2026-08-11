@@ -1,4 +1,14 @@
 "use client";
 
-// Unstyled Base UI primitive — style its parts with design tokens as needed.
-export { Form } from "@base-ui/react/form";
+import * as React from "react";
+import { Form as BaseForm } from "@base-ui/react/form";
+import { cn } from "@/lib/cn";
+
+export function Form({
+  className,
+  ...props
+}: React.ComponentProps<typeof BaseForm>) {
+  return (
+    <BaseForm className={cn("flex flex-col gap-4", className)} {...props} />
+  );
+}

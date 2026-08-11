@@ -1,30 +1,17 @@
-import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
 import { Switch } from './switch';
 
 const meta = {
-  component: Switch.Root,
+  component: Switch,
   tags: ['ai-generated'],
-} satisfies Meta<typeof Switch.Root>;
+} satisfies Meta<typeof Switch>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-function DemoSwitch(props: React.ComponentProps<typeof Switch.Root>) {
-  return (
-    <Switch.Root
-      aria-label="Toggle setting"
-      className="relative flex h-6 w-10 rounded-full bg-line-strong p-0.5 transition-colors duration-fast data-checked:bg-accent"
-      {...props}
-    >
-      <Switch.Thumb className="aspect-square h-full rounded-full bg-surface-raised shadow-raised transition-transform duration-fast data-checked:translate-x-4" />
-    </Switch.Root>
-  );
-}
-
 export const Unchecked: Story = {
-  render: () => <DemoSwitch />,
+  render: (args) => <Switch aria-label="Toggle setting" {...args} />,
   play: async ({ canvas, userEvent }) => {
     const toggle = canvas.getByRole('switch');
     await expect(toggle).not.toBeChecked();
@@ -34,9 +21,13 @@ export const Unchecked: Story = {
 };
 
 export const Checked: Story = {
-  render: () => <DemoSwitch defaultChecked />,
+  render: (args) => (
+    <Switch aria-label="Toggle setting" defaultChecked {...args} />
+  ),
 };
 
 export const Disabled: Story = {
-  render: () => <DemoSwitch disabled />,
+  render: (args) => (
+    <Switch aria-label="Toggle setting" disabled {...args} />
+  ),
 };
