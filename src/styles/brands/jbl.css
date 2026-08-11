@@ -25,38 +25,40 @@
   --jbl-paper: #ffffff;  /* page and card fills */
 
   /* -- 2. surfaces & text ------------------------------------------ */
-  --color-bg: var(--jbl-paper);
-  --color-surface: var(--n-50);
-  --color-surface-raised: var(--jbl-paper);
-  --color-fg: var(--n-900);
-  --color-fg-muted: var(--n-700);
-  --color-fg-subtle: var(--n-500);
-  --color-line: var(--n-200);
-  --color-line-strong: var(--n-300);
+  --bg: var(--jbl-paper);
+  --surface: var(--n-50);
+  --surface-raised: var(--jbl-paper);
+  --fg: var(--n-900);
+  --fg-muted: var(--n-700);
+  --fg-subtle: var(--n-500);
+  --line: var(--n-200);
+  --line-strong: var(--n-300);
 
   /* -- 3. interactive ----------------------------------------------- */
-  --color-accent: var(--jbl-orange); /* orange is the product's voice */
-  --color-accent-hover: #d94c00;
-  --color-accent-fg: #ffffff;
-  --color-highlight: var(--n-900);   /* inverse of Ledger: ink chip */
-  --color-highlight-fg: #ffffff;
-  --color-ring: var(--jbl-orange);
+  --accent: var(--jbl-orange); /* orange is the product's voice */
+  --accent-hover: #d94c00;
+  --accent-fg: #ffffff;
+  --highlight: var(--n-900);   /* inverse of Ledger: ink chip */
+  --highlight-fg: #ffffff;
+  --ring: var(--jbl-orange);
 
   /* -- 4. status ----------------------------------------------------
    * Generic roles; no product-specific meaning attached — plain
    * green / red / blue. */
-  --color-success: #16a34a;
-  --color-danger: #dc2626;
-  --color-danger-fg: #ffffff;
-  --color-info: #2563eb;
+  --success: #16a34a;
+  --danger: #dc2626;
+  --danger-fg: #ffffff;
+  --info: #2563eb;
 
   /* -- 5. shape & type ---------------------------------------------- */
   --brand-radius-sm: 2px;  /* sharper, industrial */
   --brand-radius-md: 4px;
   --brand-radius-lg: 8px;
   --brand-radius-xl: 12px;
-  --brand-font-sans: var(--font-geist-sans);
-  --brand-font-mono: var(--font-geist-mono);
+  /* no brand typeface — use the app default, with a real fallback so
+     the chain survives outside Next (Storybook has no next/font vars) */
+  --brand-font-sans: var(--font-geist-sans, ui-sans-serif);
+  --brand-font-mono: var(--font-geist-mono, ui-monospace);
 }
 
 /* Dark: paper flips to near-black; the ramp reverses by role, cool
@@ -78,12 +80,12 @@
   --jbl-paper: #0a0a0a;
 
   /* -- 2–4. semantic overrides -------------------------------------- */
-  --color-surface-raised: var(--n-100);
-  --color-accent-hover: #ff8547;
-  --color-accent-fg: #0a0a0a; /* lifted orange takes dark text */
-  --color-highlight-fg: #0a0a0a; /* ink chip flips light, glyph flips dark */
-  --color-danger-fg: #0a0a0a; /* lifted hue takes dark text */
-  --color-success: #4ade80;
-  --color-danger: #f87171;
-  --color-info: #60a5fa;
+  --surface-raised: var(--n-100);
+  --accent-hover: #ff8547;
+  --accent-fg: #0a0a0a; /* lifted orange takes dark text */
+  --highlight-fg: #0a0a0a; /* ink chip flips light, glyph flips dark */
+  --danger-fg: #0a0a0a; /* lifted hue takes dark text */
+  --success: #4ade80;
+  --danger: #f87171;
+  --info: #60a5fa;
 }

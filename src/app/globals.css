@@ -1,40 +1,59 @@
 @import "tailwindcss";
 
 /* ------------------------------------------------------------------
- * Brand registry. Semantic token names below are the stable contract;
- * each brand file assigns values to them (light + dark). Ledger owns
- * :root and is the default; other brands scope to [data-brand="…"]
- * and activate via that attribute on <html> — set it in layout.tsx to
- * rebrand, or flip it at runtime (Storybook's brand switcher does).
+ * Brand registry.
+ *
+ * Each brand file assigns values to the semantic names listed in the
+ * @theme block below (the contract). The default brand owns :root;
+ * additional brands scope to [data-brand="…"] and activate via that
+ * attribute on <html> — set it in layout.tsx, or at runtime
+ * (Storybook's Brand toolbar does).
+ *
+ * ORDER MATTERS: the default brand must be imported first so its
+ * :root values are the fallback for any token a later brand skips.
+ * To inject a new brand: copy src/styles/brands/boilerplate-template.css,
+ * fill it in, and add its @import here (after the default).
  * ------------------------------------------------------------------ */
 @import "../styles/brands/ledger.css";
 @import "../styles/brands/jbl.css";
 
-/* Expose semantic tokens to Tailwind → bg-bg, text-fg-muted,
- * border-line, bg-highlight, rounded-md, font-mono, … */
+/* ------------------------------------------------------------------
+ * The contract: semantic tokens → Tailwind utilities.
+ *
+ * Two namespaces, deliberately: brand files assign BARE names
+ * (--accent); this block maps them into Tailwind's namespace
+ * (--color-accent → bg-accent, text-accent, …). `inline` makes the
+ * generated CSS reference var(--accent) at use-sites, so utilities
+ * re-resolve when .dark or [data-brand] flips — do not remove it.
+ *
+ * This list is mirrored in src/styles/contract.ts, which the token
+ * parity test uses to verify every brand resolves every token in
+ * both themes. Add a token here → add it there and to the template.
+ * ------------------------------------------------------------------ */
 @theme inline {
-  --color-bg: var(--color-bg);
-  --color-surface: var(--color-surface);
-  --color-surface-raised: var(--color-surface-raised);
-  --color-fg: var(--color-fg);
-  --color-fg-muted: var(--color-fg-muted);
-  --color-fg-subtle: var(--color-fg-subtle);
-  --color-line: var(--color-line);
-  --color-line-strong: var(--color-line-strong);
-  --color-accent: var(--color-accent);
-  --color-accent-hover: var(--color-accent-hover);
-  --color-accent-fg: var(--color-accent-fg);
-  --color-highlight: var(--color-highlight);
-  --color-highlight-fg: var(--color-highlight-fg);
-  --color-success: var(--color-success);
-  --color-danger: var(--color-danger);
-  --color-danger-fg: var(--color-danger-fg);
-  --color-info: var(--color-info);
-  --color-ring: var(--color-ring);
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-subtle: var(--fg-subtle);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-fg: var(--accent-fg);
+  --color-highlight: var(--highlight);
+  --color-highlight-fg: var(--highlight-fg);
+  --color-success: var(--success);
+  --color-danger: var(--danger);
+  --color-danger-fg: var(--danger-fg);
+  --color-info: var(--info);
+  --color-ring: var(--ring);
 
-  /* typography — brand-driven, Geist as fallback */
-  --font-sans: var(--brand-font-sans, var(--font-geist-sans));
-  --font-mono: var(--brand-font-mono, var(--font-geist-mono));
+  /* typography — brand-driven; ends in a real font so the chain
+     survives outside Next (Storybook has no next/font variables) */
+  --font-sans: var(--brand-font-sans, var(--font-geist-sans, ui-sans-serif));
+  --font-mono: var(--brand-font-mono, var(--font-geist-mono, ui-monospace));
 
   /* radii — brand-driven */
   --radius-sm: var(--brand-radius-sm, 0.25rem);
@@ -42,12 +61,16 @@
   --radius-lg: var(--brand-radius-lg, 0.5rem);
   --radius-xl: var(--brand-radius-xl, 0.75rem);
 
-  /* elevation */
-  --shadow-raised: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  /* elevation — brands may tint via the optional --brand-shadow-* slots */
+  --shadow-raised: var(--brand-shadow-raised, 0 1px 2px 0 rgb(0 0 0 / 0.05));
   --shadow-overlay:
-    0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    var(
+      --brand-shadow-overlay,
+      0 10px 15px -3px rgb(0 0 0 / 0.1),
+      0 4px 6px -4px rgb(0 0 0 / 0.1)
+    );
 
-  /* motion */
+  /* motion — structural for now; promote to brand slots if a brand asks */
   --ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
   --duration-fast: 150ms;
 }
