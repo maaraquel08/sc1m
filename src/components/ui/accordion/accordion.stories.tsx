@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import { expect } from 'storybook/test';
+import { expect, waitFor } from 'storybook/test';
 import { Accordion, AccordionItem, AccordionTrigger, AccordionPanel } from './accordion';
 
 const meta = {
@@ -43,8 +43,11 @@ export const Default: Story = {
     await userEvent.click(
       canvas.getByRole('button', { name: /why base ui/i }),
     );
-    await expect(
-      canvas.getByText(/unstyled, accessible primitives/i),
-    ).toBeVisible();
+    // panel animates in from h-0/opacity-0 — wait for the transition
+    await waitFor(() =>
+      expect(
+        canvas.getByText(/unstyled, accessible primitives/i),
+      ).toBeVisible(),
+    );
   },
 };

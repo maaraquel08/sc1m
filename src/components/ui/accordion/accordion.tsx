@@ -10,7 +10,7 @@ export function Accordion({
 }: React.ComponentProps<typeof BaseAccordion.Root>) {
   return (
     <BaseAccordion.Root
-      className={cn("rounded-lg border border-line", className)}
+      className={cn("overflow-hidden rounded-lg border border-line", className)}
       {...props}
     />
   );
@@ -43,18 +43,21 @@ export function AccordionTrigger({
         {...props}
       >
         {children}
-        <span
+        {/* chevron flips scaleY(-1) instead of morphing its path — the
+            flip passes through a flat line at the midpoint like a path
+            morph but animates in every browser (CSS `d:` is Chromium-only) */}
+        <svg
           aria-hidden
-          className="text-fg-subtle group-data-panel-open:hidden"
+          viewBox="0 0 16 16"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="size-4 shrink-0 text-fg-subtle transition-transform duration-(--acc-chevron) ease-(--acc-ease) group-data-panel-open:-scale-y-100 motion-reduce:transition-none"
         >
-          +
-        </span>
-        <span
-          aria-hidden
-          className="hidden text-fg-subtle group-data-panel-open:inline"
-        >
-          −
-        </span>
+          <path d="M4 6.5L8 10.5L12 6.5" vectorEffect="non-scaling-stroke" />
+        </svg>
       </BaseAccordion.Trigger>
     </BaseAccordion.Header>
   );
@@ -68,11 +71,19 @@ export function AccordionPanel({
   return (
     <BaseAccordion.Panel
       className={cn(
-        "h-(--accordion-panel-height) overflow-hidden text-sm text-fg-muted transition-[height] duration-fast ease-out-quad",
+        // Base UI measures the content into --accordion-panel-height;
+        // entering/exiting states pin height to 0 so open/close tweens.
+        "h-(--accordion-panel-height) overflow-hidden text-sm text-fg-muted",
+        "transition-[height,opacity,filter] duration-(--acc-collapse) ease-(--acc-ease) data-open:duration-(--acc-expand)",
+        "data-starting-style:h-0 data-starting-style:opacity-0 data-starting-style:blur-[2px]",
+        "data-ending-style:h-0 data-ending-style:opacity-0 data-ending-style:blur-[2px]",
+        "motion-reduce:transition-none",
         className,
       )}
       {...props}
     >
+      {/* padding lives on the inner element, never the measured panel —
+          padding on the collapsing box leaves a residual height strip */}
       <div className="px-4 pb-3">{children}</div>
     </BaseAccordion.Panel>
   );
