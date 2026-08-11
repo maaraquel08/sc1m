@@ -45,10 +45,13 @@
   --color-accent-fg: var(--brand-paper);
   --color-highlight: var(--brand-accent);
   --color-highlight-fg: #252017; /* espresso glyph in both modes */
-  --color-positive: var(--money-in);
-  --color-danger: var(--money-out); /* destructive UI and money.out */
+  /* Status roles are the generic contract; the product meaning lives
+   * here in the brand: Ledger reads success as money.in, danger as
+   * money.out, info as AI authorship. */
+  --color-success: var(--money-in);
+  --color-danger: var(--money-out);
   --color-danger-fg: #ffffff;
-  --color-ai: var(--ai-blue);
+  --color-info: var(--ai-blue);
   --color-ring: var(--brand-ink); /* focus = brand.ink border */
 
   /* -- shape & type ------------------------------------------------ */

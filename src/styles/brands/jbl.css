@@ -29,10 +29,10 @@
   --color-accent-fg: #ffffff;
   --color-highlight: #0a0a0a;
   --color-highlight-fg: #ffffff;
-  --color-positive: #16a34a;
+  --color-success: #16a34a;
   --color-danger: #dc2626;
   --color-danger-fg: #ffffff;
-  --color-ai: #2563eb;
+  --color-info: #2563eb;
   --color-ring: var(--jbl-orange);
 
   /* -- shape: sharper, industrial ---------------------------------- */
@@ -59,9 +59,9 @@
   --color-accent-fg: #0a0a0a;
   --color-highlight: #f5f5f5;
   --color-highlight-fg: #0a0a0a;
-  --color-positive: #4ade80;
+  --color-success: #4ade80;
   --color-danger: #f87171;
   --color-danger-fg: #0a0a0a;
-  --color-ai: #60a5fa;
+  --color-info: #60a5fa;
   --color-ring: #ff6a1a;
 }

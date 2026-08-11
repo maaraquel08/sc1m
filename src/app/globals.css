@@ -26,10 +26,10 @@
   --color-accent-fg: var(--color-accent-fg);
   --color-highlight: var(--color-highlight);
   --color-highlight-fg: var(--color-highlight-fg);
-  --color-positive: var(--color-positive);
+  --color-success: var(--color-success);
   --color-danger: var(--color-danger);
   --color-danger-fg: var(--color-danger-fg);
-  --color-ai: var(--color-ai);
+  --color-info: var(--color-info);
   --color-ring: var(--color-ring);
 
   /* typography — brand-driven, Geist as fallback */

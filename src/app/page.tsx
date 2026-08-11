@@ -14,9 +14,9 @@ const colorTokens = [
   { name: "accent", class: "bg-accent", role: "Primary actions — brand ink" },
   { name: "accent-hover", class: "bg-accent-hover", role: "Action hover" },
   { name: "highlight", class: "bg-highlight", role: "The add action. Nothing else." },
-  { name: "positive", class: "bg-positive", role: "Money in, gains, headroom" },
-  { name: "danger", class: "bg-danger", role: "Money out, destructive actions" },
-  { name: "ai", class: "bg-ai", role: "AI-authored content" },
+  { name: "success", class: "bg-success", role: "Positive outcomes" },
+  { name: "danger", class: "bg-danger", role: "Errors, destructive actions" },
+  { name: "info", class: "bg-info", role: "Informational emphasis" },
   { name: "ring", class: "bg-ring", role: "Focus indicator" },
 ];
 
