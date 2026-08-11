@@ -18,10 +18,10 @@
   --n-400: #a5a5a5; /* mute */
   --n-500: #8a8a8a; /* quiet */
   --n-700: #5a5a5a; /* body */
-  --n-900: #1a1a1a; /* ink */
+  --n-900: #252017; /* ink */
 
   /* -- primitives: brand trio + semantic hues --------------------- */
-  --brand-ink: #000000;    /* CTAs, active nav, hero figures */
+  --brand-ink: #252017;    /* espresso ink: CTAs, active nav, primary text */
   --brand-accent: #fcc305; /* one use per screen: the add action */
   --brand-paper: #ffffff;  /* page and card fills */
   --money-in: #0f7a45;
@@ -40,11 +40,11 @@
   --color-line: var(--n-200);      /* border.hairline */
   --color-line-strong: var(--n-300); /* border.strong */
 
-  --color-accent: var(--brand-ink); /* black is the product's voice */
-  --color-accent-hover: #262626;
+  --color-accent: var(--brand-ink); /* espresso ink is the product's voice */
+  --color-accent-hover: #3d372d;
   --color-accent-fg: var(--brand-paper);
   --color-highlight: var(--brand-accent);
-  --color-highlight-fg: #000000; /* black glyph in both modes */
+  --color-highlight-fg: #252017; /* espresso glyph in both modes */
   --color-positive: var(--money-in);
   --color-danger: var(--money-out); /* destructive UI and money.out */
   --color-danger-fg: #ffffff;
@@ -63,24 +63,24 @@
 /* Dark: ink and paper trade places; the ramp reverses by role, not
  * numerically; semantic hues lift so they hold on near-black. */
 .dark {
-  --n-0: #0d0d0d;
-  --n-50: #161616;
-  --n-100: #1e1e1e;
-  --n-200: #262626;
-  --n-300: #333333;
-  --n-400: #6a6a6a;
-  --n-500: #8f8f8f;
-  --n-700: #b8b8b8;
-  --n-900: #f2f2f2;
+  --n-0: #14120e;
+  --n-50: #1e1b16;
+  --n-100: #26221b;
+  --n-200: #302b23;
+  --n-300: #3d372d;
+  --n-400: #6d6963;
+  --n-500: #918d85;
+  --n-700: #bab6ae;
+  --n-900: #f4f2ee;
 
   --brand-ink: #ffffff;
-  --brand-paper: #0d0d0d; /* never pure black */
+  --brand-paper: #14120e; /* espresso inverted, never pure black */
   --money-in: #3fbc7a;
   --money-out: #ff7a6b;
   --ai-blue: #6fa4ff;
 
   --color-surface-raised: var(--n-100);
   --color-accent-hover: #dcdad6;
-  --color-accent-fg: #000000; /* on dark, CTAs are white with black text */
-  --color-danger-fg: #0d0d0d; /* lifted hue takes dark text */
+  --color-accent-fg: #252017; /* on dark, CTAs are white with espresso text */
+  --color-danger-fg: #14120e; /* lifted hue takes dark text */
 }

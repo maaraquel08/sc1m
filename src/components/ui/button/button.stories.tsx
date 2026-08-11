@@ -44,12 +44,12 @@ export const Disabled: Story = {
 };
 
 // Proves the shared preview loaded globals.css: the primary button's
-// background resolves to --color-accent (Ledger brand.ink, #000000).
+// background resolves to --color-accent (Ledger brand.ink espresso, #252017).
 export const CssCheck: Story = {
   args: { children: 'Css check' },
   play: async ({ canvas }) => {
     const button = canvas.getByRole('button', { name: /css check/i });
     const bg = getComputedStyle(button).backgroundColor;
-    await expect(bg).toBe('rgb(0, 0, 0)');
+    await expect(bg).toBe('rgb(37, 32, 23)');
   },
 };
