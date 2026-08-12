@@ -21,11 +21,10 @@
 
   /* -- 1. primitives: brand hues ----------------------------------- */
   --brand-ink: #252017;    /* espresso ink: CTAs, active nav, primary text */
-  --brand-accent: #fcc305; /* one use per screen: the add action */
+  --brand-accent: #fcc305; /* brand yellow: the add action, and AI authorship */
   --brand-paper: #ffffff;  /* page and card fills */
   --money-in: #0f7a45;     /* income, gains, headroom */
   --money-out: #cf3a2c;    /* spend, losses, overspend */
-  --ai-blue: #1f6feb;      /* AI authorship */
 
   /* -- 2. surfaces & text ------------------------------------------
    * Cards sit on paper like the page; borders do containment
@@ -49,11 +48,16 @@
 
   /* -- 4. status ----------------------------------------------------
    * Generic roles; the product meaning lives in this brand:
-   * success = money.in, danger = money.out, info = AI authorship. */
+   * success = money.in, danger = money.out, info = AI authorship.
+   *
+   * AI authorship is the brand yellow. It is the one hue the AI surfaces
+   * own, so it never collides with the money hues — an AI banner edged in
+   * green or red would read as a gain or a loss. Repointing this line is
+   * how you move the AI signal to another colour. */
   --success: var(--money-in);
   --danger: var(--money-out);
   --danger-fg: #ffffff;
-  --info: var(--ai-blue);
+  --info: var(--brand-accent);
 
   /* -- 5. shape & type ---------------------------------------------- */
   --brand-radius-sm: 5px;   /* chips, tags */
@@ -83,7 +87,7 @@
   --brand-paper: #14120e; /* espresso inverted, never pure black */
   --money-in: #3fbc7a;
   --money-out: #ff7a6b;
-  --ai-blue: #6fa4ff;
+  /* --brand-accent needs no lift: the yellow already holds on near-black */
 
   /* -- 2–4. semantic overrides -------------------------------------- */
   --surface-raised: var(--n-100);

@@ -16,7 +16,7 @@ const colorTokens = [
   { name: "highlight", class: "bg-highlight", role: "The add action. Nothing else." },
   { name: "success", class: "bg-success", role: "Positive outcomes" },
   { name: "danger", class: "bg-danger", role: "Errors, destructive actions" },
-  { name: "info", class: "bg-info", role: "Informational emphasis" },
+  { name: "info", class: "bg-info", role: "AI authorship — the brand yellow" },
   { name: "ring", class: "bg-ring", role: "Focus indicator" },
 ];
 

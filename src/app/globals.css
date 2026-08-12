@@ -90,6 +90,14 @@
   --popup-pre-scale: 0.97;
   --popup-closing-scale: 0.99;
   --popup-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* AI authorship: the one hue the AI surfaces own, taken from the brand's
+   * --info role. --ai-hue-ink is that hue darkened toward --fg so small text
+   * and icons clear WCAG AA on the pale wash; mixing toward --fg rather than
+   * a fixed dark is what makes it invert correctly in dark mode. Override
+   * --ai-hue at any scope to re-point the AI signal. */
+  --ai-hue: var(--color-info);
+  --ai-hue-ink: color-mix(in oklab, var(--ai-hue) 50%, var(--color-fg));
 }
 
 /* One class animates every anchored popup (popover, tooltip, menus,
@@ -131,8 +139,178 @@
 .toast-nudge {
   animation: toast-nudge 300ms var(--popup-ease);
 }
+
+/* ------------------------------------------------------------------
+ * AI authorship treatment (AS1 banner).
+ *
+ * Driven entirely by --ai-hue and --ai-hue-ink (declared above): the wash,
+ * the edge, the eyebrow, the sparkle and the pulse all read from the same
+ * hue, so repointing --info in a brand file moves the whole treatment.
+ * Nothing here names a colour.
+ *
+ * The eyebrow and sparkle use --ai-hue-ink rather than the raw hue because
+ * Ledger's brand yellow is ~1.6:1 on the pale wash — far under AA for 9.5px
+ * text. The darkened mix lands near 4.6:1.
+ * ------------------------------------------------------------------ */
+.ai-wash {
+  background-image: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--ai-hue) 9%, var(--color-bg)) 0%,
+    color-mix(in oklab, var(--ai-hue) 4%, var(--color-bg)) 66%,
+    color-mix(in oklab, var(--ai-hue) 2%, var(--color-bg)) 100%
+  );
+  border-color: color-mix(in oklab, var(--ai-hue) 16%, var(--color-line));
+}
+
+/* The pulse: glow blobs drifting at the edges.
+ *
+ * Six ellipses, three per pseudo-element, each anchored half-outside an edge
+ * so only its inner falloff shows — background painting is clipped to the
+ * rounded box, which does the containment for free. The two layers run on
+ * non-harmonic cycles (5.2s / 7.1s) so the combination never visibly
+ * repeats, and each keyframe moves size, position and opacity together,
+ * which is what reads as independent blobs rather than one throb.
+ *
+ * Every blob is the same --ai-hue at a different alpha. There is no hue
+ * rotation anywhere, so unlike a canned beam palette this cannot wander into
+ * a hue the brand doesn't own, however long it runs.
+ *
+ * Base values below sit mid-cycle, so the reduced-motion rule can simply
+ * drop the animation and still leave a composed edge. */
+@keyframes ai-pulse-a {
+  from {
+    background-size:
+      44% 46%,
+      32% 38%,
+      24% 62%;
+    background-position:
+      34% -26%,
+      6% -18%,
+      -7% 68%;
+    opacity: 0.55;
+  }
+  to {
+    background-size:
+      62% 58%,
+      22% 26%,
+      18% 44%;
+    background-position:
+      46% -10%,
+      20% 4%,
+      3% 84%;
+    opacity: 1;
+  }
+}
+@keyframes ai-pulse-b {
+  from {
+    background-size:
+      58% 34%,
+      20% 52%,
+      30% 30%;
+    background-position:
+      76% 122%,
+      106% 40%,
+      14% 118%;
+    opacity: 0.5;
+  }
+  to {
+    background-size:
+      40% 24%,
+      30% 34%,
+      46% 44%;
+    background-position:
+      62% 106%,
+      94% 22%,
+      26% 104%;
+    opacity: 1;
+  }
+}
+.ai-pulse {
+  position: relative;
+  /* makes this a stacking context, so the z-index:-1 layers below paint
+     above the wash but still behind the text */
+  isolation: isolate;
+}
+.ai-pulse::before,
+.ai-pulse::after {
+  content: "";
+  position: absolute;
+  /* -1px reaches the border box, so the radius matches and the glow rides
+     the 1px edge instead of stopping just inside it */
+  inset: -1px;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  background-repeat: no-repeat;
+  /* keep only the outer band: without this the blobs pool in the middle of
+     the card and read as blotches rather than an edge glow */
+  mask-image: radial-gradient(115% 115% at 50% 50%, transparent 16%, #000 70%);
+}
+.ai-pulse::before {
+  background-image:
+    radial-gradient(
+      closest-side,
+      color-mix(in oklab, var(--ai-hue) 54%, transparent),
+      transparent
+    ),
+    radial-gradient(
+      closest-side,
+      color-mix(in oklab, var(--ai-hue) 50%, transparent),
+      transparent
+    ),
+    radial-gradient(
+      closest-side,
+      color-mix(in oklab, var(--ai-hue) 58%, transparent),
+      transparent
+    );
+  background-size:
+    52% 52%,
+    27% 32%,
+    21% 53%;
+  background-position:
+    40% -18%,
+    13% -7%,
+    -2% 76%;
+  opacity: 0.78;
+  animation: ai-pulse-a 5200ms ease-in-out infinite alternate;
+}
+.ai-pulse::after {
+  background-image:
+    radial-gradient(
+      closest-side,
+      color-mix(in oklab, var(--ai-hue) 60%, transparent),
+      transparent
+    ),
+    radial-gradient(
+      closest-side,
+      color-mix(in oklab, var(--ai-hue) 46%, transparent),
+      transparent
+    ),
+    radial-gradient(
+      closest-side,
+      color-mix(in oklab, var(--ai-hue) 64%, transparent),
+      transparent
+    );
+  background-size:
+    49% 29%,
+    25% 43%,
+    38% 37%;
+  background-position:
+    69% 114%,
+    100% 31%,
+    20% 111%;
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--ai-hue) 34%, transparent);
+  opacity: 0.75;
+  animation: ai-pulse-b 7100ms ease-in-out infinite alternate;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .toast-nudge {
+    animation: none;
+  }
+  /* keep the composed edge, just stop it moving */
+  .ai-pulse::before,
+  .ai-pulse::after {
     animation: none;
   }
 }

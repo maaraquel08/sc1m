@@ -7,7 +7,7 @@
       "name": "tokens",
       "type": "registry:theme",
       "title": "sc1m Design Tokens",
-      "description": "Ledger brand tokens and the Tailwind v4 theme contract: semantic colors, radii, shadows, motion, dark mode via the .dark class, and the popup-motion utility.",
+      "description": "Ledger brand tokens and the Tailwind v4 theme contract: semantic colors, radii, shadows, motion, dark mode via the .dark class, and the popup-motion, ai-wash and ai-pulse utilities.",
       "cssVars": {
         "theme": {
           "--color-bg": "var(--bg)",
@@ -57,7 +57,6 @@
           "--brand-paper": "#ffffff",
           "--money-in": "#0f7a45",
           "--money-out": "#cf3a2c",
-          "--ai-blue": "#1f6feb",
           "--bg": "var(--brand-paper)",
           "--surface": "var(--n-50)",
           "--surface-raised": "var(--brand-paper)",
@@ -75,7 +74,7 @@
           "--success": "var(--money-in)",
           "--danger": "var(--money-out)",
           "--danger-fg": "#ffffff",
-          "--info": "var(--ai-blue)",
+          "--info": "var(--brand-accent)",
           "--brand-radius-sm": "5px",
           "--brand-radius-md": "10px",
           "--brand-radius-lg": "14px",
@@ -90,7 +89,9 @@
           "--popup-close-dur": "150ms",
           "--popup-pre-scale": "0.97",
           "--popup-closing-scale": "0.99",
-          "--popup-ease": "cubic-bezier(0.22, 1, 0.36, 1)"
+          "--popup-ease": "cubic-bezier(0.22, 1, 0.36, 1)",
+          "--ai-hue": "var(--color-info)",
+          "--ai-hue-ink": "color-mix(in oklab, var(--ai-hue) 50%, var(--color-fg))"
         },
         ".dark": {
           "--n-0": "#14120e",
@@ -106,7 +107,6 @@
           "--brand-paper": "#14120e",
           "--money-in": "#3fbc7a",
           "--money-out": "#ff7a6b",
-          "--ai-blue": "#6fa4ff",
           "--surface-raised": "var(--n-100)",
           "--accent-hover": "#dcdad6",
           "--accent-fg": "#252017",
@@ -141,8 +141,68 @@
         ".toast-nudge": {
           "animation": "toast-nudge 300ms var(--popup-ease)"
         },
+        ".ai-wash": {
+          "background-image": "linear-gradient(180deg, color-mix(in oklab, var(--ai-hue) 9%, var(--color-bg)) 0%, color-mix(in oklab, var(--ai-hue) 4%, var(--color-bg)) 66%, color-mix(in oklab, var(--ai-hue) 2%, var(--color-bg)) 100%)",
+          "border-color": "color-mix(in oklab, var(--ai-hue) 16%, var(--color-line))"
+        },
+        "@keyframes ai-pulse-a": {
+          "from": {
+            "background-size": "44% 46%, 32% 38%, 24% 62%",
+            "background-position": "34% -26%, 6% -18%, -7% 68%",
+            "opacity": "0.55"
+          },
+          "to": {
+            "background-size": "62% 58%, 22% 26%, 18% 44%",
+            "background-position": "46% -10%, 20% 4%, 3% 84%",
+            "opacity": "1"
+          }
+        },
+        "@keyframes ai-pulse-b": {
+          "from": {
+            "background-size": "58% 34%, 20% 52%, 30% 30%",
+            "background-position": "76% 122%, 106% 40%, 14% 118%",
+            "opacity": "0.5"
+          },
+          "to": {
+            "background-size": "40% 24%, 30% 34%, 46% 44%",
+            "background-position": "62% 106%, 94% 22%, 26% 104%",
+            "opacity": "1"
+          }
+        },
+        ".ai-pulse": {
+          "position": "relative",
+          "isolation": "isolate"
+        },
+        ".ai-pulse::before, .ai-pulse::after": {
+          "content": "\"\"",
+          "position": "absolute",
+          "inset": "-1px",
+          "z-index": "-1",
+          "border-radius": "inherit",
+          "pointer-events": "none",
+          "background-repeat": "no-repeat",
+          "mask-image": "radial-gradient(115% 115% at 50% 50%, transparent 16%, #000 70%)"
+        },
+        ".ai-pulse::before": {
+          "background-image": "radial-gradient(closest-side, color-mix(in oklab, var(--ai-hue) 54%, transparent), transparent), radial-gradient(closest-side, color-mix(in oklab, var(--ai-hue) 50%, transparent), transparent), radial-gradient(closest-side, color-mix(in oklab, var(--ai-hue) 58%, transparent), transparent)",
+          "background-size": "52% 52%, 27% 32%, 21% 53%",
+          "background-position": "40% -18%, 13% -7%, -2% 76%",
+          "opacity": "0.78",
+          "animation": "ai-pulse-a 5200ms ease-in-out infinite alternate"
+        },
+        ".ai-pulse::after": {
+          "background-image": "radial-gradient(closest-side, color-mix(in oklab, var(--ai-hue) 60%, transparent), transparent), radial-gradient(closest-side, color-mix(in oklab, var(--ai-hue) 46%, transparent), transparent), radial-gradient(closest-side, color-mix(in oklab, var(--ai-hue) 64%, transparent), transparent)",
+          "background-size": "49% 29%, 25% 43%, 38% 37%",
+          "background-position": "69% 114%, 100% 31%, 20% 111%",
+          "box-shadow": "inset 0 0 0 1px color-mix(in oklab, var(--ai-hue) 34%, transparent)",
+          "opacity": "0.75",
+          "animation": "ai-pulse-b 7100ms ease-in-out infinite alternate"
+        },
         "@media (prefers-reduced-motion: reduce)": {
           ".toast-nudge": {
+            "animation": "none"
+          },
+          ".ai-pulse::before, .ai-pulse::after": {
             "animation": "none"
           }
         }
@@ -180,6 +240,22 @@
       "files": [
         {
           "path": "src/components/ui/accordion/accordion.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "ai-summary",
+      "type": "registry:ui",
+      "title": "AI Summary",
+      "description": "AI Summary banner (AS1): a wash tinted with the brand AI hue to mark AI-authored copy, a sparkle eyebrow naming the angle, one sentence of plain-language body, and an inner glow pulsing at the edge. No runtime dependencies.",
+      "registryDependencies": [
+        "https://sc1m.vercel.app/r/tokens.json",
+        "https://sc1m.vercel.app/r/cn.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/ai-summary/ai-summary.tsx",
           "type": "registry:ui"
         }
       ]

@@ -7,6 +7,11 @@ import {
   AccordionPanel,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import {
+  AiSummary,
+  AiSummaryLabel,
+  AiSummaryText,
+} from "@/components/ui/ai-summary";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -132,6 +137,16 @@ export function Gallery() {
             </DialogContent>
           </Dialog>
         </div>
+      </Demo>
+
+      <Demo title="AI Summary">
+        <AiSummary className="w-full max-w-80">
+          <AiSummaryLabel>The verdict</AiSummaryLabel>
+          <AiSummaryText>
+            You can spend ₱458 a day for the rest of August and still hit every
+            goal.
+          </AiSummaryText>
+        </AiSummary>
       </Demo>
 
       <Demo title="Accordion">
