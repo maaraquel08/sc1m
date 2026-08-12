@@ -17,12 +17,14 @@ export function DrawerContent({
   return (
     <BaseDrawer.Portal>
       <BaseDrawer.Backdrop className="fixed inset-0 bg-black/40 transition-opacity duration-fast data-starting-style:opacity-0 data-ending-style:opacity-0" />
-      <BaseDrawer.Viewport className="fixed inset-0 flex items-end justify-center">
+      {/* p-4 insets the sheet from the screen edges so it floats */}
+      <BaseDrawer.Viewport className="fixed inset-0 flex items-end justify-center p-4">
         <BaseDrawer.Popup
           className={cn(
-            "w-full max-w-lg rounded-t-xl border-t border-line bg-surface-raised p-6 text-fg shadow-overlay",
+            "w-full max-w-lg rounded-xl border border-line bg-surface-raised p-6 text-fg shadow-overlay",
             "[transform:translateY(var(--drawer-swipe-movement-y))] transition-transform duration-fast ease-out-quad",
-            "data-starting-style:[transform:translateY(100%)] data-ending-style:[transform:translateY(100%)]",
+            // +1rem clears the viewport's bottom inset so the exit fully leaves the screen
+            "data-starting-style:[transform:translateY(calc(100%+1rem))] data-ending-style:[transform:translateY(calc(100%+1rem))]",
             className,
           )}
           {...props}
