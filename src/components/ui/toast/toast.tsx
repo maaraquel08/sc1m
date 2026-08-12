@@ -13,7 +13,7 @@ export const createToastManager = BaseToast.createToastManager;
  * should NOT stack. If the toast is already on screen, no new toast is
  * appended — the existing one is updated in place (Base UI's add() is
  * an upsert that also refreshes the auto-dismiss timer) and replays a
- * scale-to-1.1 pulse as a visual nudge.
+ * scale pulse (see toast-nudge in globals.css) as a visual nudge.
  */
 export function useToast() {
   const manager = BaseToast.useToastManager();

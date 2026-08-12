@@ -107,7 +107,7 @@ function NudgeDemo() {
 }
 
 /** Non-stacking nudge: a stable id means re-firing never appends — the
- * existing toast pulses to 1.1× and its dismiss timer resets. */
+ * existing toast pulses and its dismiss timer resets. */
 export const Nudge: Story = {
   render: () => (
     <ToastProvider>

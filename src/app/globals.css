@@ -125,7 +125,7 @@
  * transform-based scale. Replayed by remove → reflow → re-add. */
 @keyframes toast-nudge {
   50% {
-    scale: 1.1;
+    scale: 1.05;
   }
 }
 .toast-nudge {
