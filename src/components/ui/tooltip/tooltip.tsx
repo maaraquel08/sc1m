@@ -23,9 +23,7 @@ export function Tooltip({
           <BaseTooltip.Popup
             className={cn(
               "rounded-md bg-fg px-2.5 py-1.5 text-xs font-medium text-bg shadow-overlay",
-              "origin-[var(--transform-origin)] transition-[opacity,transform] duration-fast ease-out-quad",
-              "data-starting-style:scale-95 data-starting-style:opacity-0",
-              "data-ending-style:scale-95 data-ending-style:opacity-0",
+              "popup-motion",
             )}
           >
             {content}

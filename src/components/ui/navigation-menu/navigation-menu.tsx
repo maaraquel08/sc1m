@@ -93,9 +93,7 @@ export function NavigationMenuViewport({
         <BaseNavigationMenu.Popup
           className={cn(
             "rounded-lg border border-line bg-surface-raised shadow-overlay",
-            "origin-[var(--transform-origin)] transition-[opacity,transform] duration-fast ease-out-quad",
-            "data-starting-style:scale-95 data-starting-style:opacity-0",
-            "data-ending-style:scale-95 data-ending-style:opacity-0",
+            "popup-motion",
           )}
         >
           <BaseNavigationMenu.Viewport
