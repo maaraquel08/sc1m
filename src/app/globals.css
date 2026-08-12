@@ -120,6 +120,23 @@
   }
 }
 
+/* toast nudge: a non-stacking toast re-fires → pulse the existing one.
+ * Animates the `scale` property so it composes with the stack's
+ * transform-based scale. Replayed by remove → reflow → re-add. */
+@keyframes toast-nudge {
+  50% {
+    scale: 1.1;
+  }
+}
+.toast-nudge {
+  animation: toast-nudge 300ms var(--popup-ease);
+}
+@media (prefers-reduced-motion: reduce) {
+  .toast-nudge {
+    animation: none;
+  }
+}
+
 /* dark mode via .dark class (next-themes compatible) */
 @custom-variant dark (&:where(.dark, .dark *));
 
