@@ -8,9 +8,8 @@
       "type": "registry:theme",
       "title": "sc1m Design Tokens",
       "description": "Ledger brand tokens and the Tailwind v4 theme contract: semantic colors, radii, shadows, motion, dark mode via the .dark class, and the popup-motion utility.",
-      "css": {
-        "@custom-variant dark": "(&:where(.dark, .dark *))",
-        "@theme inline": {
+      "cssVars": {
+        "theme": {
           "--color-bg": "var(--bg)",
           "--color-surface": "var(--surface)",
           "--color-surface-raised": "var(--surface-raised)",
@@ -39,7 +38,10 @@
           "--shadow-overlay": "var(--brand-shadow-overlay, 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1))",
           "--ease-out-quad": "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
           "--duration-fast": "150ms"
-        },
+        }
+      },
+      "css": {
+        "@custom-variant dark (&:where(.dark, .dark *))": {},
         ":root": {
           "--n-0": "#eceae6",
           "--n-50": "#f7f6f4",
