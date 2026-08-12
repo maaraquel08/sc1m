@@ -17,7 +17,10 @@ jobs:
           node-version: 24
           cache: npm
 
-      - run: npm ci
+      # npm install, not ci: the lockfile's bundled wasm optional deps
+      # (@tailwindcss/oxide-wasm32-wasi) don't survive the macOS↔Linux
+      # npm ci sync check, and this workflow only validates — it ships nothing.
+      - run: npm install --no-audit --no-fund
 
       - run: npm run registry:build
 
