@@ -1,0 +1,29 @@
+name: registry
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  registry:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      # npm install, not ci: the lockfile's bundled wasm optional deps
+      # (@tailwindcss/oxide-wasm32-wasi) don't survive the macOS↔Linux
+      # npm ci sync check, and this workflow only validates — it ships nothing.
+      - run: npm install --no-audit --no-fund
+
+      - run: npm run registry:build
+
+      - run: node scripts/check-registry.mjs
+
+      - run: node scripts/check-tokens-parity.mjs
