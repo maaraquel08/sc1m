@@ -1,0 +1,64 @@
+---
+title: "Menu"
+description: "Menu component built on Base UI, styled with sc1m tokens."
+---
+
+import { story } from "@/components/ui/menu/menu.story";
+
+## Preview
+
+A representative composition. Open it in Storybook to vary the props.
+
+<story.WithControl />
+
+## Installation
+
+```bash
+npx shadcn@latest add @sc1m/menu
+```
+
+This also merges the [token layer](/docs/foundations/tokens) and installs
+`src/lib/cn.ts` plus `@base-ui/react`.
+
+## Usage
+
+```tsx
+import {
+  Menu,
+  MenuTrigger,
+  MenuContent,
+  MenuItem,
+  MenuCheckboxItem,
+  MenuCheckboxItemIndicator,
+  MenuRadioGroup,
+  MenuRadioItem,
+  MenuRadioItemIndicator,
+  MenuSeparator,
+  MenuGroup,
+  MenuGroupLabel,
+  MenuSubmenuRoot,
+  MenuSubmenuTrigger,
+} from "@/components/ui/menu";
+```
+
+## Exports
+
+- `Menu`
+- `MenuTrigger`
+- `MenuContent`
+- `MenuItem`
+- `MenuCheckboxItem`
+- `MenuCheckboxItemIndicator`
+- `MenuRadioGroup`
+- `MenuRadioItem`
+- `MenuRadioItemIndicator`
+- `MenuSeparator`
+- `MenuGroup`
+- `MenuGroupLabel`
+- `MenuSubmenuRoot`
+- `MenuSubmenuTrigger`
+
+## Source
+
+[`src/components/ui/menu/menu.tsx`](https://github.com/maaraquel08/sc1m/blob/main/src/components/ui/menu/menu.tsx) — no `next/*` imports, so it drops into any
+React 19 + Tailwind v4 app.

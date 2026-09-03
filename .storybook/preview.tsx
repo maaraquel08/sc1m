@@ -19,21 +19,21 @@ const preview: Preview = {
       toolbar: {
         title: 'Brand',
         icon: 'paintbrush',
-        items: ['ledger', 'jbl'],
+        items: ['sc1m', 'ledger'],
         dynamicTitle: true,
       },
     },
   },
   initialGlobals: {
     theme: 'light',
-    brand: 'ledger',
+    brand: 'sc1m',
   },
   decorators: [
     (Story, { globals }) => {
       // .dark and data-brand live on <html> so portalled popups (in
       // <body>) also pick up theme and brand
       document.documentElement.classList.toggle('dark', globals.theme === 'dark')
-      if (globals.brand && globals.brand !== 'ledger') {
+      if (globals.brand && globals.brand !== 'sc1m') {
         document.documentElement.dataset.brand = globals.brand
       } else {
         delete document.documentElement.dataset.brand

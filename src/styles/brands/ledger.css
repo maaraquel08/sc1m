@@ -1,13 +1,14 @@
 /* ==================================================================
  * Brand: Ledger (v1) — "three colours and one ramp"
  *
- * Default brand: owns :root, so it applies when <html> carries no
- * data-brand attribute, and provides the fallback for any token
- * another brand skips. All brand files follow the same template:
- * primitives → surfaces & text → interactive → status → shape & type.
+ * Scoped to [data-brand="ledger"] on <html>: the default brand (sc1m)
+ * owns :root, additional brands activate via the attribute. Tokens a
+ * brand skips fall back to the default. All brand files follow the
+ * same template: primitives → surfaces & text → interactive → status
+ * → shape & type.
  * ================================================================== */
 
-:root {
+[data-brand="ledger"] {
   /* -- 1. primitives: neutral ramp (named by lightness) ------------ */
   --n-0: #eceae6;   /* canvas */
   --n-50: #f7f6f4;  /* weak */
@@ -71,7 +72,7 @@
 /* Dark: ink and paper trade places; the ramp reverses by role, not
  * numerically, and carries the espresso warmth; semantic hues lift so
  * they hold on near-black. Only tokens that change are listed. */
-.dark {
+[data-brand="ledger"].dark {
   /* -- 1. primitives ------------------------------------------------ */
   --n-0: #14120e;
   --n-50: #1e1b16;

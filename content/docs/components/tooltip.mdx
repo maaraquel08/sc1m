@@ -1,0 +1,37 @@
+---
+title: "Tooltip"
+description: "Tooltip component built on Base UI, styled with sc1m tokens."
+---
+
+import { story } from "@/components/ui/tooltip/tooltip.story";
+
+## Preview
+
+Every prop below is live — change one and the component re-renders.
+
+<story.WithControl />
+
+## Installation
+
+```bash
+npx shadcn@latest add @sc1m/tooltip
+```
+
+This also merges the [token layer](/docs/foundations/tokens) and installs
+`src/lib/cn.ts` plus `@base-ui/react`.
+
+## Usage
+
+```tsx
+import { TooltipProvider, Tooltip } from "@/components/ui/tooltip";
+```
+
+## Exports
+
+- `TooltipProvider`
+- `Tooltip`
+
+## Source
+
+[`src/components/ui/tooltip/tooltip.tsx`](https://github.com/maaraquel08/sc1m/blob/main/src/components/ui/tooltip/tooltip.tsx) — no `next/*` imports, so it drops into any
+React 19 + Tailwind v4 app.

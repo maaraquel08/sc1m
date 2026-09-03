@@ -68,7 +68,7 @@ export const Parity: Story = {
       }
 
       // brands must actually differ, or the switcher is wired to nothing
-      await expect(accents['ledger/light']).not.toBe(accents['jbl/light']);
+      await expect(accents['ledger/light']).not.toBe(accents['sc1m/light']);
       // themes must actually differ within a brand
       await expect(accents['ledger/light']).not.toBe(accents['ledger/dark']);
     } finally {

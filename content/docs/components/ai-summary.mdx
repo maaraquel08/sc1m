@@ -1,0 +1,44 @@
+---
+title: "AI Summary"
+description: "AI Summary banner (AS1): a wash tinted with the brand AI hue to mark AI-authored copy, a sparkle eyebrow naming the angle, one sentence of plain-language body, and an inner glow pulsing at the edge. No runtime dependencies."
+---
+
+import { story } from "@/components/ui/ai-summary/ai-summary.story";
+
+## Preview
+
+A representative composition. Open it in Storybook to vary the props.
+
+<story.WithControl />
+
+## Installation
+
+```bash
+npx shadcn@latest add @sc1m/ai-summary
+```
+
+This also merges the [token layer](/docs/foundations/tokens) and installs
+`src/lib/cn.ts`.
+
+## Usage
+
+```tsx
+import {
+  AiSummary,
+  AiSummaryLabel,
+  AiSummaryText,
+  AiSummarySparkle,
+} from "@/components/ui/ai-summary";
+```
+
+## Exports
+
+- `AiSummary`
+- `AiSummaryLabel`
+- `AiSummaryText`
+- `AiSummarySparkle`
+
+## Source
+
+[`src/components/ui/ai-summary/ai-summary.tsx`](https://github.com/maaraquel08/sc1m/blob/main/src/components/ui/ai-summary/ai-summary.tsx) — no `next/*` imports, so it drops into any
+React 19 + Tailwind v4 app.

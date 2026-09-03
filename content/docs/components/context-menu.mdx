@@ -1,0 +1,64 @@
+---
+title: "Context Menu"
+description: "Context Menu component built on Base UI, styled with sc1m tokens."
+---
+
+import { story } from "@/components/ui/context-menu/context-menu.story";
+
+## Preview
+
+A representative composition. Open it in Storybook to vary the props.
+
+<story.WithControl />
+
+## Installation
+
+```bash
+npx shadcn@latest add @sc1m/context-menu
+```
+
+This also merges the [token layer](/docs/foundations/tokens) and installs
+`src/lib/cn.ts` plus `@base-ui/react`.
+
+## Usage
+
+```tsx
+import {
+  ContextMenu,
+  ContextMenuTrigger,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuCheckboxItem,
+  ContextMenuCheckboxItemIndicator,
+  ContextMenuRadioGroup,
+  ContextMenuRadioItem,
+  ContextMenuRadioItemIndicator,
+  ContextMenuSeparator,
+  ContextMenuGroup,
+  ContextMenuGroupLabel,
+  ContextMenuSubmenuRoot,
+  ContextMenuSubmenuTrigger,
+} from "@/components/ui/context-menu";
+```
+
+## Exports
+
+- `ContextMenu`
+- `ContextMenuTrigger`
+- `ContextMenuContent`
+- `ContextMenuItem`
+- `ContextMenuCheckboxItem`
+- `ContextMenuCheckboxItemIndicator`
+- `ContextMenuRadioGroup`
+- `ContextMenuRadioItem`
+- `ContextMenuRadioItemIndicator`
+- `ContextMenuSeparator`
+- `ContextMenuGroup`
+- `ContextMenuGroupLabel`
+- `ContextMenuSubmenuRoot`
+- `ContextMenuSubmenuTrigger`
+
+## Source
+
+[`src/components/ui/context-menu/context-menu.tsx`](https://github.com/maaraquel08/sc1m/blob/main/src/components/ui/context-menu/context-menu.tsx) — no `next/*` imports, so it drops into any
+React 19 + Tailwind v4 app.

@@ -1,0 +1,83 @@
+---
+title: "Tokens"
+description: "The semantic token contract — the fixed set of role names every brand must resolve."
+---
+
+import { ColorTokens, TypeScale, Radii, Elevation } from "@/components/site/token-tables";
+
+The contract is a fixed list of **role names**. A brand assigns values to them;
+components consume them through Tailwind utilities and never see the values.
+Add a name and every brand must answer for it — which is why the list is short
+and grows reluctantly.
+
+## Colour
+
+Each swatch below is painted with its own utility class, so this table is also
+a live test: switch theme or brand and the colours follow.
+
+<ColorTokens />
+
+Two of these carry a rule rather than just a role:
+
+- **`highlight`** is the add action. Nothing else.
+- **`info`** is AI authorship. It is the hue the AI surfaces own — see
+  [AI authorship](/docs/foundations/ai-authorship).
+
+## Typography
+
+Type is brand-driven through `--brand-font-sans` and `--brand-font-mono`. The
+fallback chain ends in a real generic family, so the chain still resolves
+outside Next.js — Storybook has no `next/font` variables.
+
+<TypeScale />
+
+## Radius
+
+<Radii />
+
+## Elevation
+
+<Elevation />
+
+Brands may tint elevation through the optional `--brand-shadow-raised` and
+`--brand-shadow-overlay` slots; skip them and the structural defaults apply.
+
+## The contract, as data
+
+`src/styles/contract.ts` lists the same names as a TypeScript array, and the
+token parity test iterates it to prove that **every registered brand resolves
+every token in both themes**.
+
+```ts title="src/styles/contract.ts"
+export const COLOR_TOKENS = ["bg", "surface", "surface-raised", /* … */] as const;
+export const SHAPE_TOKENS = ["brand-radius-sm", /* … */ "brand-font-mono"] as const;
+export const BRANDS = [
+  { key: "sc1m", attr: null },      // default brand owns :root
+  { key: "ledger", attr: "ledger" },
+] as const;
+```
+
+<Callout type="warn" title="Adding a token touches four files">
+  The contract is deliberately duplicated — in `globals.css`'s `@theme inline`
+  block, in `contract.ts`, in every brand file, and in the `tokens` item of
+  `registry.json` (in the exact JSON shape the shadcn CLI can merge). A new
+  token goes in all four. `scripts/check-tokens-parity.mjs` fails the build
+  when they drift, so you will not get this wrong quietly.
+</Callout>
+
+## The two namespaces
+
+Brand files assign **bare** names; `globals.css` maps them into Tailwind's
+namespace:
+
+```css title="src/app/globals.css"
+@theme inline {
+  --color-accent: var(--accent);
+  --color-fg-muted: var(--fg-muted);
+  /* … */
+}
+```
+
+`inline` is load-bearing. It makes the generated CSS reference `var(--accent)`
+at the use site, so utilities re-resolve when `.dark` or `[data-brand]` flips.
+Remove it and dark mode stops working.

@@ -1,0 +1,48 @@
+---
+title: "Drawer"
+description: "Drawer component built on Base UI, styled with sc1m tokens."
+---
+
+import { story } from "@/components/ui/drawer/drawer.story";
+
+## Preview
+
+A representative composition. Open it in Storybook to vary the props.
+
+<story.WithControl />
+
+## Installation
+
+```bash
+npx shadcn@latest add @sc1m/drawer
+```
+
+This also merges the [token layer](/docs/foundations/tokens) and installs
+`src/lib/cn.ts` plus `@base-ui/react`.
+
+## Usage
+
+```tsx
+import {
+  Drawer,
+  DrawerTrigger,
+  DrawerContent,
+  DrawerTitle,
+  DrawerDescription,
+  DrawerClose,
+} from "@/components/ui/drawer";
+```
+
+## Exports
+
+- `Drawer`
+- `DrawerTrigger`
+- `DrawerContent`
+- `DrawerTitle`
+- `DrawerDescription`
+- `DrawerClose`
+
+## Source
+
+[`src/components/ui/drawer/drawer.tsx`](https://github.com/maaraquel08/sc1m/blob/main/src/components/ui/drawer/drawer.tsx) — no `next/*` imports, so it drops into any
+React 19 + Tailwind v4 app.

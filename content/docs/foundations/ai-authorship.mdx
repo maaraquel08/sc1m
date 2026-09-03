@@ -1,0 +1,85 @@
+---
+title: "AI authorship"
+description: "One hue, derived from the brand, marks every surface an AI wrote — and it inverts correctly on its own."
+---
+
+import { story } from "@/components/ui/ai-summary/ai-summary.story";
+
+When an AI wrote something, the interface should say so without a badge on
+every paragraph. sc1m does it with a single treatment: a pale wash, a tinted
+edge, and a slow pulse — all derived from **one hue the brand already owns**.
+
+<story.WithControl />
+
+## The whole treatment is two variables
+
+```css title="src/app/globals.css"
+:root {
+  --ai-hue: var(--color-info);
+  --ai-hue-ink: color-mix(in oklab, var(--ai-hue) 50%, var(--color-fg));
+}
+```
+
+`--ai-hue` is the brand's `info` role. The wash, the edge, the eyebrow, the
+sparkle and the pulse all read from it, so **repointing `--info` in a brand
+file moves the entire treatment**. Nothing in the AI CSS names a colour.
+
+Override `--ai-hue` at any scope to re-point the AI signal for a subtree.
+
+## Why the second variable exists
+
+Ledger's brand yellow is roughly **1.6:1** on the pale wash — far under AA for
+the 9.5px eyebrow text. So the eyebrow and sparkle use `--ai-hue-ink`, which
+mixes the hue toward `--fg` rather than toward a fixed dark value. That lands
+near **4.6:1**.
+
+Mixing toward `--fg` is what makes it invert: in dark mode `--fg` is light, so
+the mix brightens instead of darkening, and contrast holds without a separate
+dark-mode rule.
+
+## The wash
+
+```css
+.ai-wash {
+  background-image: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--ai-hue) 9%, var(--color-bg)) 0%,
+    color-mix(in oklab, var(--ai-hue) 4%, var(--color-bg)) 66%,
+    color-mix(in oklab, var(--ai-hue) 2%, var(--color-bg)) 100%
+  );
+  border-color: color-mix(in oklab, var(--ai-hue) 16%, var(--color-line));
+}
+```
+
+Every stop mixes against `--color-bg`, so the wash sits on whatever the page
+background is rather than assuming white.
+
+## The pulse
+
+`.ai-pulse` paints six soft ellipses across two pseudo-elements, three each,
+anchored half-outside an edge so only the inner falloff shows. Background
+painting is clipped to the rounded box, which handles containment for free.
+
+Two decisions do the work:
+
+- **Non-harmonic cycles.** The layers run at 5.2s and 7.1s, so the combination
+  never visibly repeats. Each keyframe moves size, position *and* opacity
+  together, which is what reads as independent blobs rather than one throb.
+- **No hue rotation.** Every blob is the same `--ai-hue` at a different alpha.
+  Unlike a canned beam palette, this cannot wander into a hue the brand does
+  not own, however long it runs.
+
+Base values sit mid-cycle, so the reduced-motion rule simply drops the
+animation and still leaves a composed edge:
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  .ai-pulse::before,
+  .ai-pulse::after { animation: none; }
+}
+```
+
+## Using it
+
+See the [AI Summary](/docs/components/ai-summary) component, which composes
+`.ai-wash` and `.ai-pulse` into the AS1 banner.

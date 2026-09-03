@@ -5,7 +5,7 @@
  *   1. Copy to src/styles/brands/<brand>.css
  *   2. Replace every BRAND with the brand key (lowercase, no spaces)
  *      and every <value> with a real value — assign ALL tokens; any
- *      token skipped falls back to the default brand (ledger.css,
+ *      token skipped falls back to the default brand (sc1m.css,
  *      which owns :root instead of [data-brand]).
  *   3. Register it: add the @import in src/app/globals.css (AFTER the
  *      default brand — order matters), the brand key to BRANDS in

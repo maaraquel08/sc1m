@@ -1,0 +1,36 @@
+---
+title: "Input"
+description: "Input component built on Base UI, styled with sc1m tokens."
+---
+
+import { story } from "@/components/ui/input/input.story";
+
+## Preview
+
+Every prop below is live — change one and the component re-renders.
+
+<story.WithControl />
+
+## Installation
+
+```bash
+npx shadcn@latest add @sc1m/input
+```
+
+This also merges the [token layer](/docs/foundations/tokens) and installs
+`src/lib/cn.ts` plus `@base-ui/react`.
+
+## Usage
+
+```tsx
+import { Input } from "@/components/ui/input";
+```
+
+## Exports
+
+- `Input`
+
+## Source
+
+[`src/components/ui/input/input.tsx`](https://github.com/maaraquel08/sc1m/blob/main/src/components/ui/input/input.tsx) — no `next/*` imports, so it drops into any
+React 19 + Tailwind v4 app.

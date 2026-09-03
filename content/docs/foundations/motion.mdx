@@ -1,0 +1,80 @@
+---
+title: "Motion"
+description: "Shared duration and easing tokens, and the one utility that animates every anchored popup."
+---
+
+Motion is structural rather than brand-driven for now — the tokens live in
+`globals.css`, not in brand files. Promote one to a brand slot when a brand
+actually asks for it.
+
+## Tokens
+
+```css
+@theme inline {
+  --ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --duration-fast: 150ms;
+}
+```
+
+Used as `transition-colors duration-fast ease-out-quad` — the standard
+treatment for hover and focus transitions across the system.
+
+## The popup recipe
+
+Every anchored popup — popover, tooltip, menu, select, combobox, context menu,
+preview card — is animated by a **single utility**, `popup-motion`. Apply it to
+a Base UI Popup part and the `data-*` lifecycle attributes drive the rest.
+
+```tsx
+<Popover.Popup className="popup-motion …">
+```
+
+```css title="src/app/globals.css"
+@utility popup-motion {
+  transform-origin: var(--transform-origin);
+  transition-property: opacity, scale;
+  transition-duration: var(--popup-close-dur);
+  transition-timing-function: var(--popup-ease);
+
+  &[data-open]           { transition-duration: var(--popup-open-dur); }
+  &[data-starting-style] { scale: var(--popup-pre-scale); opacity: 0; }
+  &[data-ending-style]   { scale: var(--popup-closing-scale); opacity: 0; }
+
+  @media (prefers-reduced-motion: reduce) { transition: none; }
+}
+```
+
+Two details worth keeping:
+
+- **It grows from its trigger.** `transform-origin: var(--transform-origin)`
+  reads the origin Base UI computes from the anchor, so a menu opening upward
+  animates from its bottom edge.
+- **It is asymmetric.** Opening takes `--popup-open-dur` (250ms), closing
+  `--popup-close-dur` (150ms). Entrances want to be noticed; exits want to get
+  out of the way.
+
+## Tunable values
+
+```css
+:root {
+  --popup-open-dur: 250ms;
+  --popup-close-dur: 150ms;
+  --popup-pre-scale: 0.97;
+  --popup-closing-scale: 0.99;
+  --popup-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --acc-expand: 250ms;    /* accordion */
+  --acc-collapse: 250ms;
+  --acc-chevron: 250ms;
+  --acc-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+```
+
+Override any of them at any scope to retune a subtree.
+
+## Reduced motion
+
+Every animated treatment carries a `prefers-reduced-motion: reduce` branch —
+`popup-motion`, the toast nudge, and the AI pulse. The reduced branch keeps the
+composed appearance and stops only the movement; it does not remove the
+element's visual state.

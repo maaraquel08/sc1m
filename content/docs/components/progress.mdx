@@ -1,0 +1,46 @@
+---
+title: "Progress"
+description: "Progress component built on Base UI, styled with sc1m tokens."
+---
+
+import { story } from "@/components/ui/progress/progress.story";
+
+## Preview
+
+A representative composition. Open it in Storybook to vary the props.
+
+<story.WithControl />
+
+## Installation
+
+```bash
+npx shadcn@latest add @sc1m/progress
+```
+
+This also merges the [token layer](/docs/foundations/tokens) and installs
+`src/lib/cn.ts` plus `@base-ui/react`.
+
+## Usage
+
+```tsx
+import {
+  Progress,
+  ProgressTrack,
+  ProgressIndicator,
+  ProgressLabel,
+  ProgressValue,
+} from "@/components/ui/progress";
+```
+
+## Exports
+
+- `Progress`
+- `ProgressTrack`
+- `ProgressIndicator`
+- `ProgressLabel`
+- `ProgressValue`
+
+## Source
+
+[`src/components/ui/progress/progress.tsx`](https://github.com/maaraquel08/sc1m/blob/main/src/components/ui/progress/progress.tsx) — no `next/*` imports, so it drops into any
+React 19 + Tailwind v4 app.

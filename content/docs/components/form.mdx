@@ -1,0 +1,36 @@
+---
+title: "Form"
+description: "Form component built on Base UI, styled with sc1m tokens."
+---
+
+import { story } from "@/components/ui/form/form.story";
+
+## Preview
+
+A representative composition. Open it in Storybook to vary the props.
+
+<story.WithControl />
+
+## Installation
+
+```bash
+npx shadcn@latest add @sc1m/form
+```
+
+This also merges the [token layer](/docs/foundations/tokens) and installs
+`src/lib/cn.ts` plus `@base-ui/react`.
+
+## Usage
+
+```tsx
+import { Form } from "@/components/ui/form";
+```
+
+## Exports
+
+- `Form`
+
+## Source
+
+[`src/components/ui/form/form.tsx`](https://github.com/maaraquel08/sc1m/blob/main/src/components/ui/form/form.tsx) — no `next/*` imports, so it drops into any
+React 19 + Tailwind v4 app.

@@ -1,0 +1,71 @@
+/* ------------------------------------------------------------------
+ * Fumadocs → sc1m token bridge.
+ *
+ * fumadocs-ui ships its own palette (`fumadocs-ui/css/neutral.css`) and a
+ * base rule that paints <body> with --color-fd-background. We deliberately
+ * do NOT import that palette: instead every --color-fd-* name is pointed at
+ * the design system's semantic token of the same role.
+ *
+ * Two consequences, both wanted:
+ *   1. The docs chrome is brand-themed. Flip [data-brand] and the sidebar,
+ *      search dialog and code blocks re-theme along with the components.
+ *   2. No dark block is needed here. The DS tokens already invert under
+ *      .dark, and these are var() references, so the indirection carries
+ *      the inversion for free.
+ *
+ * `@theme static` (not `@theme inline`) is required on both counts:
+ * fumadocs' compiled CSS reads var(--color-fd-*) directly, so the custom
+ * properties must really exist on :root rather than being inlined away at
+ * use sites — and `static` stops Tailwind tree-shaking the ones it cannot
+ * see referenced from a utility class.
+ * ------------------------------------------------------------------ */
+@theme static {
+  /* surfaces */
+  --color-fd-background: var(--bg);
+  --color-fd-foreground: var(--fg);
+  --color-fd-card: var(--surface-raised);
+  --color-fd-card-foreground: var(--fg);
+  --color-fd-popover: var(--surface-raised);
+  --color-fd-popover-foreground: var(--fg);
+
+  /* recessed / secondary surfaces — fd-accent is a hover wash in fumadocs'
+     vocabulary, NOT the brand accent. Pointing it at --accent would turn
+     every sidebar hover into a slab of brand ink. */
+  --color-fd-muted: var(--surface);
+  --color-fd-muted-foreground: var(--fg-muted);
+  --color-fd-secondary: var(--surface);
+  --color-fd-secondary-foreground: var(--fg);
+  --color-fd-accent: var(--surface);
+  --color-fd-accent-foreground: var(--fg);
+
+  /* the actual brand accent: active nav item, primary buttons */
+  --color-fd-primary: var(--accent);
+  --color-fd-primary-foreground: var(--accent-fg);
+
+  /* lines and focus */
+  --color-fd-border: var(--line);
+  --color-fd-ring: var(--ring);
+
+  --color-fd-overlay: color-mix(in oklab, var(--fg) 20%, transparent);
+}
+
+/* Callout and code-diff hues. Every name fumadocs declares under its own
+   `@theme static` must be repeated here — `fumadocs-ui/css/shiki.css`
+   @applies bg-fd-diff-remove etc., so a missing one is a hard build error,
+   not a silently unstyled element.
+
+   Three map onto DS tokens. --warning, --idea and the diff pair have no DS
+   equivalent and keep fumadocs' published defaults verbatim. */
+@theme static {
+  --color-fd-info: var(--info);
+  --color-fd-error: var(--danger);
+  --color-fd-success: var(--success);
+
+  --color-fd-warning: oklch(76.9% 0.188 70.08);
+  --color-fd-idea: oklch(70.5% 0.209 60.849);
+
+  --color-fd-diff-remove: rgba(200, 10, 100, 0.12);
+  --color-fd-diff-remove-symbol: rgb(230, 10, 100);
+  --color-fd-diff-add: rgba(14, 180, 100, 0.1);
+  --color-fd-diff-add-symbol: rgb(10, 200, 100);
+}

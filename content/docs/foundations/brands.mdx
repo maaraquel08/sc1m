@@ -1,0 +1,95 @@
+---
+title: "Brands"
+description: "How a brand is defined, registered, and activated — and why swapping one is a single import."
+---
+
+A brand is one CSS file that assigns values to every name in the
+[token contract](/docs/foundations/tokens). The default brand owns `:root`;
+every other brand scopes itself to a `[data-brand]` attribute.
+
+```css title="src/styles/brands/sc1m.css"
+:root {
+  /* 1. primitives — the only layer allowed product vocabulary */
+  --n-0: #ececec;          /* canvas */
+  --n-900: #0a0a0a;        /* ink */
+  --sc1m-orange: #ff5a00;  /* CTAs, focus, the brand voice */
+  --sc1m-paper: #ffffff;   /* page and card fills */
+
+  /* 2. semantics — fixed names, mapped from the primitives above */
+  --accent: var(--sc1m-orange);
+  --bg: var(--sc1m-paper);
+  --ring: var(--sc1m-orange);
+}
+```
+
+```css title="src/styles/brands/ledger.css"
+[data-brand="ledger"] {
+  /* same section order, same names, different values */
+}
+```
+
+Every brand file keeps the same section order — primitives → surfaces & text →
+interactive → status → shape & type — so the files read as mirrors of one
+another and a diff between two brands is meaningful.
+
+## Activating a brand
+
+Set the attribute on `<html>`, so portalled popups (which render into `<body>`)
+rebrand along with everything else:
+
+```tsx
+<html data-brand="ledger">
+```
+
+The default brand carries no attribute — it owns `:root`, and is also the
+fallback for any token another brand skips.
+
+<Callout title="Try it">
+  The switcher at the bottom of the sidebar does exactly this. Because the
+  docs theme is bridged onto the same tokens, the sidebar and search dialog
+  rebrand too.
+</Callout>
+
+## Adding a brand
+
+<div className="fd-steps [&_h3]:fd-step">
+
+### Copy the template
+
+`src/styles/brands/boilerplate-template.css` is the canonical boilerplate.
+Copy it to `src/styles/brands/<brand>.css` and replace every `BRAND` with your
+brand key and every `<value>` with a real value.
+
+### Assign every token
+
+Any token you skip silently falls back to the default brand. That is a
+convenience, not a strategy — the parity test will tell you which you missed.
+
+### Register it in three places
+
+- the `@import` in `src/app/globals.css` — **after** the default brand, because
+  order decides the fallback
+- `BRANDS` in `src/styles/contract.ts`
+- the Brand toolbar items in `.storybook/preview.tsx`
+
+### Verify
+
+```bash
+npx vitest --project storybook run src/styles/tokens.stories.tsx
+```
+
+</div>
+
+## Rules of the contract
+
+- Brand files assign **bare** semantic names (`--accent`); the `@theme` block
+  maps them to utilities. Never rename a semantic name.
+- Product and domain vocabulary lives **only** in section 1 primitives —
+  Ledger's `--money-in` is legal there and nowhere else.
+- For dark mode, flip the primitives, then override only the semantics that
+  genuinely change. Comment the reason.
+
+Optional slots you can skip freely: `--brand-shadow-raised`,
+`--brand-shadow-overlay`. Type scale, spacing/density and motion durations are
+reserved — likely future widenings of the contract, so coordinate rather than
+self-serve.

@@ -1,0 +1,38 @@
+---
+title: "Avatar"
+description: "Avatar component built on Base UI, styled with sc1m tokens."
+---
+
+import { story } from "@/components/ui/avatar/avatar.story";
+
+## Preview
+
+A representative composition. Open it in Storybook to vary the props.
+
+<story.WithControl />
+
+## Installation
+
+```bash
+npx shadcn@latest add @sc1m/avatar
+```
+
+This also merges the [token layer](/docs/foundations/tokens) and installs
+`src/lib/cn.ts` plus `@base-ui/react`.
+
+## Usage
+
+```tsx
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+```
+
+## Exports
+
+- `Avatar`
+- `AvatarImage`
+- `AvatarFallback`
+
+## Source
+
+[`src/components/ui/avatar/avatar.tsx`](https://github.com/maaraquel08/sc1m/blob/main/src/components/ui/avatar/avatar.tsx) — no `next/*` imports, so it drops into any
+React 19 + Tailwind v4 app.

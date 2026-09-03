@@ -1,0 +1,46 @@
+---
+title: "Popover"
+description: "Popover component built on Base UI, styled with sc1m tokens."
+---
+
+import { story } from "@/components/ui/popover/popover.story";
+
+## Preview
+
+A representative composition. Open it in Storybook to vary the props.
+
+<story.WithControl />
+
+## Installation
+
+```bash
+npx shadcn@latest add @sc1m/popover
+```
+
+This also merges the [token layer](/docs/foundations/tokens) and installs
+`src/lib/cn.ts` plus `@base-ui/react`.
+
+## Usage
+
+```tsx
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverTitle,
+  PopoverDescription,
+} from "@/components/ui/popover";
+```
+
+## Exports
+
+- `Popover`
+- `PopoverTrigger`
+- `PopoverContent`
+- `PopoverTitle`
+- `PopoverDescription`
+
+## Source
+
+[`src/components/ui/popover/popover.tsx`](https://github.com/maaraquel08/sc1m/blob/main/src/components/ui/popover/popover.tsx) — no `next/*` imports, so it drops into any
+React 19 + Tailwind v4 app.

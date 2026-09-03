@@ -1,0 +1,48 @@
+---
+title: "Alert Dialog"
+description: "Alert Dialog component built on Base UI, styled with sc1m tokens."
+---
+
+import { story } from "@/components/ui/alert-dialog/alert-dialog.story";
+
+## Preview
+
+A representative composition. Open it in Storybook to vary the props.
+
+<story.WithControl />
+
+## Installation
+
+```bash
+npx shadcn@latest add @sc1m/alert-dialog
+```
+
+This also merges the [token layer](/docs/foundations/tokens) and installs
+`src/lib/cn.ts` plus `@base-ui/react`.
+
+## Usage
+
+```tsx
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogClose,
+} from "@/components/ui/alert-dialog";
+```
+
+## Exports
+
+- `AlertDialog`
+- `AlertDialogTrigger`
+- `AlertDialogContent`
+- `AlertDialogTitle`
+- `AlertDialogDescription`
+- `AlertDialogClose`
+
+## Source
+
+[`src/components/ui/alert-dialog/alert-dialog.tsx`](https://github.com/maaraquel08/sc1m/blob/main/src/components/ui/alert-dialog/alert-dialog.tsx) — no `next/*` imports, so it drops into any
+React 19 + Tailwind v4 app.

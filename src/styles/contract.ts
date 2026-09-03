@@ -47,6 +47,6 @@ export const SHAPE_TOKENS = [
  * default brand (owns :root, needs no attribute). Keep in sync with
  * the @import list in globals.css and the Storybook Brand toolbar. */
 export const BRANDS = [
-  { key: "ledger", attr: null },
-  { key: "jbl", attr: "jbl" },
+  { key: "sc1m", attr: null },
+  { key: "ledger", attr: "ledger" },
 ] as const;

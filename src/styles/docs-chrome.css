@@ -1,0 +1,63 @@
+/* ------------------------------------------------------------------
+ * Code-block chrome for /docs.
+ *
+ * fumadocs' preset gives every block a raised card and an icon-only copy
+ * button. The Accordion Docs design calls for the opposite: a quiet tinted
+ * block that recedes into the page, with a text "Copy" pill in the corner.
+ *
+ * Written as CSS rather than arbitrary Tailwind variants because these are
+ * descendant overrides on markup this app does not own — `[&_figure_button…]`
+ * chains for the same rules run to several hundred characters and stop being
+ * readable. Scoped to `.docs-body`, which the docs page puts on DocsBody.
+ *
+ * Every value resolves through the token contract, so the chrome follows the
+ * active brand and theme like everything else.
+ * ------------------------------------------------------------------ */
+
+/* Only top-level blocks get the tinted card. A figure nested inside a tabbed
+   shell or an example drawer is already sitting on one, and giving it its own
+   radius draws a second, inset box. */
+.docs-body > figure.shiki {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+}
+
+.docs-body figure.shiki {
+  box-shadow: none;
+}
+
+.docs-body .shiki code {
+  line-height: 1.75;
+}
+
+/* The copy button: a bordered text pill, labelled through ::after so the
+   component's own data-checked state still drives the wording. */
+.docs-body figure button[aria-label] {
+  width: auto;
+  height: auto;
+  padding: 0.3rem 0.55rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--bg);
+  color: var(--fg-muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.3;
+}
+
+.docs-body figure button[aria-label]:hover {
+  border-color: var(--line-strong);
+  color: var(--fg);
+}
+
+.docs-body figure button[aria-label] svg {
+  display: none;
+}
+
+.docs-body figure button[aria-label]::after {
+  content: "Copy";
+}
+
+.docs-body figure button[aria-label][data-checked]::after {
+  content: "Copied";
+}

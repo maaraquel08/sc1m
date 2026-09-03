@@ -4,6 +4,8 @@ A multi-brand design system: React 19 components built on [Base UI](https://base
 
 Components are distributed through a [shadcn-compatible registry](https://ui.shadcn.com/docs/registry) — consumers copy source into their own codebase with the shadcn CLI. Component source is framework-agnostic (no `next/*` imports): it works in Next.js, Vite, or any React 19 + Tailwind v4 app.
 
+**📖 Full documentation: [sc1m.vercel.app/docs](https://sc1m.vercel.app/docs)** — built with [Fumadocs](https://fumadocs.dev), served from this same app. Every component has a page with a live preview, install command and prop reference; the foundations (tokens, brands, dark mode, motion, AI authorship) are written up there rather than here.
+
 ## Installing components (consumers)
 
 ### 1. Prerequisites
@@ -85,7 +87,21 @@ The shadcn CLI's CSS merger (`shadcn@4.x`) is picky about the `css`/`cssVars` JS
 ## Development
 
 ```bash
-npm run dev        # Next.js docs/registry host
+npm run dev        # gallery at /, docs at /docs, registry at /r/*  (port 8127)
 npm run storybook  # component workbench (port 6006)
+npm run docs:gen   # regenerate per-component docs pages from registry.json + stories
 npm run registry:build && node scripts/check-registry.mjs && node scripts/check-tokens-parity.mjs
 ```
+
+### Docs
+
+The docs live in this app: content in `content/docs/`, routes under
+`src/app/docs/`. `npm run docs:gen` writes one MDX page per registry component
+plus its preview modules, lifting the preview out of that component's
+Storybook `Default` story — so a docs preview cannot drift from what is
+tested. It never overwrites an existing file; pass `--force` to regenerate
+deliberately, `--check` to fail when a registry component has no page.
+
+Fumadocs' own grey palette is deliberately not imported. `src/styles/fumadocs-bridge.css`
+maps every `--color-fd-*` onto the design system's semantic tokens instead, so
+the docs chrome follows the active brand and theme along with the components.

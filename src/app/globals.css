@@ -1,6 +1,32 @@
 @import "tailwindcss";
 
 /* ------------------------------------------------------------------
+ * Docs theme (/docs). `fumadocs-ui/css/neutral.css` — fumadocs' own grey
+ * palette — is deliberately NOT imported; fumadocs-bridge.css points every
+ * --color-fd-* at a design-system token instead, so the docs chrome follows
+ * the active brand and theme. See that file for the full reasoning.
+ *
+ * Two ordering rules:
+ *   - the bridge precedes the preset, matching fumadocs' own order. The
+ *     preset's shiki.css @applies utilities like bg-fd-diff-remove, so those
+ *     names must already be declared. Reversing them is a hard build error.
+ *   - all of it precedes the brand imports below, so every @import here is
+ *     still ahead of the first real rule. The bridge only *references* brand
+ *     tokens through var(), which resolves at use time, so it loses nothing
+ *     by sitting above the files that define them.
+ *
+ * Storybook's Vite pipeline logs a handful of "@import must precede all other
+ * statements" warnings against this file. They come from inside
+ * fumadocs-ui/css/preset.css, which puts an @plugin ahead of five @imports —
+ * not from anything here, and not fixable from this end. Tailwind's own
+ * parser accepts it and `next build` is clean.
+ * ------------------------------------------------------------------ */
+@import "../styles/fumadocs-bridge.css";
+@import "fumadocs-ui/css/preset.css";
+@import "@fumadocs/story/css/preset.css";
+@import "../styles/docs-chrome.css";
+
+/* ------------------------------------------------------------------
  * Brand registry.
  *
  * Each brand file assigns values to the semantic names listed in the
@@ -14,8 +40,8 @@
  * To inject a new brand: copy src/styles/brands/boilerplate-template.css,
  * fill it in, and add its @import here (after the default).
  * ------------------------------------------------------------------ */
+@import "../styles/brands/sc1m.css";
 @import "../styles/brands/ledger.css";
-@import "../styles/brands/jbl.css";
 
 /* ------------------------------------------------------------------
  * The contract: semantic tokens → Tailwind utilities.
