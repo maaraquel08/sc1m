@@ -2,11 +2,12 @@
 // Drift detection between the source CSS files and the hand-encoded
 // `tokens` item in registry.json. The tokens item duplicates CSS from:
 //   - the `@theme inline { ... }` block in src/app/globals.css
-//   - the `:root { ... }` block in src/styles/brands/ledger.css, merged
-//     with the *motion* `:root { ... }` block in globals.css (the one
-//     after @theme — accordion/popup vars) — the built tokens item
-//     folds both into one :root
-//   - the `.dark { ... }` block in src/styles/brands/ledger.css
+//   - the `:root { ... }` block in the DEFAULT brand file (the one that
+//     owns :root — src/styles/brands/sc1m.css), merged with the *motion*
+//     `:root { ... }` block in globals.css (the one after @theme —
+//     accordion/popup vars) — the built tokens item folds both into one
+//     :root
+//   - the `.dark { ... }` block in the default brand file
 //
 // Scope: flat custom-property maps only. Structural CSS (the
 // popup-motion @utility, @keyframes, @custom-variant, @media blocks) is
@@ -16,8 +17,8 @@
 // Paths are overridable via env vars (or CLI flags) so this can be run
 // against a scratch copy to prove it catches drift without touching the
 // real source files:
-//   GLOBALS_CSS, LEDGER_CSS, REGISTRY_JSON env vars, or
-//   --globals=<path> --ledger=<path> --registry=<path>
+//   GLOBALS_CSS, BRAND_CSS, REGISTRY_JSON env vars, or
+//   --globals=<path> --brand=<path> --registry=<path>
 
 import { readFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
@@ -38,9 +39,11 @@ const globalsPath = resolve(
   root,
   argOrEnv("globals", "GLOBALS_CSS", "src/app/globals.css")
 );
-const ledgerPath = resolve(
+// The default brand — whichever file owns :root. Swapping which brand is
+// default means changing this path (and the @import order in globals.css).
+const brandPath = resolve(
   root,
-  argOrEnv("ledger", "LEDGER_CSS", "src/styles/brands/ledger.css")
+  argOrEnv("brand", "BRAND_CSS", "src/styles/brands/sc1m.css")
 );
 const registryPath = resolve(
   root,
@@ -52,6 +55,13 @@ const registryPath = resolve(
  * brace-matching from the first occurrence of `<selector> {`.
  * Returns the inner text (without the outer braces), or null if not found.
  */
+/** Comments are stripped before any selector matching: a header comment
+ *  mentioning `:root` or `.dark` would otherwise be matched as a rule, and
+ *  extractBlock would then capture whichever block follows it. */
+function stripComments(css) {
+  return css.replace(/\/\*[\s\S]*?\*\//g, (m) => m.replace(/[^\n]/g, " "));
+}
+
 function extractBlock(css, selectorRe, fromIndex = 0) {
   const re = new RegExp(selectorRe, "g");
   re.lastIndex = fromIndex;
@@ -127,8 +137,8 @@ function diffMaps(label, expected, actual) {
 
 // --- load sources ---------------------------------------------------
 
-const globalsCss = readFileSync(globalsPath, "utf8");
-const ledgerCss = readFileSync(ledgerPath, "utf8");
+const globalsCss = stripComments(readFileSync(globalsPath, "utf8"));
+const brandCss = stripComments(readFileSync(brandPath, "utf8"));
 const registry = JSON.parse(readFileSync(registryPath, "utf8"));
 
 const tokensItem = (registry.items ?? []).find((i) => i.name === "tokens");
@@ -151,13 +161,13 @@ const themeActual = new Map(
 
 // --- 2. :root blocks -------------------------------------------------
 
-// ledger.css :root (the first, and only, :root block in that file)
-const ledgerRootBlock = extractBlock(ledgerCss, ":root\\s*");
-if (!ledgerRootBlock) {
-  console.error("check-tokens-parity: could not find `:root { ... }` block in ledger.css");
+// default brand :root (the first, and only, :root block in that file)
+const brandRootBlock = extractBlock(brandCss, "(?:^|})\\s*:root\\s*\\{");
+if (!brandRootBlock) {
+  console.error(`check-tokens-parity: could not find \`:root { ... }\` block in ${brandPath}`);
   process.exit(1);
 }
-const ledgerRoot = parseDeclarations(ledgerRootBlock.content);
+const brandRoot = parseDeclarations(brandRootBlock.content);
 
 // globals.css :root (the motion block, AFTER the @theme block)
 const globalsRootBlock = extractBlock(
@@ -173,18 +183,21 @@ if (!globalsRootBlock) {
 }
 const globalsMotionRoot = parseDeclarations(globalsRootBlock.content);
 
-// expected merged :root = ledger :root + globals motion :root
-const rootExpected = new Map([...ledgerRoot, ...globalsMotionRoot]);
+// expected merged :root = default brand :root + globals motion :root
+const rootExpected = new Map([...brandRoot, ...globalsMotionRoot]);
 const rootActual = new Map(Object.entries(tokensItem.css?.[":root"] ?? {}));
 
 // --- 3. .dark block ----------------------------------------------------
 
-const ledgerDarkBlock = extractBlock(ledgerCss, "\\.dark\\s*");
-if (!ledgerDarkBlock) {
-  console.error("check-tokens-parity: could not find `.dark { ... }` block in ledger.css");
+// Anchored to the start of a rule so a scoped `[data-brand="x"].dark`
+// selector in a non-default brand file can never be mistaken for the
+// default brand's bare `.dark`.
+const brandDarkBlock = extractBlock(brandCss, "(?:^|})\\s*\\.dark\\s*\\{");
+if (!brandDarkBlock) {
+  console.error(`check-tokens-parity: could not find \`.dark { ... }\` block in ${brandPath}`);
   process.exit(1);
 }
-const darkExpected = parseDeclarations(ledgerDarkBlock.content);
+const darkExpected = parseDeclarations(brandDarkBlock.content);
 const darkActual = new Map(Object.entries(tokensItem.css?.[".dark"] ?? {}));
 
 // --- compare -----------------------------------------------------------
@@ -192,11 +205,11 @@ const darkActual = new Map(Object.entries(tokensItem.css?.[".dark"] ?? {}));
 const allDiffs = [
   ...diffMaps("cssVars.theme (vs globals.css @theme inline)", themeExpected, themeActual),
   ...diffMaps(
-    "css[\":root\"] (vs ledger.css :root + globals.css motion :root)",
+    'css[":root"] (vs default brand :root + globals.css motion :root)',
     rootExpected,
     rootActual
   ),
-  ...diffMaps("css[\".dark\"] (vs ledger.css .dark)", darkExpected, darkActual),
+  ...diffMaps('css[".dark"] (vs default brand .dark)', darkExpected, darkActual),
 ];
 
 console.log(
