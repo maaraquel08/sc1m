@@ -82,6 +82,7 @@
           "--acc-collapse": "250ms",
           "--acc-chevron": "250ms",
           "--acc-ease": "cubic-bezier(0.22, 1, 0.36, 1)",
+          "--acc-spring": "cubic-bezier(0.34, 1.36, 0.64, 1)",
           "--popup-open-dur": "250ms",
           "--popup-close-dur": "150ms",
           "--popup-pre-scale": "0.97",
