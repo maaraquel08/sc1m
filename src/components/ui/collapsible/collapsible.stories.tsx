@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import { expect } from 'storybook/test';
+import { expect, waitFor } from 'storybook/test';
 import { Collapsible, CollapsibleTrigger, CollapsiblePanel } from './collapsible';
 
 const meta = {
@@ -24,8 +24,10 @@ export const Default: Story = {
     await userEvent.click(
       canvas.getByRole('button', { name: /what is a collapsible/i }),
     );
-    await expect(
-      canvas.getByText(/disclosure region/i),
-    ).toBeVisible();
+    // the panel fades in from opacity-0 over --acc-expand, so visibility is
+    // reached a frame or two after the click, not synchronously with it
+    await waitFor(() =>
+      expect(canvas.getByText(/disclosure region/i)).toBeVisible(),
+    );
   },
 };
