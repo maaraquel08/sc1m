@@ -3,26 +3,29 @@ title: "Drawer"
 description: "Drawer component built on Base UI, styled with sc1m tokens."
 ---
 
-import { story } from "@/components/ui/drawer/drawer.story";
+import { Demo as ComponentDemo } from "@/components/ui/drawer/drawer.demo";
+import { propColumns } from "@/components/site/docs-page";
+import { tokenColumns } from "@/components/site/docs-page";
 
-## Preview
+<Chips items={[{ label: "Stable", tone: "accent" }, { label: "Base UI" }]} />
 
-A representative composition. Open it in Storybook to vary the props.
+## Live preview
 
-<story.WithControl />
+<Preview>
+  <ComponentDemo />
+</Preview>
 
 ## Installation
 
-```bash
-npx shadcn@latest add @sc1m/drawer
-```
+<PMCommand exec="shadcn@latest add @sc1m/drawer" />
 
 This also merges the [token layer](/docs/foundations/tokens) and installs
-`src/lib/cn.ts` plus `@base-ui/react`.
+`src/lib/cn.ts` plus `@base-ui/react`. For the manual route — prerequisites,
+`components.json`, and app-level setup — see [Installation](/docs/installation).
 
 ## Usage
 
-```tsx
+```tsx lineNumbers
 import {
   Drawer,
   DrawerTrigger,
@@ -33,14 +36,131 @@ import {
 } from "@/components/ui/drawer";
 ```
 
-## Exports
+## Composition
 
-- `Drawer`
-- `DrawerTrigger`
-- `DrawerContent`
-- `DrawerTitle`
-- `DrawerDescription`
-- `DrawerClose`
+Every part is a separate export. `Drawer` owns state; the rest are
+presentational and must appear in this order.
+
+<Composition>{`
+  Drawer
+    DrawerTrigger
+    DrawerContent
+      DrawerTitle
+      DrawerDescription
+      DrawerClose
+`}</Composition>
+
+## Example
+
+The preview above, with its source. This is the demo module verbatim, so
+the code and the thing it renders cannot drift apart.
+
+<Demo>
+<DemoPreview>
+  <ComponentDemo />
+</DemoPreview>
+<DemoCode>
+
+```tsx lineNumbers
+<Drawer>
+  <DrawerTrigger render={<Button variant="secondary" />}>
+    Open drawer
+  </DrawerTrigger>
+  <DrawerContent>
+    <DrawerTitle className="text-base font-semibold">
+      Notifications
+    </DrawerTitle>
+    <DrawerDescription className="mt-1 text-sm text-fg-muted">
+      You are all caught up. Good job!
+    </DrawerDescription>
+    <div className="mt-5 flex justify-end gap-2">
+      <DrawerClose render={<Button variant="ghost" />}>Close</DrawerClose>
+    </div>
+  </DrawerContent>
+</Drawer>
+```
+
+</DemoCode>
+</Demo>
+
+## API reference
+Each part forwards every prop of its Base UI counterpart; the tables list
+the ones declared on the part itself. See
+[Base UI's reference](https://base-ui.com/react/components/drawer)
+for the inherited element props.
+
+### Drawer
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["open", "boolean", "—", "Whether the drawer is currently open."],
+    ["defaultOpen", "boolean", "false", "Whether the drawer is initially open."],
+    ["modal", "boolean | 'trap-focus'", "true", "Determines if the drawer enters a modal state when open."],
+    ["onOpenChange", "((open: boolean, eventDetails: DrawerRoot.ChangeEventDetails) => void)", "—", "Event handler called when the drawer is opened or closed."],
+    ["onOpenChangeComplete", "((open: boolean) => void)", "—", "Event handler called after any animations complete when the drawer is opened or closed."],
+    ["disablePointerDismissal", "boolean", "false", "Whether to prevent the drawer from closing on outside presses."],
+    ["actionsRef", "React.RefObject<DrawerRoot.Actions | null>", "—", "A ref to imperative actions."],
+    ["handle", "DrawerHandle<Payload>", "—", "A handle to associate the drawer with a trigger."],
+    ["triggerId", "string | null", "—", "ID of the trigger that the drawer is associated with."],
+    ["defaultTriggerId", "string | null", "—", "ID of the trigger that the drawer is associated with."],
+    ["swipeDirection", "DrawerSwipeDirection", "'down'", "The swipe direction used to dismiss the drawer."],
+    ["snapPoints", "DrawerSnapPoint[]", "—", "Snap points used to position the drawer."],
+    ["snapToSequentialPoints", "boolean", "false", "Disables velocity-based snap skipping so drag distance determines the next snap point."],
+    ["snapPoint", "DrawerSnapPoint | null", "—", "The currently active snap point."],
+    ["defaultSnapPoint", "DrawerSnapPoint | null", "—", "The initial snap point value when uncontrolled."],
+    ["onSnapPointChange", "((snapPoint: DrawerSnapPoint | null, eventDetails: DrawerRoot.SnapPointChangeEventDetails) => void)", "—", "Callback fired when the snap point changes."],
+  ]}
+/>
+
+### DrawerTrigger
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["handle", "DrawerHandle<Payload>", "—", "A handle to associate the trigger with a drawer."],
+    ["payload", "Payload", "—", "A payload to pass to the drawer when it is opened."],
+    ["id", "string", "—", "ID of the trigger."],
+  ]}
+/>
+
+### DrawerContent
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["initialFocus", "boolean | React.RefObject<HTMLElement | null> | ((openType: InteractionType) => boolean | HTMLElement | null | void)", "—", "Determines the element to focus when the drawer is opened."],
+    ["finalFocus", "boolean | React.RefObject<HTMLElement | null> | ((closeType: InteractionType) => boolean | HTMLElement | null | void)", "—", "Determines the element to focus when the drawer is closed."],
+  ]}
+/>
+
+## Accessibility
+
+Behaviour, focus management, and ARIA wiring come from [Base UI's Drawer](https://base-ui.com/react/components/drawer) — see its reference for the full keyboard map.
+
+- Decorative glyphs are `aria-hidden`, so they are not announced.
+
+## Design tokens
+
+The component reads semantic tokens only — no raw colour, radius, or
+duration appears in its source. Override the token, not the component.
+
+<SpecTable
+  columns={[tokenColumns[0], tokenColumns[2]]}
+  widths="1.2fr 1.8fr"
+  minWidth={420}
+  rows={[
+    ["--brand-radius-xl", "DrawerContent"],
+    ["--fg", "DrawerContent"],
+    ["--line", "DrawerContent"],
+    ["--line-strong", "DrawerContent"],
+    ["--shadow-overlay", "DrawerContent"],
+    ["--surface-raised", "DrawerContent"],
+  ]}
+/>
 
 ## Source
 

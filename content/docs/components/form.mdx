@@ -3,32 +3,82 @@ title: "Form"
 description: "Form component built on Base UI, styled with sc1m tokens."
 ---
 
-import { story } from "@/components/ui/form/form.story";
+import { Demo as ComponentDemo } from "@/components/ui/form/form.demo";
+import { propColumns } from "@/components/site/docs-page";
 
-## Preview
+<Chips items={[{ label: "Stable", tone: "accent" }, { label: "Base UI" }]} />
 
-A representative composition. Open it in Storybook to vary the props.
+## Live preview
 
-<story.WithControl />
+<Preview>
+  <ComponentDemo />
+</Preview>
 
 ## Installation
 
-```bash
-npx shadcn@latest add @sc1m/form
-```
+<PMCommand exec="shadcn@latest add @sc1m/form" />
 
 This also merges the [token layer](/docs/foundations/tokens) and installs
-`src/lib/cn.ts` plus `@base-ui/react`.
+`src/lib/cn.ts` plus `@base-ui/react`. For the manual route — prerequisites,
+`components.json`, and app-level setup — see [Installation](/docs/installation).
 
 ## Usage
 
-```tsx
+```tsx lineNumbers
 import { Form } from "@/components/ui/form";
 ```
 
-## Exports
+## Example
 
-- `Form`
+The preview above, with its source. This is the demo module verbatim, so
+the code and the thing it renders cannot drift apart.
+
+<Demo>
+<DemoPreview>
+  <ComponentDemo />
+</DemoPreview>
+<DemoCode>
+
+```tsx lineNumbers
+<Form
+  onFormSubmit={(values, eventDetails) => {
+    eventDetails.event?.preventDefault?.();
+  }}
+>
+  <Field name="name">
+    <FieldLabel>Name</FieldLabel>
+    <FieldControl required placeholder="Ada Lovelace" />
+    <FieldError />
+  </Field>
+  <Button type="submit">Submit</Button>
+</Form>
+```
+
+</DemoCode>
+</Demo>
+
+## API reference
+Each part forwards every prop of its Base UI counterpart; the tables list
+the ones declared on the part itself. See
+[Base UI's reference](https://base-ui.com/react/components/form)
+for the inherited element props.
+
+### Form
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["validationMode", "FormValidationMode", "'onSubmit'", "Determines when the form should be validated."],
+    ["errors", "FormContext['errors']", "—", "Validation errors returned externally, typically after submission by a server or a form action."],
+    ["onFormSubmit", "((formValues: FormValues, eventDetails: Form.SubmitEventDetails) => void)", "—", "Event handler called when the form is submitted. preventDefault() is called on the native submit event when used."],
+    ["actionsRef", "React.RefObject<Form.Actions | null>", "—", "A ref to imperative actions."],
+  ]}
+/>
+
+## Accessibility
+
+Behaviour, focus management, and ARIA wiring come from [Base UI's Form](https://base-ui.com/react/components/form) — see its reference for the full keyboard map.
 
 ## Source
 

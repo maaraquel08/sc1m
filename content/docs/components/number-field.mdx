@@ -3,26 +3,29 @@ title: "Number Field"
 description: "Number Field component built on Base UI, styled with sc1m tokens."
 ---
 
-import { story } from "@/components/ui/number-field/number-field.story";
+import { Demo as ComponentDemo } from "@/components/ui/number-field/number-field.demo";
+import { propColumns } from "@/components/site/docs-page";
+import { tokenColumns } from "@/components/site/docs-page";
 
-## Preview
+<Chips items={[{ label: "Stable", tone: "accent" }, { label: "Base UI" }]} />
 
-A representative composition. Open it in Storybook to vary the props.
+## Live preview
 
-<story.WithControl />
+<Preview>
+  <ComponentDemo />
+</Preview>
 
 ## Installation
 
-```bash
-npx shadcn@latest add @sc1m/number-field
-```
+<PMCommand exec="shadcn@latest add @sc1m/number-field" />
 
 This also merges the [token layer](/docs/foundations/tokens) and installs
-`src/lib/cn.ts` plus `@base-ui/react`.
+`src/lib/cn.ts` plus `@base-ui/react`. For the manual route — prerequisites,
+`components.json`, and app-level setup — see [Installation](/docs/installation).
 
 ## Usage
 
-```tsx
+```tsx lineNumbers
 import {
   NumberField,
   NumberFieldGroup,
@@ -33,14 +36,111 @@ import {
 } from "@/components/ui/number-field";
 ```
 
-## Exports
+## Composition
 
-- `NumberField`
-- `NumberFieldGroup`
-- `NumberFieldInput`
-- `NumberFieldIncrement`
-- `NumberFieldDecrement`
-- `NumberFieldScrubArea`
+Every part is a separate export. `NumberField` owns state; the rest are
+presentational and must appear in this order.
+
+<Composition>{`
+  NumberField
+    NumberFieldGroup
+      NumberFieldDecrement
+      NumberFieldInput
+      NumberFieldIncrement
+`}</Composition>
+
+## Example
+
+The preview above, with its source. This is the demo module verbatim, so
+the code and the thing it renders cannot drift apart.
+
+<Demo>
+<DemoPreview>
+  <ComponentDemo />
+</DemoPreview>
+<DemoCode>
+
+```tsx lineNumbers
+<DemoNumberField />
+```
+
+</DemoCode>
+</Demo>
+
+## API reference
+Each part forwards every prop of its Base UI counterpart; the tables list
+the ones declared on the part itself. See
+[Base UI's reference](https://base-ui.com/react/components/number-field)
+for the inherited element props.
+
+### NumberField
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["id", "string", "—", "The id of the input element."],
+    ["min", "number", "—", "The minimum value of the input element."],
+    ["max", "number", "—", "The maximum value of the input element."],
+    ["allowOutOfRange", "boolean", "false", "When true, direct text entry may be outside the min/max range without clamping, so native range underflow/overflow validation can occur."],
+    ["smallStep", "number", "0.1", "The small step value of the input element when incrementing while the alt key is held."],
+    ["step", "number | 'any'", "1", "Amount to increment and decrement with the buttons and arrow keys, or to scrub with pointer movement in the scrub area."],
+    ["largeStep", "number", "10", "The large step value of the input element when incrementing while the shift key is held."],
+    ["required", "boolean", "false", "Whether the user must enter a value before submitting a form."],
+    ["disabled", "boolean", "false", "Whether the component should ignore user interaction."],
+    ["readOnly", "boolean", "false", "Whether the user should be unable to change the field value."],
+    ["name", "string", "—", "Identifies the field when a form is submitted."],
+    ["form", "string", "—", "Identifies the form that owns the hidden input."],
+    ["value", "number | null", "—", "The raw numeric value of the field."],
+    ["defaultValue", "number", "—", "The uncontrolled value of the field when it's initially rendered."],
+    ["allowWheelScrub", "boolean", "false", "Whether to allow the user to scrub the input value with the mouse wheel while focused and hovering over the input."],
+    ["snapOnStep", "boolean", "false", "Whether the value should snap to the nearest step when incrementing or decrementing."],
+    ["format", "Intl.NumberFormatOptions", "—", "Options to format the input value."],
+    ["onValueChange", "((value: number | null, eventDetails: NumberFieldRoot.ChangeEventDetails) => void)", "—", "Callback fired when the number value changes."],
+    ["onValueCommitted", "((value: number | null, eventDetails: NumberFieldRoot.CommitEventDetails) => void)", "—", "Callback function that is fired when the value is committed."],
+    ["locale", "Intl.LocalesArgument", "—", "The locale of the input element."],
+    ["inputRef", "React.Ref<HTMLInputElement>", "—", "A ref to access the hidden input element."],
+  ]}
+/>
+
+### NumberFieldScrubArea
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["direction", "'horizontal' | 'vertical'", "'horizontal'", "Cursor movement direction in the scrub area."],
+    ["pixelSensitivity", "number", "2", "Determines how many pixels the cursor must move before the value changes."],
+    ["teleportDistance", "number", "—", "If specified, determines the distance that the cursor may move from the center of the scrub area before it will loop back around."],
+  ]}
+/>
+
+## Accessibility
+
+Behaviour, focus management, and ARIA wiring come from [Base UI's Number Field](https://base-ui.com/react/components/number-field) — see its reference for the full keyboard map.
+
+- Disabled parts mute their contents rather than the element, keeping the focus ring at full strength where the part stays focusable.
+
+## Design tokens
+
+The component reads semantic tokens only — no raw colour, radius, or
+duration appears in its source. Override the token, not the component.
+
+<SpecTable
+  columns={[tokenColumns[0], tokenColumns[2]]}
+  widths="1.2fr 1.8fr"
+  minWidth={420}
+  rows={[
+    ["--brand-radius-md", "NumberFieldGroup"],
+    ["--fg", "NumberFieldInput, NumberFieldIncrement, NumberFieldDecrement"],
+    ["--fg-muted", "NumberFieldIncrement, NumberFieldDecrement"],
+    ["--fg-subtle", "NumberFieldInput"],
+    ["--line", "NumberFieldGroup, NumberFieldIncrement, NumberFieldDecrement"],
+    ["--ring", "NumberFieldGroup"],
+    ["--surface", "NumberFieldGroup, NumberFieldIncrement, NumberFieldDecrement"],
+    ["--surface-raised", "NumberFieldGroup"],
+  ]}
+/>
 
 ## Source
 

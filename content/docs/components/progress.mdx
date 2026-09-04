@@ -3,26 +3,29 @@ title: "Progress"
 description: "Progress component built on Base UI, styled with sc1m tokens."
 ---
 
-import { story } from "@/components/ui/progress/progress.story";
+import { Demo as ComponentDemo } from "@/components/ui/progress/progress.demo";
+import { propColumns } from "@/components/site/docs-page";
+import { tokenColumns } from "@/components/site/docs-page";
 
-## Preview
+<Chips items={[{ label: "Stable", tone: "accent" }, { label: "Base UI" }]} />
 
-A representative composition. Open it in Storybook to vary the props.
+## Live preview
 
-<story.WithControl />
+<Preview>
+  <ComponentDemo />
+</Preview>
 
 ## Installation
 
-```bash
-npx shadcn@latest add @sc1m/progress
-```
+<PMCommand exec="shadcn@latest add @sc1m/progress" />
 
 This also merges the [token layer](/docs/foundations/tokens) and installs
-`src/lib/cn.ts` plus `@base-ui/react`.
+`src/lib/cn.ts` plus `@base-ui/react`. For the manual route — prerequisites,
+`components.json`, and app-level setup — see [Installation](/docs/installation).
 
 ## Usage
 
-```tsx
+```tsx lineNumbers
 import {
   Progress,
   ProgressTrack,
@@ -32,13 +35,87 @@ import {
 } from "@/components/ui/progress";
 ```
 
-## Exports
+## Composition
 
-- `Progress`
-- `ProgressTrack`
-- `ProgressIndicator`
-- `ProgressLabel`
-- `ProgressValue`
+Every part is a separate export. `Progress` owns state; the rest are
+presentational and must appear in this order.
+
+<Composition>{`
+  Progress
+    ProgressLabel
+    ProgressValue
+    ProgressTrack
+      ProgressIndicator
+`}</Composition>
+
+## Example
+
+The preview above, with its source. This is the demo module verbatim, so
+the code and the thing it renders cannot drift apart.
+
+<Demo>
+<DemoPreview>
+  <ComponentDemo />
+</DemoPreview>
+<DemoCode>
+
+```tsx lineNumbers
+<Progress {...storyArgs} className="w-64">
+  <div className="flex items-center justify-between">
+    <ProgressLabel>Uploading</ProgressLabel>
+    <ProgressValue />
+  </div>
+  <ProgressTrack>
+    <ProgressIndicator />
+  </ProgressTrack>
+</Progress>
+```
+
+</DemoCode>
+</Demo>
+
+## API reference
+Each part forwards every prop of its Base UI counterpart; the tables list
+the ones declared on the part itself. See
+[Base UI's reference](https://base-ui.com/react/components/progress)
+for the inherited element props.
+
+### Progress
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["format", "Intl.NumberFormatOptions", "—", "Options to format the value."],
+    ["getAriaValueText", "((formattedValue: string, value: number | null) => string)", "—", "Accepts a function which returns a string value that provides a human-readable text alternative for the current value of the progress bar."],
+    ["locale", "Intl.LocalesArgument", "—", "The locale used by Intl.NumberFormat when formatting the value."],
+    ["max", "number", "100", "The maximum value."],
+    ["min", "number", "0", "The minimum value."],
+    ["value", "number | null", "—", "The current value."],
+  ]}
+/>
+
+## Accessibility
+
+Behaviour, focus management, and ARIA wiring come from [Base UI's Progress](https://base-ui.com/react/components/progress) — see its reference for the full keyboard map.
+
+## Design tokens
+
+The component reads semantic tokens only — no raw colour, radius, or
+duration appears in its source. Override the token, not the component.
+
+<SpecTable
+  columns={[tokenColumns[0], tokenColumns[2]]}
+  widths="1.2fr 1.8fr"
+  minWidth={420}
+  rows={[
+    ["--accent", "ProgressIndicator"],
+    ["--brand-radius-sm", "ProgressTrack, ProgressIndicator"],
+    ["--fg", "ProgressLabel"],
+    ["--fg-muted", "ProgressValue"],
+    ["--surface", "ProgressTrack"],
+  ]}
+/>
 
 ## Source
 

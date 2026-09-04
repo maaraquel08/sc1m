@@ -3,26 +3,29 @@ title: "Alert Dialog"
 description: "Alert Dialog component built on Base UI, styled with sc1m tokens."
 ---
 
-import { story } from "@/components/ui/alert-dialog/alert-dialog.story";
+import { Demo as ComponentDemo } from "@/components/ui/alert-dialog/alert-dialog.demo";
+import { propColumns } from "@/components/site/docs-page";
+import { tokenColumns } from "@/components/site/docs-page";
 
-## Preview
+<Chips items={[{ label: "Stable", tone: "accent" }, { label: "Base UI" }]} />
 
-A representative composition. Open it in Storybook to vary the props.
+## Live preview
 
-<story.WithControl />
+<Preview>
+  <ComponentDemo />
+</Preview>
 
 ## Installation
 
-```bash
-npx shadcn@latest add @sc1m/alert-dialog
-```
+<PMCommand exec="shadcn@latest add @sc1m/alert-dialog" />
 
 This also merges the [token layer](/docs/foundations/tokens) and installs
-`src/lib/cn.ts` plus `@base-ui/react`.
+`src/lib/cn.ts` plus `@base-ui/react`. For the manual route — prerequisites,
+`components.json`, and app-level setup — see [Installation](/docs/installation).
 
 ## Usage
 
-```tsx
+```tsx lineNumbers
 import {
   AlertDialog,
   AlertDialogTrigger,
@@ -33,14 +36,107 @@ import {
 } from "@/components/ui/alert-dialog";
 ```
 
-## Exports
+## Composition
 
-- `AlertDialog`
-- `AlertDialogTrigger`
-- `AlertDialogContent`
-- `AlertDialogTitle`
-- `AlertDialogDescription`
-- `AlertDialogClose`
+Every part is a separate export. `AlertDialog` owns state; the rest are
+presentational and must appear in this order.
+
+<Composition>{`
+  AlertDialog
+    AlertDialogTrigger
+    AlertDialogContent
+      AlertDialogTitle
+      AlertDialogDescription
+      AlertDialogClose
+`}</Composition>
+
+## Example
+
+The preview above, with its source. This is the demo module verbatim, so
+the code and the thing it renders cannot drift apart.
+
+<Demo>
+<DemoPreview>
+  <ComponentDemo />
+</DemoPreview>
+<DemoCode>
+
+```tsx lineNumbers
+<AlertDialog>
+  <AlertDialogTrigger render={<Button variant="danger" />}>
+    Delete workspace
+  </AlertDialogTrigger>
+  <AlertDialogContent>
+    <AlertDialogTitle className="text-base font-semibold">
+      Delete workspace
+    </AlertDialogTitle>
+    <AlertDialogDescription className="mt-1 text-sm text-fg-muted">
+      This action is permanent and cannot be undone.
+    </AlertDialogDescription>
+    <div className="mt-5 flex justify-end gap-2">
+      <AlertDialogClose render={<Button variant="ghost" />}>
+        Cancel
+      </AlertDialogClose>
+      <AlertDialogClose render={<Button variant="danger" />}>
+        Delete
+      </AlertDialogClose>
+    </div>
+  </AlertDialogContent>
+</AlertDialog>
+```
+
+</DemoCode>
+</Demo>
+
+## API reference
+Each part forwards every prop of its Base UI counterpart; the tables list
+the ones declared on the part itself. See
+[Base UI's reference](https://base-ui.com/react/components/alert-dialog)
+for the inherited element props.
+
+### AlertDialog
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["onOpenChange", "((open: boolean, eventDetails: AlertDialogRoot.ChangeEventDetails) => void)", "—", "Event handler called when the alert dialog is opened or closed."],
+    ["actionsRef", "React.RefObject<AlertDialogRoot.Actions | null>", "—", "A ref to imperative actions."],
+    ["handle", "AlertDialogHandle<Payload>", "—", "A handle to associate the alert dialog with a trigger."],
+  ]}
+/>
+
+### AlertDialogTrigger
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["handle", "AlertDialogHandle<Payload>", "—", "A handle to associate the trigger with an alert dialog."],
+  ]}
+/>
+
+## Accessibility
+
+Behaviour, focus management, and ARIA wiring come from [Base UI's Alert Dialog](https://base-ui.com/react/components/alert-dialog) — see its reference for the full keyboard map.
+
+## Design tokens
+
+The component reads semantic tokens only — no raw colour, radius, or
+duration appears in its source. Override the token, not the component.
+
+<SpecTable
+  columns={[tokenColumns[0], tokenColumns[2]]}
+  widths="1.2fr 1.8fr"
+  minWidth={420}
+  rows={[
+    ["--brand-radius-xl", "AlertDialogContent"],
+    ["--fg", "AlertDialogContent"],
+    ["--line", "AlertDialogContent"],
+    ["--shadow-overlay", "AlertDialogContent"],
+    ["--surface-raised", "AlertDialogContent"],
+  ]}
+/>
 
 ## Source
 

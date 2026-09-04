@@ -3,26 +3,29 @@ title: "Field"
 description: "Field component built on Base UI, styled with sc1m tokens."
 ---
 
-import { story } from "@/components/ui/field/field.story";
+import { Demo as ComponentDemo } from "@/components/ui/field/field.demo";
+import { propColumns } from "@/components/site/docs-page";
+import { tokenColumns } from "@/components/site/docs-page";
 
-## Preview
+<Chips items={[{ label: "Stable", tone: "accent" }, { label: "Base UI" }]} />
 
-A representative composition. Open it in Storybook to vary the props.
+## Live preview
 
-<story.WithControl />
+<Preview>
+  <ComponentDemo />
+</Preview>
 
 ## Installation
 
-```bash
-npx shadcn@latest add @sc1m/field
-```
+<PMCommand exec="shadcn@latest add @sc1m/field" />
 
 This also merges the [token layer](/docs/foundations/tokens) and installs
-`src/lib/cn.ts` plus `@base-ui/react`.
+`src/lib/cn.ts` plus `@base-ui/react`. For the manual route — prerequisites,
+`components.json`, and app-level setup — see [Installation](/docs/installation).
 
 ## Usage
 
-```tsx
+```tsx lineNumbers
 import {
   Field,
   FieldLabel,
@@ -32,13 +35,121 @@ import {
 } from "@/components/ui/field";
 ```
 
-## Exports
+## Composition
 
-- `Field`
-- `FieldLabel`
-- `FieldDescription`
-- `FieldError`
-- `FieldControl`
+Every part is a separate export. `Field` owns state; the rest are
+presentational and must appear in this order.
+
+<Composition>{`
+  Field
+    FieldLabel
+    FieldControl
+    FieldDescription
+`}</Composition>
+
+## Example
+
+The preview above, with its source. This is the demo module verbatim, so
+the code and the thing it renders cannot drift apart.
+
+<Demo>
+<DemoPreview>
+  <ComponentDemo />
+</DemoPreview>
+<DemoCode>
+
+```tsx lineNumbers
+<Field name="email">
+  <FieldLabel>Email</FieldLabel>
+  <FieldControl type="email" placeholder="you@example.com" />
+  <FieldDescription>We&apos;ll never share your email.</FieldDescription>
+</Field>
+```
+
+</DemoCode>
+</Demo>
+
+## API reference
+Each part forwards every prop of its Base UI counterpart; the tables list
+the ones declared on the part itself. See
+[Base UI's reference](https://base-ui.com/react/components/field)
+for the inherited element props.
+
+### Field
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["disabled", "boolean", "false", "Whether the component should ignore user interaction."],
+    ["name", "string", "—", "Identifies the field when a form is submitted."],
+    ["validate", "((value: unknown, formValues: Form.Values) => string | string[] | null | Promise<string | string[] | null>)", "—", "A function for custom validation."],
+    ["validationMode", "Form.ValidationMode", "'onSubmit'", "Determines when the field should be validated."],
+    ["validationDebounceTime", "number", "0", "How long to wait between validate callbacks if validationMode=\"onChange\" is used."],
+    ["invalid", "boolean", "—", "Whether the field is invalid."],
+    ["dirty", "boolean", "—", "Whether the field's value has been changed from its initial value."],
+    ["touched", "boolean", "—", "Whether the field has been touched."],
+    ["actionsRef", "React.RefObject<FieldRoot.Actions | null>", "—", "A ref to imperative actions."],
+  ]}
+/>
+
+### FieldLabel
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["nativeLabel", "boolean", "true", "Whether the component renders a native <label> element when replacing it via the render prop."],
+  ]}
+/>
+
+### FieldError
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["match", "boolean | keyof ValidityState", "—", "Determines whether to show the error message according to the field's [ValidityState](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState)."],
+  ]}
+/>
+
+### FieldControl
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["onValueChange", "((value: string, eventDetails: FieldControl.ChangeEventDetails) => void)", "—", "Callback fired when the value changes."],
+    ["defaultValue", "React.ComponentProps<'input'>['defaultValue']", "—", ""],
+  ]}
+/>
+
+## Accessibility
+
+Behaviour, focus management, and ARIA wiring come from [Base UI's Field](https://base-ui.com/react/components/field) — see its reference for the full keyboard map.
+
+- Disabled parts mute their contents rather than the element, keeping the focus ring at full strength where the part stays focusable.
+
+## Design tokens
+
+The component reads semantic tokens only — no raw colour, radius, or
+duration appears in its source. Override the token, not the component.
+
+<SpecTable
+  columns={[tokenColumns[0], tokenColumns[2]]}
+  widths="1.2fr 1.8fr"
+  minWidth={420}
+  rows={[
+    ["--brand-radius-md", "FieldControl"],
+    ["--danger", "FieldError"],
+    ["--fg", "FieldLabel, FieldControl"],
+    ["--fg-subtle", "FieldDescription, FieldControl"],
+    ["--line", "FieldControl"],
+    ["--ring", "FieldControl"],
+    ["--surface", "FieldControl"],
+    ["--surface-raised", "FieldControl"],
+  ]}
+/>
 
 ## Source
 

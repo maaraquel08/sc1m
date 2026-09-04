@@ -3,26 +3,29 @@ title: "Tabs"
 description: "Tabs component built on Base UI, styled with sc1m tokens."
 ---
 
-import { story } from "@/components/ui/tabs/tabs.story";
+import { Demo as ComponentDemo } from "@/components/ui/tabs/tabs.demo";
+import { propColumns } from "@/components/site/docs-page";
+import { tokenColumns } from "@/components/site/docs-page";
 
-## Preview
+<Chips items={[{ label: "Stable", tone: "accent" }, { label: "Base UI" }]} />
 
-A representative composition. Open it in Storybook to vary the props.
+## Live preview
 
-<story.WithControl />
+<Preview>
+  <ComponentDemo />
+</Preview>
 
 ## Installation
 
-```bash
-npx shadcn@latest add @sc1m/tabs
-```
+<PMCommand exec="shadcn@latest add @sc1m/tabs" />
 
 This also merges the [token layer](/docs/foundations/tokens) and installs
-`src/lib/cn.ts` plus `@base-ui/react`.
+`src/lib/cn.ts` plus `@base-ui/react`. For the manual route — prerequisites,
+`components.json`, and app-level setup — see [Installation](/docs/installation).
 
 ## Usage
 
-```tsx
+```tsx lineNumbers
 import {
   Tabs,
   TabsList,
@@ -31,12 +34,131 @@ import {
 } from "@/components/ui/tabs";
 ```
 
-## Exports
+## Composition
 
-- `Tabs`
-- `TabsList`
-- `TabsTab`
-- `TabsPanel`
+Every part is a separate export. `Tabs` owns state; the rest are
+presentational and must appear in this order.
+
+<Composition>{`
+  Tabs
+    TabsList
+      TabsTab
+    TabsPanel
+`}</Composition>
+
+## Example
+
+The preview above, with its source. This is the demo module verbatim, so
+the code and the thing it renders cannot drift apart.
+
+<Demo>
+<DemoPreview>
+  <ComponentDemo />
+</DemoPreview>
+<DemoCode>
+
+```tsx lineNumbers
+<Tabs defaultValue="tokens" className="w-96">
+  <TabsList>
+    {['tokens', 'components', 'patterns'].map((value) => (
+      <TabsTab key={value} value={value}>
+        {value}
+      </TabsTab>
+    ))}
+  </TabsList>
+  <TabsPanel value="tokens">
+    Color, typography, spacing, and motion tokens.
+  </TabsPanel>
+  <TabsPanel value="components">
+    Base UI primitives styled with the token layer.
+  </TabsPanel>
+  <TabsPanel value="patterns">
+    Composition patterns built from components.
+  </TabsPanel>
+</Tabs>
+```
+
+</DemoCode>
+</Demo>
+
+## API reference
+Each part forwards every prop of its Base UI counterpart; the tables list
+the ones declared on the part itself. See
+[Base UI's reference](https://base-ui.com/react/components/tabs)
+for the inherited element props.
+
+### Tabs
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["value", "TabsTab.Value", "—", "The value of the currently active Tab."],
+    ["defaultValue", "TabsTab.Value", "0", "The default value."],
+    ["orientation", "TabsRoot.Orientation", "'horizontal'", "The component orientation (layout flow direction)."],
+    ["onValueChange", "((value: TabsTab.Value, eventDetails: TabsRoot.ChangeEventDetails) => void)", "—", "Callback invoked when new value is being set."],
+  ]}
+/>
+
+### TabsList
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["activateOnFocus", "boolean", "false", "Whether to automatically change the active tab on arrow key focus."],
+    ["loopFocus", "boolean", "true", "Whether to loop keyboard focus back to the first item when the end of the list is reached while using the arrow keys."],
+  ]}
+/>
+
+### TabsTab
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["value", "TabsTab.Value", "—", "The value of the Tab."],
+    ["disabled", "boolean", "—", "Whether the Tab is disabled."],
+  ]}
+/>
+
+### TabsPanel
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["value", "TabsTab.Value", "—", "The value of the TabPanel."],
+    ["keepMounted", "boolean", "false", "Whether to keep the HTML element in the DOM while the panel is hidden."],
+  ]}
+/>
+
+## Accessibility
+
+Behaviour, focus management, and ARIA wiring come from [Base UI's Tabs](https://base-ui.com/react/components/tabs) — see its reference for the full keyboard map.
+
+- Keyboard focus draws a 2px ring in `--ring`, never removed — only shown on `:focus-visible`, so a pointer press does not paint one.
+
+## Design tokens
+
+The component reads semantic tokens only — no raw colour, radius, or
+duration appears in its source. Override the token, not the component.
+
+<SpecTable
+  columns={[tokenColumns[0], tokenColumns[2]]}
+  widths="1.2fr 1.8fr"
+  minWidth={420}
+  rows={[
+    ["--brand-radius-lg", "TabsList"],
+    ["--brand-radius-md", "TabsList, TabsTab"],
+    ["--fg", "TabsTab"],
+    ["--fg-muted", "TabsTab, TabsPanel"],
+    ["--ring", "TabsTab"],
+    ["--shadow-raised", "TabsList"],
+    ["--surface", "TabsList"],
+    ["--surface-raised", "TabsList"],
+  ]}
+/>
 
 ## Source
 

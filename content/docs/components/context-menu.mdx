@@ -3,26 +3,29 @@ title: "Context Menu"
 description: "Context Menu component built on Base UI, styled with sc1m tokens."
 ---
 
-import { story } from "@/components/ui/context-menu/context-menu.story";
+import { Demo as ComponentDemo } from "@/components/ui/context-menu/context-menu.demo";
+import { propColumns } from "@/components/site/docs-page";
+import { tokenColumns } from "@/components/site/docs-page";
 
-## Preview
+<Chips items={[{ label: "Stable", tone: "accent" }, { label: "Base UI" }]} />
 
-A representative composition. Open it in Storybook to vary the props.
+## Live preview
 
-<story.WithControl />
+<Preview>
+  <ComponentDemo />
+</Preview>
 
 ## Installation
 
-```bash
-npx shadcn@latest add @sc1m/context-menu
-```
+<PMCommand exec="shadcn@latest add @sc1m/context-menu" />
 
 This also merges the [token layer](/docs/foundations/tokens) and installs
-`src/lib/cn.ts` plus `@base-ui/react`.
+`src/lib/cn.ts` plus `@base-ui/react`. For the manual route — prerequisites,
+`components.json`, and app-level setup — see [Installation](/docs/installation).
 
 ## Usage
 
-```tsx
+```tsx lineNumbers
 import {
   ContextMenu,
   ContextMenuTrigger,
@@ -41,22 +44,91 @@ import {
 } from "@/components/ui/context-menu";
 ```
 
-## Exports
+## Composition
 
-- `ContextMenu`
-- `ContextMenuTrigger`
-- `ContextMenuContent`
-- `ContextMenuItem`
-- `ContextMenuCheckboxItem`
-- `ContextMenuCheckboxItemIndicator`
-- `ContextMenuRadioGroup`
-- `ContextMenuRadioItem`
-- `ContextMenuRadioItemIndicator`
-- `ContextMenuSeparator`
-- `ContextMenuGroup`
-- `ContextMenuGroupLabel`
-- `ContextMenuSubmenuRoot`
-- `ContextMenuSubmenuTrigger`
+Every part is a separate export. `ContextMenu` owns state; the rest are
+presentational and must appear in this order.
+
+<Composition>{`
+  ContextMenu
+    ContextMenuTrigger
+    ContextMenuContent
+      ContextMenuItem
+      ContextMenuSeparator
+`}</Composition>
+
+## Example
+
+The preview above, with its source. This is the demo module verbatim, so
+the code and the thing it renders cannot drift apart.
+
+<Demo>
+<DemoPreview>
+  <ComponentDemo />
+</DemoPreview>
+<DemoCode>
+
+```tsx lineNumbers
+<ContextMenu>
+  <ContextMenuTrigger className="flex h-32 w-64 items-center justify-center rounded-lg border border-dashed border-line text-sm text-fg-muted">
+    Right-click here
+  </ContextMenuTrigger>
+  <ContextMenuContent>
+    <ContextMenuItem>Back</ContextMenuItem>
+    <ContextMenuItem>Forward</ContextMenuItem>
+    <ContextMenuItem>Reload</ContextMenuItem>
+    <ContextMenuSeparator />
+    <ContextMenuItem>Inspect</ContextMenuItem>
+  </ContextMenuContent>
+</ContextMenu>
+```
+
+</DemoCode>
+</Demo>
+
+## API reference
+Each part forwards every prop of its Base UI counterpart; the tables list
+the ones declared on the part itself. See
+[Base UI's reference](https://base-ui.com/react/components/context-menu)
+for the inherited element props.
+
+### ContextMenu
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["onOpenChange", "((open: boolean, eventDetails: ContextMenuRoot.ChangeEventDetails) => void)", "—", "Event handler called when the menu is opened or closed."],
+  ]}
+/>
+
+## Accessibility
+
+Behaviour, focus management, and ARIA wiring come from [Base UI's Context Menu](https://base-ui.com/react/components/context-menu) — see its reference for the full keyboard map.
+
+- Decorative glyphs are `aria-hidden`, so they are not announced.
+- Disabled parts mute their contents rather than the element, keeping the focus ring at full strength where the part stays focusable.
+
+## Design tokens
+
+The component reads semantic tokens only — no raw colour, radius, or
+duration appears in its source. Override the token, not the component.
+
+<SpecTable
+  columns={[tokenColumns[0], tokenColumns[2]]}
+  widths="1.2fr 1.8fr"
+  minWidth={420}
+  rows={[
+    ["--brand-radius-lg", "ContextMenuContent"],
+    ["--brand-radius-sm", "ContextMenuItem, ContextMenuCheckboxItem, ContextMenuRadioItem, ContextMenuSubmenuTrigger"],
+    ["--fg", "ContextMenuContent, ContextMenuRadioItemIndicator"],
+    ["--fg-subtle", "ContextMenuGroupLabel, ContextMenuSubmenuTrigger"],
+    ["--line", "ContextMenuContent, ContextMenuSeparator"],
+    ["--shadow-overlay", "ContextMenuContent"],
+    ["--surface", "ContextMenuItem, ContextMenuCheckboxItem, ContextMenuRadioItem, ContextMenuSubmenuTrigger"],
+    ["--surface-raised", "ContextMenuContent"],
+  ]}
+/>
 
 ## Source
 

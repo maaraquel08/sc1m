@@ -3,33 +3,84 @@ title: "Otp Field"
 description: "Otp Field component built on Base UI, styled with sc1m tokens."
 ---
 
-import { story } from "@/components/ui/otp-field/otp-field.story";
+import { Demo as ComponentDemo } from "@/components/ui/otp-field/otp-field.demo";
+import { tokenColumns } from "@/components/site/docs-page";
 
-## Preview
+<Chips items={[{ label: "Stable", tone: "accent" }, { label: "Base UI" }]} />
 
-A representative composition. Open it in Storybook to vary the props.
+## Live preview
 
-<story.WithControl />
+<Preview>
+  <ComponentDemo />
+</Preview>
 
 ## Installation
 
-```bash
-npx shadcn@latest add @sc1m/otp-field
-```
+<PMCommand exec="shadcn@latest add @sc1m/otp-field" />
 
 This also merges the [token layer](/docs/foundations/tokens) and installs
-`src/lib/cn.ts` plus `@base-ui/react`.
+`src/lib/cn.ts` plus `@base-ui/react`. For the manual route — prerequisites,
+`components.json`, and app-level setup — see [Installation](/docs/installation).
 
 ## Usage
 
-```tsx
+```tsx lineNumbers
 import { OTPField, OTPFieldInput } from "@/components/ui/otp-field";
 ```
 
-## Exports
+## Composition
 
-- `OTPField`
-- `OTPFieldInput`
+Every part is a separate export. `OTPField` owns state; the rest are
+presentational and must appear in this order.
+
+<Composition>{`
+  OTPField
+    OTPFieldInput
+`}</Composition>
+
+## Example
+
+The preview above, with its source. This is the demo module verbatim, so
+the code and the thing it renders cannot drift apart.
+
+<Demo>
+<DemoPreview>
+  <ComponentDemo />
+</DemoPreview>
+<DemoCode>
+
+```tsx lineNumbers
+<DemoOTPField />
+```
+
+</DemoCode>
+</Demo>
+
+## Accessibility
+
+Behaviour, focus management, and ARIA wiring come from [Base UI's Otp Field](https://base-ui.com/react/components/otp-field) — see its reference for the full keyboard map.
+
+- Disabled parts mute their contents rather than the element, keeping the focus ring at full strength where the part stays focusable.
+
+## Design tokens
+
+The component reads semantic tokens only — no raw colour, radius, or
+duration appears in its source. Override the token, not the component.
+
+<SpecTable
+  columns={[tokenColumns[0], tokenColumns[2]]}
+  widths="1.2fr 1.8fr"
+  minWidth={420}
+  rows={[
+    ["--brand-radius-md", "OTPFieldInput"],
+    ["--fg", "OTPFieldInput"],
+    ["--fg-subtle", "OTPFieldInput"],
+    ["--line", "OTPFieldInput"],
+    ["--ring", "OTPFieldInput"],
+    ["--surface", "OTPFieldInput"],
+    ["--surface-raised", "OTPFieldInput"],
+  ]}
+/>
 
 ## Source
 

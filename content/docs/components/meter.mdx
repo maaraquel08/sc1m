@@ -3,26 +3,29 @@ title: "Meter"
 description: "Meter component built on Base UI, styled with sc1m tokens."
 ---
 
-import { story } from "@/components/ui/meter/meter.story";
+import { Demo as ComponentDemo } from "@/components/ui/meter/meter.demo";
+import { propColumns } from "@/components/site/docs-page";
+import { tokenColumns } from "@/components/site/docs-page";
 
-## Preview
+<Chips items={[{ label: "Stable", tone: "accent" }, { label: "Base UI" }]} />
 
-A representative composition. Open it in Storybook to vary the props.
+## Live preview
 
-<story.WithControl />
+<Preview>
+  <ComponentDemo />
+</Preview>
 
 ## Installation
 
-```bash
-npx shadcn@latest add @sc1m/meter
-```
+<PMCommand exec="shadcn@latest add @sc1m/meter" />
 
 This also merges the [token layer](/docs/foundations/tokens) and installs
-`src/lib/cn.ts` plus `@base-ui/react`.
+`src/lib/cn.ts` plus `@base-ui/react`. For the manual route — prerequisites,
+`components.json`, and app-level setup — see [Installation](/docs/installation).
 
 ## Usage
 
-```tsx
+```tsx lineNumbers
 import {
   Meter,
   MeterTrack,
@@ -32,13 +35,87 @@ import {
 } from "@/components/ui/meter";
 ```
 
-## Exports
+## Composition
 
-- `Meter`
-- `MeterTrack`
-- `MeterIndicator`
-- `MeterLabel`
-- `MeterValue`
+Every part is a separate export. `Meter` owns state; the rest are
+presentational and must appear in this order.
+
+<Composition>{`
+  Meter
+    MeterLabel
+    MeterValue
+    MeterTrack
+      MeterIndicator
+`}</Composition>
+
+## Example
+
+The preview above, with its source. This is the demo module verbatim, so
+the code and the thing it renders cannot drift apart.
+
+<Demo>
+<DemoPreview>
+  <ComponentDemo />
+</DemoPreview>
+<DemoCode>
+
+```tsx lineNumbers
+<Meter {...storyArgs} className="w-64">
+  <div className="flex items-center justify-between">
+    <MeterLabel>Storage used</MeterLabel>
+    <MeterValue />
+  </div>
+  <MeterTrack>
+    <MeterIndicator />
+  </MeterTrack>
+</Meter>
+```
+
+</DemoCode>
+</Demo>
+
+## API reference
+Each part forwards every prop of its Base UI counterpart; the tables list
+the ones declared on the part itself. See
+[Base UI's reference](https://base-ui.com/react/components/meter)
+for the inherited element props.
+
+### Meter
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["format", "Intl.NumberFormatOptions", "—", "Options to format the value."],
+    ["getAriaValueText", "((formattedValue: string, value: number) => string)", "—", "A function that returns a string value that provides a human-readable text alternative for aria-valuenow, the current value of the meter."],
+    ["locale", "Intl.LocalesArgument", "—", "The locale used by Intl.NumberFormat when formatting the value."],
+    ["max", "number", "100", "The maximum value"],
+    ["min", "number", "0", "The minimum value"],
+    ["value", "number", "—", "The current value."],
+  ]}
+/>
+
+## Accessibility
+
+Behaviour, focus management, and ARIA wiring come from [Base UI's Meter](https://base-ui.com/react/components/meter) — see its reference for the full keyboard map.
+
+## Design tokens
+
+The component reads semantic tokens only — no raw colour, radius, or
+duration appears in its source. Override the token, not the component.
+
+<SpecTable
+  columns={[tokenColumns[0], tokenColumns[2]]}
+  widths="1.2fr 1.8fr"
+  minWidth={420}
+  rows={[
+    ["--accent", "MeterIndicator"],
+    ["--brand-radius-sm", "MeterTrack, MeterIndicator"],
+    ["--fg", "MeterLabel"],
+    ["--fg-muted", "MeterValue"],
+    ["--surface", "MeterTrack"],
+  ]}
+/>
 
 ## Source
 

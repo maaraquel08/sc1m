@@ -30,6 +30,16 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { parseBaseUi } from "./lib/base-ui-props.mjs";
+import {
+  accessibilityNotes,
+  apiSections,
+  compositionTree,
+  demoJsx,
+  exportsByPart,
+  tokenRows,
+} from "./lib/docs-sections.mjs";
+
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const argv = new Set(process.argv.slice(2));
 const FORCE = argv.has("--force");
@@ -37,6 +47,11 @@ const CHECK = argv.has("--check");
 
 const GITHUB = "https://github.com/maaraquel08/sc1m/blob/main";
 const DOCS_DIR = path.join(root, "content/docs/components");
+
+/** Pages authored by hand. --force regenerates everything else; these are the
+ *  reference the template was derived from, and hold examples and a keyboard
+ *  map no generator can derive. */
+const HAND_WRITTEN = new Set(["accordion"]);
 
 /* ---------------------------------------------------------------- utils */
 
@@ -285,6 +300,61 @@ function yaml(value) {
 }
 
 /**
+ * Turn a story's `args` object literal back into JSX attributes, so the demo
+ * reads the way someone would write it — `<Switch aria-label="Toggle" />`
+ * rather than a spread of the args object.
+ *
+ * Returns null for anything it cannot split confidently; the caller then
+ * falls back to the spread, which is uglier but always correct.
+ */
+function argsToJsxAttrs(literal) {
+  const body = literal.trim().replace(/^\{/, "").replace(/\}$/, "");
+  const parts = [];
+  let depth = 0;
+  let start = 0;
+  let inStr = null;
+  for (let i = 0; i < body.length; i++) {
+    const c = body[i];
+    if (inStr) {
+      if (c === inStr && body[i - 1] !== "\\") inStr = null;
+      continue;
+    }
+    if (c === '"' || c === "'" || c === "`") inStr = c;
+    else if ("{[(".includes(c)) depth++;
+    else if ("}])".includes(c)) depth--;
+    else if (c === "," && depth === 0) {
+      parts.push(body.slice(start, i));
+      start = i + 1;
+    }
+  }
+  parts.push(body.slice(start));
+
+  const attrs = [];
+  for (const raw of parts) {
+    const entry = raw.trim();
+    if (!entry) continue;
+    const at = entry.indexOf(":");
+    if (at === -1) return null;
+    const key = entry.slice(0, at).trim().replace(/^["']|["']$/g, "");
+    const value = entry.slice(at + 1).trim();
+    if (!/^[A-Za-z_$][A-Za-z0-9_$-]*$/.test(key)) return null;
+    if (key === "children") continue;
+    if (value === "true") attrs.push(key);
+    else if (/^(['"]).*\1$/s.test(value))
+      attrs.push(`${key}=${JSON.stringify(value.slice(1, -1))}`);
+    else attrs.push(`${key}={${value}}`);
+  }
+
+  const children = parts
+    .map((p) => p.trim())
+    .find((p) => /^children\s*:/.test(p))
+    ?.replace(/^children\s*:/, "")
+    .trim();
+
+  return { attrs, children: children ?? null };
+}
+
+/**
  * Build the story module and, where one is needed, the client demo module
  * it previews. Returns { story, demo, hasControls }.
  */
@@ -317,12 +387,45 @@ export const story = defineStory({
     if (fromJsx) initial = s.args ? `{ ...${fromJsx}, ...${s.args} }` : fromJsx;
   }
 
+  // A controls story still needs a demo module: the docs page renders the
+  // component itself, not `story.WithControl`, so the preview is the component
+  // rather than the component plus a props panel.
+  const controlsDemo = (importLine) => {
+    // The component import is written above by hand; drop the story file's
+    // own (quote style and relative depth vary) so it is not imported twice.
+    const selfImport = new RegExp(`from\\s+['"]\\.{1,2}/(?:.*/)?${name}['"]`);
+    const kept = prune(parsed.imports, [], `${parsed.primary} ${initial}`).imports.filter(
+      (i) => !selfImport.test(i),
+    );
+    const jsx = argsToJsxAttrs(initial);
+    let element = `<${parsed.primary} {...(${initial})} />`;
+    if (jsx) {
+      const attrs = jsx.attrs.length ? ` ${jsx.attrs.join(" ")}` : "";
+      element = jsx.children
+        ? `<${parsed.primary}${attrs}>{${jsx.children}}</${parsed.primary}>`
+        : `<${parsed.primary}${attrs} />`;
+      // A plain string or a single JSX element reads better unbraced.
+      element = element
+        .replace(/\{(['"])(.*?)\1\}/, (_, __, text) => text)
+        .replace(/\{(<[\s\S]*>)\}/, (_, jsxChild) => jsxChild);
+    }
+
+    return `"use client";
+
+${banner(`${name}.stories.tsx`)}${importLine}
+${kept.length ? `${kept.join("\n")}\n` : ""}
+export function Demo() {
+  return ${element};
+}
+`;
+  };
+
   if (initial !== null && parsed.primary) {
     if (isClientComponent) {
       const keptImports = prune(parsed.imports, [], `${parsed.primary} ${initial}`).imports;
       return {
         story: storyModule(keptImports.join("\n"), parsed.primary, initial),
-        demo: null,
+        demo: controlsDemo(`import { ${parsed.primary} } from "./${name}";\n`),
         hasControls: true,
       };
     }
@@ -335,11 +438,9 @@ export const story = defineStory({
         parsed.primary,
         initial,
       ),
-      demo: `"use client";
-
-${banner(`${name}.tsx`)}
-export { ${parsed.primary} } from "./${name}";
-`,
+      demo: controlsDemo(
+        `import { ${parsed.primary} } from "./${name}";\nexport { ${parsed.primary} };\n`,
+      ),
       hasControls: true,
     };
   }
@@ -397,69 +498,161 @@ ${keptFixtures}${demoBody}`,
   };
 }
 
-function mdxFor(item, { exports, hasStory, hasControls }) {
+/** A cell that has to survive as literal text inside a JS array in MDX. */
+function cell(text) {
+  return JSON.stringify(text ?? "");
+}
+
+/** The eight-section component page, every section derived from source. */
+function mdxFor(item, ctx) {
+  const { exports, hasStory, componentSrc, demoSrc } = ctx;
   const { name, title, description, dependencies = [] } = item;
   const src = `src/components/ui/${name}/${name}.tsx`;
+
+  const baseUi = parseBaseUi(componentSrc);
+  const byPart = exportsByPart(componentSrc, exports);
+  const api = apiSections(root, baseUi, byPart, exports);
+  const tokens = tokenRows(componentSrc, exports);
+  const a11y = accessibilityNotes(componentSrc, baseUi, title);
+  const tree = demoSrc ? compositionTree(demoSrc, exports) : null;
+  const example = demoSrc ? demoJsx(demoSrc) : null;
 
   const importList =
     exports.length > 3
       ? `import {\n${exports.map((e) => `  ${e},`).join("\n")}\n} from "@/components/ui/${name}";`
       : `import { ${exports.join(", ")} } from "@/components/ui/${name}";`;
 
-  const preview = hasStory
-    ? `import { story } from "@/components/ui/${name}/${name}.story";
+  const out = [];
 
-## Preview
-
-${
-  hasControls
-    ? "Every prop below is live — change one and the component re-renders."
-    : "A representative composition. Open it in Storybook to vary the props."
-}
-
-<story.WithControl />
-`
-    : `## Preview
-
-Not yet ported to a docs preview. Run it in Storybook:
-
-\`\`\`bash
-npm run storybook
-\`\`\`
-`;
-
-  // Always quote: registry descriptions contain colons ("AI Summary (AS1):
-  // a wash …"), which YAML reads as a nested mapping.
-  return `---
+  out.push(`---
 title: ${yaml(title)}
 description: ${yaml(description)}
 ---
+`);
 
-${preview}
-## Installation
+  if (hasStory) {
+    out.push(`import { Demo as ComponentDemo } from "@/components/ui/${name}/${name}.demo";`);
+  }
+  if (api.length) {
+    out.push(`import { propColumns } from "@/components/site/docs-page";`);
+  }
+  if (tokens.length) {
+    out.push(`import { tokenColumns } from "@/components/site/docs-page";`);
+  }
+  out.push("");
 
-\`\`\`bash
-npx shadcn@latest add @sc1m/${name}
-\`\`\`
+  const chips = [`{ label: "Stable", tone: "accent" }`];
+  if (baseUi) chips.push(`{ label: "Base UI" }`);
+  out.push(`<Chips items={[${chips.join(", ")}]} />\n`);
 
-This also merges the [token layer](/docs/foundations/tokens) and installs
-\`src/lib/cn.ts\`${dependencies.length ? ` plus \`${dependencies.join("`, `")}\`` : ""}.
+  /* 1 — live preview */
+  out.push("## Live preview\n");
+  out.push(
+    hasStory
+      ? `<Preview>\n  <ComponentDemo />\n</Preview>\n`
+      : `Not yet ported to a docs preview. Run it in Storybook:\n\n\`\`\`bash\nnpm run storybook\n\`\`\`\n`,
+  );
 
-## Usage
+  /* 2 — installation */
+  out.push("## Installation\n");
+  out.push(`<PMCommand exec="shadcn@latest add @sc1m/${name}" />\n`);
+  out.push(
+    `This also merges the [token layer](/docs/foundations/tokens) and installs\n` +
+      `\`src/lib/cn.ts\`${dependencies.length ? ` plus \`${dependencies.join("`, `")}\`` : ""}. For the manual route — prerequisites,\n` +
+      `\`components.json\`, and app-level setup — see [Installation](/docs/installation).\n`,
+  );
 
-\`\`\`tsx
-${importList}
-\`\`\`
+  /* 3 — usage */
+  out.push("## Usage\n");
+  out.push("```tsx lineNumbers\n" + importList + "\n```\n");
 
-## Exports
+  /* 4 — composition */
+  if (tree) {
+    out.push("## Composition\n");
+    out.push(
+      `Every part is a separate export. \`${exports[0]}\` owns state; the rest are\n` +
+        `presentational and must appear in this order.\n`,
+    );
+    out.push(
+      "<Composition>{`\n" +
+        tree
+          .split("\n")
+          .map((l) => `  ${l}`)
+          .join("\n") +
+        "\n`}</Composition>\n",
+    );
+  }
 
-${exports.map((e) => `- \`${e}\``).join("\n")}
+  /* 5 — example */
+  if (hasStory && example) {
+    out.push("## Example\n");
+    out.push(
+      `The preview above, with its source. This is the demo module verbatim, so\n` +
+        `the code and the thing it renders cannot drift apart.\n`,
+    );
+    out.push(
+      `<Demo>\n<DemoPreview>\n  <ComponentDemo />\n</DemoPreview>\n<DemoCode>\n\n` +
+        "```tsx lineNumbers\n" +
+        example +
+        "\n```\n\n</DemoCode>\n</Demo>\n",
+    );
+  }
 
-## Source
+  /* 6 — api reference */
+  if (api.length) {
+    out.push("## API reference");
+    out.push(
+      `Each part forwards every prop of its Base UI counterpart; the tables list\n` +
+        `the ones declared on the part itself. See\n` +
+        `[Base UI's reference](https://base-ui.com/react/components/${baseUi.primitive})\n` +
+        `for the inherited element props.\n`,
+    );
+    for (const section of api) {
+      out.push(`### ${section.name}\n`);
+      const rows = section.rows
+        .map(
+          (r) =>
+            `    [${cell(r.prop)}, ${cell(r.type)}, ${cell(r.def)}, ${cell(r.description)}],`,
+        )
+        .join("\n");
+      out.push(
+        `<SpecTable\n  columns={propColumns}\n  widths="1.1fr 1.3fr 0.7fr 2fr"\n  rows={[\n${rows}\n  ]}\n/>\n`,
+      );
+    }
+  }
 
-[\`${src}\`](${GITHUB}/${src}) — no \`next/*\` imports, so it drops into any
-React 19 + Tailwind v4 app.
-`;
+  /* 7 — accessibility */
+  if (a11y.intro.length || a11y.facts.length) {
+    out.push("## Accessibility\n");
+    for (const line of a11y.intro) out.push(`${line}\n`);
+    if (a11y.facts.length) {
+      out.push(a11y.facts.map((f) => `- ${f}`).join("\n") + "\n");
+    }
+  }
+
+  /* 8 — design tokens */
+  if (tokens.length) {
+    out.push("## Design tokens\n");
+    out.push(
+      `The component reads semantic tokens only — no raw colour, radius, or\n` +
+        `duration appears in its source. Override the token, not the component.\n`,
+    );
+    const rows = tokens
+      .map(([token, where]) => `    [${cell(token)}, ${cell(where)}],`)
+      .join("\n");
+    out.push(
+      `<SpecTable\n  columns={[tokenColumns[0], tokenColumns[2]]}\n` +
+        `  widths="1.2fr 1.8fr"\n  minWidth={420}\n  rows={[\n${rows}\n  ]}\n/>\n`,
+    );
+  }
+
+  out.push("## Source\n");
+  out.push(
+    `[\`${src}\`](${GITHUB}/${src}) — no \`next/*\` imports, so it drops into any\n` +
+      `React 19 + Tailwind v4 app.\n`,
+  );
+
+  return out.join("\n");
 }
 
 /* ---------------------------------------------------------------- main */
@@ -526,12 +719,18 @@ for (const item of components) {
   catalog.push({ name, title: item.title, hasStory, hasControls });
 
   // --- mdx page
-  if (fs.existsSync(mdxPath) && !FORCE) {
+  if (fs.existsSync(mdxPath) && (!FORCE || HAND_WRITTEN.has(name))) {
     skipped.push(path.relative(root, mdxPath));
     continue;
   }
   if (!CHECK) {
-    fs.writeFileSync(mdxPath, mdxFor(item, { exports, hasStory, hasControls }));
+    const demoSrc = fs.existsSync(demoPath)
+      ? fs.readFileSync(demoPath, "utf8")
+      : null;
+    fs.writeFileSync(
+      mdxPath,
+      mdxFor(item, { exports, hasStory, hasControls, componentSrc, demoSrc }),
+    );
   }
   created.push(path.relative(root, mdxPath));
 }

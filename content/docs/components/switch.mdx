@@ -3,32 +3,101 @@ title: "Switch"
 description: "Switch component built on Base UI, styled with sc1m tokens."
 ---
 
-import { story } from "@/components/ui/switch/switch.story";
+import { Demo as ComponentDemo } from "@/components/ui/switch/switch.demo";
+import { propColumns } from "@/components/site/docs-page";
+import { tokenColumns } from "@/components/site/docs-page";
 
-## Preview
+<Chips items={[{ label: "Stable", tone: "accent" }, { label: "Base UI" }]} />
 
-Every prop below is live — change one and the component re-renders.
+## Live preview
 
-<story.WithControl />
+<Preview>
+  <ComponentDemo />
+</Preview>
 
 ## Installation
 
-```bash
-npx shadcn@latest add @sc1m/switch
-```
+<PMCommand exec="shadcn@latest add @sc1m/switch" />
 
 This also merges the [token layer](/docs/foundations/tokens) and installs
-`src/lib/cn.ts` plus `@base-ui/react`.
+`src/lib/cn.ts` plus `@base-ui/react`. For the manual route — prerequisites,
+`components.json`, and app-level setup — see [Installation](/docs/installation).
 
 ## Usage
 
-```tsx
+```tsx lineNumbers
 import { Switch } from "@/components/ui/switch";
 ```
 
-## Exports
+## Example
 
-- `Switch`
+The preview above, with its source. This is the demo module verbatim, so
+the code and the thing it renders cannot drift apart.
+
+<Demo>
+<DemoPreview>
+  <ComponentDemo />
+</DemoPreview>
+<DemoCode>
+
+```tsx lineNumbers
+<Switch aria-label="Toggle setting" />
+```
+
+</DemoCode>
+</Demo>
+
+## API reference
+Each part forwards every prop of its Base UI counterpart; the tables list
+the ones declared on the part itself. See
+[Base UI's reference](https://base-ui.com/react/components/switch)
+for the inherited element props.
+
+### Switch
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["id", "string", "—", "The id of the hidden input element."],
+    ["checked", "boolean", "—", "Whether the switch is currently active."],
+    ["defaultChecked", "boolean", "false", "Whether the switch is initially active."],
+    ["disabled", "boolean", "false", "Whether the component should ignore user interaction."],
+    ["inputRef", "React.Ref<HTMLInputElement>", "—", "A ref to access the hidden <input> element."],
+    ["name", "string", "—", "Identifies the field when a form is submitted."],
+    ["form", "string", "—", "Identifies the form that owns the hidden input."],
+    ["onCheckedChange", "((checked: boolean, eventDetails: SwitchRoot.ChangeEventDetails) => void)", "—", "Event handler called when the switch is activated or deactivated."],
+    ["readOnly", "boolean", "false", "Whether the user should be unable to activate or deactivate the switch."],
+    ["required", "boolean", "false", "Whether the user must activate the switch before submitting a form."],
+    ["value", "string", "—", "The value submitted with the form when the switch is on."],
+    ["uncheckedValue", "string", "—", "The value submitted with the form when the switch is off."],
+  ]}
+/>
+
+## Accessibility
+
+Behaviour, focus management, and ARIA wiring come from [Base UI's Switch](https://base-ui.com/react/components/switch) — see its reference for the full keyboard map.
+
+- Keyboard focus draws a 2px ring in `--ring`, never removed — only shown on `:focus-visible`, so a pointer press does not paint one.
+- Disabled parts mute their contents rather than the element, keeping the focus ring at full strength where the part stays focusable.
+
+## Design tokens
+
+The component reads semantic tokens only — no raw colour, radius, or
+duration appears in its source. Override the token, not the component.
+
+<SpecTable
+  columns={[tokenColumns[0], tokenColumns[2]]}
+  widths="1.2fr 1.8fr"
+  minWidth={420}
+  rows={[
+    ["--accent", "Switch"],
+    ["--line-strong", "Switch"],
+    ["--ring", "Switch"],
+    ["--shadow-raised", "Switch"],
+    ["--surface-raised", "Switch"],
+  ]}
+/>
 
 ## Source
 

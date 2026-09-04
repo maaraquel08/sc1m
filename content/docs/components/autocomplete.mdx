@@ -3,26 +3,29 @@ title: "Autocomplete"
 description: "Autocomplete component built on Base UI, styled with sc1m tokens."
 ---
 
-import { story } from "@/components/ui/autocomplete/autocomplete.story";
+import { Demo as ComponentDemo } from "@/components/ui/autocomplete/autocomplete.demo";
+import { propColumns } from "@/components/site/docs-page";
+import { tokenColumns } from "@/components/site/docs-page";
 
-## Preview
+<Chips items={[{ label: "Stable", tone: "accent" }, { label: "Base UI" }]} />
 
-A representative composition. Open it in Storybook to vary the props.
+## Live preview
 
-<story.WithControl />
+<Preview>
+  <ComponentDemo />
+</Preview>
 
 ## Installation
 
-```bash
-npx shadcn@latest add @sc1m/autocomplete
-```
+<PMCommand exec="shadcn@latest add @sc1m/autocomplete" />
 
 This also merges the [token layer](/docs/foundations/tokens) and installs
-`src/lib/cn.ts` plus `@base-ui/react`.
+`src/lib/cn.ts` plus `@base-ui/react`. For the manual route — prerequisites,
+`components.json`, and app-level setup — see [Installation](/docs/installation).
 
 ## Usage
 
-```tsx
+```tsx lineNumbers
 import {
   Autocomplete,
   AutocompleteInput,
@@ -33,14 +36,121 @@ import {
 } from "@/components/ui/autocomplete";
 ```
 
-## Exports
+## Composition
 
-- `Autocomplete`
-- `AutocompleteInput`
-- `AutocompleteContent`
-- `AutocompleteList`
-- `AutocompleteItem`
-- `AutocompleteEmpty`
+Every part is a separate export. `Autocomplete` owns state; the rest are
+presentational and must appear in this order.
+
+<Composition>{`
+  Autocomplete
+    AutocompleteInput
+    AutocompleteContent
+      AutocompleteEmpty
+      AutocompleteList
+        AutocompleteItem
+`}</Composition>
+
+## Example
+
+The preview above, with its source. This is the demo module verbatim, so
+the code and the thing it renders cannot drift apart.
+
+<Demo>
+<DemoPreview>
+  <ComponentDemo />
+</DemoPreview>
+<DemoCode>
+
+```tsx lineNumbers
+<Autocomplete items={fruits}>
+  <AutocompleteInput placeholder="Search fruits…" />
+  <AutocompleteContent>
+    <AutocompleteEmpty>No fruits found.</AutocompleteEmpty>
+    <AutocompleteList>
+      {(fruit: string) => (
+        <AutocompleteItem key={fruit} value={fruit}>
+          {fruit}
+        </AutocompleteItem>
+      )}
+    </AutocompleteList>
+  </AutocompleteContent>
+</Autocomplete>
+```
+
+</DemoCode>
+</Demo>
+
+## API reference
+Each part forwards every prop of its Base UI counterpart; the tables list
+the ones declared on the part itself. See
+[Base UI's reference](https://base-ui.com/react/components/autocomplete)
+for the inherited element props.
+
+### Autocomplete
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["form", "string", "—", "Identifies the form that owns the internal input."],
+    ["mode", "'list' | 'both' | 'inline' | 'none'", "'list'", "Controls how the autocomplete behaves with respect to list filtering and inline autocompletion."],
+    ["inline", "boolean", "false", "Whether the list is rendered inline without using the component's own popup."],
+    ["autoHighlight", "boolean | 'always'", "false", "Whether the first matching item is highlighted automatically."],
+    ["keepHighlight", "boolean", "false", "Whether the highlighted item should be preserved when the pointer leaves the list."],
+    ["highlightItemOnHover", "boolean", "true", "Whether moving the pointer over items should highlight them."],
+    ["defaultValue", "AriaCombobox.Props<React.ComponentProps<'input'>['defaultValue'], 'none'>['defaultInputValue']", "—", "The uncontrolled input value of the autocomplete when it's initially rendered."],
+    ["value", "AriaCombobox.Props<React.ComponentProps<'input'>['value'], 'none'>['inputValue']", "—", "The input value of the autocomplete."],
+    ["onValueChange", "((value: string, eventDetails: AutocompleteRootChangeEventDetails) => void)", "—", "Event handler called when the input value of the autocomplete changes."],
+    ["submitOnItemClick", "AriaCombobox.Props<ItemValue, 'none'>['submitOnItemClick']", "false", "Whether clicking an item should submit the autocomplete's owning form."],
+    ["itemToStringValue", "((itemValue: ItemValue) => string)", "—", "When the item values are objects (<Autocomplete.Item value={object}>), this function converts the object value to a string representation for both display in the input and form submission."],
+    ["actionsRef", "React.RefObject<AutocompleteRootActions | null>", "—", "A ref to imperative actions."],
+    ["onOpenChange", "((open: boolean, eventDetails: AutocompleteRootChangeEventDetails) => void)", "—", "Event handler called when the popup is opened or closed."],
+    ["onItemHighlighted", "((highlightedValue: ItemValue | undefined, eventDetails: AutocompleteRootHighlightEventDetails) => void)", "—", "Callback fired when an item is highlighted or unhighlighted."],
+    ["openOnInputClick", "boolean", "false", "Whether the popup opens when clicking the input."],
+  ]}
+/>
+
+### AutocompleteItem
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["onClick", "BaseUIComponentProps<'div', AutocompleteItemState>['onClick']", "—", "An optional click handler for the item when selected."],
+    ["index", "number", "—", "The index of the item in the list."],
+    ["value", "any", "null", "A unique value that identifies this item."],
+    ["disabled", "boolean", "false", "Whether the component should ignore user interaction."],
+  ]}
+/>
+
+## Accessibility
+
+Behaviour, focus management, and ARIA wiring come from [Base UI's Autocomplete](https://base-ui.com/react/components/autocomplete) — see its reference for the full keyboard map.
+
+- Keyboard focus draws a 2px ring in `--ring`, never removed — only shown on `:focus-visible`, so a pointer press does not paint one.
+- Disabled parts mute their contents rather than the element, keeping the focus ring at full strength where the part stays focusable.
+
+## Design tokens
+
+The component reads semantic tokens only — no raw colour, radius, or
+duration appears in its source. Override the token, not the component.
+
+<SpecTable
+  columns={[tokenColumns[0], tokenColumns[2]]}
+  widths="1.2fr 1.8fr"
+  minWidth={420}
+  rows={[
+    ["--brand-radius-md", "AutocompleteInput, AutocompleteContent"],
+    ["--brand-radius-sm", "AutocompleteItem"],
+    ["--fg", "AutocompleteInput, AutocompleteContent, AutocompleteItem"],
+    ["--fg-subtle", "AutocompleteInput, AutocompleteEmpty"],
+    ["--line", "AutocompleteInput, AutocompleteContent"],
+    ["--ring", "AutocompleteInput"],
+    ["--shadow-overlay", "AutocompleteContent"],
+    ["--surface", "AutocompleteItem"],
+    ["--surface-raised", "AutocompleteInput, AutocompleteContent"],
+  ]}
+/>
 
 ## Source
 
