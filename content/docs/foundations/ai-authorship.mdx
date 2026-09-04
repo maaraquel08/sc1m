@@ -81,5 +81,8 @@ animation and still leaves a composed edge:
 
 ## Using it
 
-See the [AI Summary](/docs/components/ai-summary) component, which composes
-`.ai-wash` and `.ai-pulse` into the AS1 banner.
+`.ai-wash` and `.ai-pulse` are the hue's utility form — a tinted fill and a
+breathing edge — for any surface that needs to read as AI-authored. The
+[AI Summary](/docs/components/ai-summary) component no longer uses them: it
+moved to a painted vector field, which carries the same signal at full-bleed
+scale. The utilities stay in the token layer for lighter surfaces.

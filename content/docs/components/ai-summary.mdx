@@ -1,10 +1,10 @@
 ---
 title: "AI Summary"
-description: "AI Summary banner (AS1): a wash tinted with the brand AI hue to mark AI-authored copy, a sparkle eyebrow naming the angle, one sentence of plain-language body, and an inner glow pulsing at the edge. No runtime dependencies."
+description: "The banner that marks AI-authored copy: one sentence of plain language on an animated painting, in one of four palettes. No runtime dependencies."
 ---
 
-import { Demo as ComponentDemo } from "@/components/ui/ai-summary/ai-summary.demo";
-import { tokenColumns } from "@/components/site/docs-page";
+import { Demo as ComponentDemo, Palettes } from "@/components/ui/ai-summary/ai-summary.demo";
+import { tokenColumns, propColumns } from "@/components/site/docs-page";
 
 <Chips items={[{ label: "Stable", tone: "accent" }]} />
 
@@ -14,13 +14,24 @@ import { tokenColumns } from "@/components/site/docs-page";
   <ComponentDemo />
 </Preview>
 
+The painting above is live — the colour masses drift and the noise warp
+breathes on separate cycles, so the field never visibly loops. **Only the
+background moves**: the highlighted phrases are static, because a highlight is
+a reading aid rather than an event.
+
+Each field is one gradient plus a handful of colour masses pushed through a
+fractal-noise displacement warp, with a grain pass over the top — so a palette
+is a few hex values and three durations, and nothing is re-rendered or fetched
+at runtime. The preview shows `ember`; the `ink` default is deliberately the
+still one.
+
 ## Installation
 
 <PMCommand exec="shadcn@latest add @sc1m/ai-summary" />
 
 This also merges the [token layer](/docs/foundations/tokens) and installs
-`src/lib/cn.ts`. For the manual route — prerequisites,
-`components.json`, and app-level setup — see [Installation](/docs/installation).
+`src/lib/cn.ts`. For the manual route — prerequisites, `components.json`, and
+app-level setup — see [Installation](/docs/installation).
 
 ## Usage
 
@@ -29,62 +40,98 @@ import {
   AiSummary,
   AiSummaryLabel,
   AiSummaryText,
-  AiSummarySparkle,
+  AiSummaryMark,
 } from "@/components/ui/ai-summary";
 ```
 
 ## Composition
 
-Every part is a separate export. `AiSummary` owns state; the rest are
+Every part is a separate export. `AiSummary` owns the painting; the rest are
 presentational and must appear in this order.
 
 <Composition>{`
   AiSummary
     AiSummaryLabel
     AiSummaryText
+      AiSummaryMark
 `}</Composition>
 
 ## Example
 
-The preview above, with its source. This is the demo module verbatim, so
-the code and the thing it renders cannot drift apart.
-
-<Demo>
-<DemoPreview>
-  <ComponentDemo />
-</DemoPreview>
-<DemoCode>
-
 ```tsx lineNumbers
-<AiSummary className="max-w-[342px]">
-  <AiSummaryLabel>AI note</AiSummaryLabel>
+<AiSummary palette="ember">
+  <AiSummaryLabel>What mattered</AiSummaryLabel>
   <AiSummaryText>
-    Your 96th coffee this year. Same shop, same time. This one is a habit,
-    not a decision.
+    You made 42 purchases in August.{" "}
+    <AiSummaryMark>Twelve were the same café at the same hour</AiSummaryMark>{" "}
+    — a habit, not a decision.
   </AiSummaryText>
 </AiSummary>
 ```
 
-</DemoCode>
-</Demo>
+<Callout title="Writing this in MDX">
+  Keep the children of `AiSummaryText` on one line, or render them from a
+  `.tsx`. MDX parses multi-line JSX children as a markdown block and wraps them
+  in its own `<p>`, nesting a paragraph inside this one — which the HTML parser
+  cannot do, so it auto-closes the outer one and hydration fails.
+</Callout>
+
+## Palettes
+
+Four ship. `ink` is the default — the restrained one, brand accent on
+near-black with three masses and almost no movement. `ember` is warm with a
+high warp and a slow pan; `tide` is cool and deep, low warp with high octaves;
+`moss` is green and sand on a lazy 52s pan.
+
+<div className="not-prose my-4">
+  <Palettes />
+</div>
+
+## API reference
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["palette", "\"ember\" | \"tide\" | \"moss\" | \"ink\"", "\"ink\"", "Which painting to hang behind the copy."],
+  ]}
+/>
+
+`AiSummaryMark` takes no props of its own — the highlight is static, and
+`box-decoration-break: clone` keeps the pill whole when a phrase wraps.
 
 ## Accessibility
 
-- Decorative glyphs are `aria-hidden`, so they are not announced.
+- The painting is `aria-hidden` — it carries no information, and the summary
+  reads the same with it removed.
+- The veil between painting and copy is what makes the text legible, so it is
+  per-palette rather than constant: a hot field needs a flat 72%, a deep one
+  can be graded and let the top of the card keep its colour.
+- The highlight on `AiSummaryMark` is static. It is a reading aid, not an
+  event: animating it in would pull the eye to the mark before the reader has
+  reached it, and repeat on every remount.
+- SMIL ignores `prefers-reduced-motion` — no CSS rule can stop `<animate>` — so
+  the component leaves the painting's timelines out of the DOM entirely rather
+  than trying to suppress them. The server render and first paint are always
+  the still painting; motion is added on hydration only if the reader allows
+  it.
 
 ## Design tokens
 
-The component reads semantic tokens only — no raw colour, radius, or
-duration appears in its source. Override the token, not the component.
+The palettes are deliberately raw hex. They are paint, not semantics — there is
+no brand meaning to inherit, and pinning them to tokens would give every brand
+the same picture. Everything structural around them is tokens.
 
 <SpecTable
   columns={[tokenColumns[0], tokenColumns[2]]}
   widths="1.2fr 1.8fr"
   minWidth={420}
   rows={[
-    ["--brand-radius-lg", "AiSummary"],
-    ["--fg", "AiSummaryText"],
-    ["--font-mono", "AiSummaryLabel"],
+    ["--fg", "The veil over the painting, and the card's base"],
+    ["--bg", "Eyebrow and body copy"],
+    ["--accent", "The highlight sweep on AiSummaryMark"],
+    ["--brand-radius-lg", "Card corners"],
+    ["--font-mono", "Eyebrow"],
   ]}
 />
 
