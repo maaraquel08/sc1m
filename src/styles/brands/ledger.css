@@ -59,6 +59,10 @@
   --danger: var(--money-out);
   --danger-fg: #ffffff;
   --info: var(--brand-accent);
+  /* warning is NOT the brand yellow: --brand-accent is spoken for by AI
+     authorship, and a caution edged in it would read as an AI surface.
+     Burnt amber sits between the espresso ink and money.out instead. */
+  --warning: #b4690e;
 
   /* -- 5. shape & type ---------------------------------------------- */
   --brand-radius-sm: 5px;   /* chips, tags */
@@ -95,4 +99,5 @@
   --accent-hover: #dcdad6;
   --accent-fg: #252017; /* on dark, CTAs are white with espresso text */
   --danger-fg: #14120e; /* lifted hue takes dark text */
+  --warning: #e8a33d;
 }

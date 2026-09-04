@@ -1,0 +1,185 @@
+---
+title: "Badge"
+description: "Badge: a status chip carried by fill alone — a tint of the tone at 12–15%, label inked toward the hue, and a sharp radius from --brand-radius-sm. Five tones (neutral, info, success, warning, danger) plus an optional icon slot. No runtime dependencies."
+---
+
+import { Demo as ComponentDemo } from "@/components/ui/badge/badge.demo";
+import { Badge } from "@/components/ui/badge";
+import { propColumns, tokenColumns } from "@/components/site/docs-page";
+
+<Chips items={[{ label: "Stable", tone: "accent" }]} />
+
+## Live preview
+
+<Preview>
+  <ComponentDemo />
+</Preview>
+
+## Installation
+
+<PMCommand exec="shadcn@latest add @sc1m/badge" />
+
+This also merges the [token layer](/docs/foundations/tokens) and installs
+`src/lib/cn.ts`. For the manual route — prerequisites,
+`components.json`, and app-level setup — see [Installation](/docs/installation).
+
+## Usage
+
+```tsx lineNumbers
+import { Badge } from "@/components/ui/badge";
+```
+
+## Composition
+
+One element. `tone` picks the fill, `icon` fills the optional leading slot.
+
+<Composition>{`
+  Badge
+    (icon — optional, aria-hidden)
+    children
+`}</Composition>
+
+## Tones
+
+Four tinted tones plus a neutral. Neutral is not a 0% tint of some arbitrary
+hue — it is the absence of a state, so it takes the plain surface.
+
+<Demo>
+<DemoPreview>
+  <div className="flex flex-wrap gap-2">
+    <Badge tone="success">Paid</Badge>
+    <Badge tone="info">Pending</Badge>
+    <Badge tone="warning">Retrying</Badge>
+    <Badge tone="danger">Overdue</Badge>
+    <Badge>Draft</Badge>
+  </div>
+</DemoPreview>
+<DemoCode>
+
+```tsx lineNumbers
+<Badge tone="success">Paid</Badge>
+<Badge tone="info">Pending</Badge>
+<Badge tone="warning">Retrying</Badge>
+<Badge tone="danger">Overdue</Badge>
+<Badge>Draft</Badge>
+```
+
+</DemoCode>
+</Demo>
+
+## Icon
+
+The study is deliberately glyphless — the fill carries the state on its own,
+and every glyph you add is ink the tint had already earned. Reach for the slot
+when a badge has to survive greyscale, or sits somewhere the tint alone is
+ambiguous.
+
+The slot fixes the box and stops the glyph shrinking, so a 16px or 24px source
+icon still lands at the label's optical weight. It inherits the tone's ink
+through `currentColor`, and is `aria-hidden` — the label is what gets read.
+
+<Demo>
+<DemoPreview>
+  <div className="flex flex-wrap gap-2">
+    <Badge
+      tone="success"
+      icon={<svg viewBox="0 0 16 16" fill="currentColor" aria-hidden><path d="M6.5 11.4 3.2 8.1l1.1-1.1 2.2 2.2 5-5 1.1 1.1z" /></svg>}
+    >
+      Paid
+    </Badge>
+    <Badge
+      tone="danger"
+      icon={<svg viewBox="0 0 16 16" fill="currentColor" aria-hidden><path d="M7.2 3h1.6v6H7.2zM7.2 11h1.6v1.8H7.2z" /></svg>}
+    >
+      Overdue
+    </Badge>
+  </div>
+</DemoPreview>
+<DemoCode>
+
+```tsx lineNumbers
+<Badge
+  tone="success"
+  icon={<CheckIcon />}
+>
+  Paid
+</Badge>
+```
+
+</DemoCode>
+</Demo>
+
+## Example
+
+The preview above, with its source. This is the demo module verbatim, so
+the code and the thing it renders cannot drift apart.
+
+<Demo>
+<DemoPreview>
+  <ComponentDemo />
+</DemoPreview>
+<DemoCode>
+
+```tsx lineNumbers
+<div className="flex flex-wrap gap-2">
+  <Badge tone="success">Paid</Badge>
+  <Badge tone="info">Pending</Badge>
+  <Badge tone="warning">Retrying</Badge>
+  <Badge tone="danger">Overdue</Badge>
+  <Badge>Draft</Badge>
+</div>
+```
+
+</DemoCode>
+</Demo>
+
+## API reference
+
+`Badge` forwards every prop of a `span`.
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["tone", '"neutral" | "info" | "success" | "warning" | "danger"', '"neutral"', "Fill and label ink. Neutral takes the plain surface."],
+    ["icon", "ReactNode", "—", "Optional leading glyph. Sized by the slot, hidden from assistive tech."],
+  ]}
+/>
+
+## Accessibility
+
+- A badge is a label, not a live region. It announces as its text and takes no
+  role of its own — if a badge reflects state that changes while the page is
+  open, put the live region on the container that owns that state.
+- The icon slot is `aria-hidden`, so the label carries the whole meaning. Never
+  ship an icon-only badge: the tint is not readable in greyscale, and the glyph
+  is not readable at all.
+- Colour is never the sole carrier of meaning here — the label always says what
+  the tint says.
+
+## Design tokens
+
+The component reads semantic tokens only — no raw colour, radius, or
+duration appears in its source. Override the token, not the component.
+
+<SpecTable
+  columns={[tokenColumns[0], tokenColumns[2]]}
+  widths="1.2fr 1.8fr"
+  minWidth={420}
+  rows={[
+    ["--info", "info fill and label ink"],
+    ["--success", "success fill and label ink"],
+    ["--warning", "warning fill and label ink"],
+    ["--danger", "danger fill and label ink"],
+    ["--surface", "neutral fill"],
+    ["--fg-muted", "neutral label"],
+    ["--bg", "what each tone is washed into"],
+    ["--fg", "what each label ink is pulled from"],
+    ["--brand-radius-sm", "corner radius — 2px in sc1m"],
+  ]}
+/>
+
+## Source
+
+[`src/components/ui/badge/badge.tsx`](https://github.com/maaraquel08/sc1m/blob/main/src/components/ui/badge/badge.tsx) — no `next/*` imports, so it drops into any
+React 19 + Tailwind v4 app.

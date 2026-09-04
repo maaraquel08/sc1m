@@ -74,6 +74,7 @@
   --color-danger: var(--danger);
   --color-danger-fg: var(--danger-fg);
   --color-info: var(--info);
+  --color-warning: var(--warning);
   --color-ring: var(--ring);
 
   /* typography — brand-driven; ends in a real font so the chain

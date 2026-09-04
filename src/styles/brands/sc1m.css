@@ -48,6 +48,7 @@
   --danger: #dc2626;
   --danger-fg: #ffffff;
   --info: #2563eb;
+  --warning: #d4a017;
 
   /* -- 5. shape & type ---------------------------------------------- */
   --brand-radius-sm: 2px;  /* sharper, industrial */
@@ -87,4 +88,5 @@
   --success: #4ade80;
   --danger: #f87171;
   --info: #60a5fa;
+  --warning: #facc15; /* lifted to hold on near-black */
 }

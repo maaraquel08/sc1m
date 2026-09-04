@@ -9,7 +9,7 @@
 //       resolves to a real item (catches typos / bare-name shadcn fallbacks)
 //   (d) every registry:ui item depends on both tokens and cn
 //   (e) every registry:ui file's built content starts with "use client"
-//       (button is the one intentionally server-safe component)
+//       (except the intentionally server-safe ones — see the exempt set)
 //   (f) no file content references Next.js-specific APIs (framework-agnostic
 //       guarantee for a shadcn-style registry)
 
@@ -31,7 +31,9 @@ const FORBIDDEN_IMPORTS = [
   "next/font",
   "next/headers",
 ];
-const CLIENT_DIRECTIVE_EXEMPT = new Set(["button"]);
+// Components with no hooks, state, or event handlers render on the server;
+// marking them "use client" would ship JS for static markup.
+const CLIENT_DIRECTIVE_EXEMPT = new Set(["button", "banner", "badge"]);
 
 const failures = [];
 

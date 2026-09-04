@@ -27,6 +27,7 @@
           "--color-danger": "var(--danger)",
           "--color-danger-fg": "var(--danger-fg)",
           "--color-info": "var(--info)",
+          "--color-warning": "var(--warning)",
           "--color-ring": "var(--ring)",
           "--font-sans": "var(--brand-font-sans, var(--font-geist-sans, ui-sans-serif))",
           "--font-mono": "var(--brand-font-mono, var(--font-geist-mono, ui-monospace))",
@@ -72,6 +73,7 @@
           "--danger": "#dc2626",
           "--danger-fg": "#ffffff",
           "--info": "#2563eb",
+          "--warning": "#d4a017",
           "--brand-radius-sm": "2px",
           "--brand-radius-md": "4px",
           "--brand-radius-lg": "8px",
@@ -110,7 +112,8 @@
           "--danger-fg": "#0a0a0a",
           "--success": "#4ade80",
           "--danger": "#f87171",
-          "--info": "#60a5fa"
+          "--info": "#60a5fa",
+          "--warning": "#facc15"
         },
         "@utility popup-motion": {
           "transform-origin": "var(--transform-origin)",
@@ -347,6 +350,38 @@
       "files": [
         {
           "path": "src/components/ui/avatar/avatar.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "badge",
+      "type": "registry:ui",
+      "title": "Badge",
+      "description": "Badge: a status chip carried by fill alone \u2014 a tint of the tone at 12\u201315%, label inked toward the hue, and a sharp radius from --brand-radius-sm. Five tones (neutral, info, success, warning, danger) plus an optional icon slot. No runtime dependencies.",
+      "registryDependencies": [
+        "https://sc1m.vercel.app/r/tokens.json",
+        "https://sc1m.vercel.app/r/cn.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/badge/badge.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "banner",
+      "type": "registry:ui",
+      "title": "Banner",
+      "description": "Banner: a borderless status note \u2014 a flat wash of the tone at 7\u20138%, a tone-coloured icon, and body copy inked toward the hue instead of muted grey. Four tones (info, warning, success, danger), each driven by three custom properties. No runtime dependencies.",
+      "registryDependencies": [
+        "https://sc1m.vercel.app/r/tokens.json",
+        "https://sc1m.vercel.app/r/cn.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/banner/banner.tsx",
           "type": "registry:ui"
         }
       ]

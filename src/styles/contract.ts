@@ -30,6 +30,7 @@ export const COLOR_TOKENS = [
   "danger",
   "danger-fg",
   "info",
+  "warning",
   "ring",
 ] as const;
 

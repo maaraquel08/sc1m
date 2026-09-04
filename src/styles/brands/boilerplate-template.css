@@ -81,6 +81,7 @@
   --danger: <value>;
   --danger-fg: <value>;
   --info: <value>;
+  --warning: <value>;
 
   /* -- 5. shape & type ---------------------------------------------- */
   --brand-radius-sm: <value>;
@@ -120,4 +121,5 @@
   --success: <value>;
   --danger: <value>;
   --info: <value>;
+  --warning: <value>;
 }
