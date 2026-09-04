@@ -26,7 +26,7 @@ export function OTPFieldInput({
         "size-10 rounded-md border border-line bg-surface-raised text-center text-sm text-fg",
         "transition-colors duration-fast ease-out-quad",
         "placeholder:text-fg-subtle",
-        "focus:bg-surface focus:outline-2 focus:outline-offset-2 focus:outline-ring",
+        "focus:outline-2 focus:outline-offset-2 focus:outline-ring",
         "data-disabled:pointer-events-none data-disabled:opacity-50",
         className,
       )}

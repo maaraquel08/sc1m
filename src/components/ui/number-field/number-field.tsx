@@ -22,7 +22,7 @@ export function NumberFieldGroup({
       className={cn(
         "flex items-stretch overflow-hidden rounded-md border border-line bg-surface-raised",
         "transition-colors duration-fast ease-out-quad",
-        "focus-within:bg-surface focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-ring",
+        "focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-ring",
         "data-disabled:pointer-events-none data-disabled:opacity-50",
         className,
       )}
