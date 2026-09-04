@@ -1,9 +1,10 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
+import { Badge, type BadgeProps } from "@/components/ui/badge";
 
 /**
  * Page furniture for component docs, following the Claude Design
- * "Accordion Docs" layout: status chips under the title, a tinted preview
+ * "Accordion Docs" layout: status badges under the title, a tinted preview
  * frame, and mono-headed spec tables for props, keyboard, and tokens.
  *
  * Every colour, radius, and font here resolves through the sc1m token
@@ -13,27 +14,23 @@ import { cn } from "@/lib/cn";
 
 /* ---------------------------------------------------------------- chips -- */
 
+/**
+ * The status chips under a page title are the DS's own `Badge`, so the docs
+ * demonstrate the component rather than a look-alike. `Chips` only owns the
+ * row: the wrap, the gap, and `not-prose` to keep fumadocs' typography off it.
+ */
 interface Chip {
   label: string;
-  /** Accent-tinted, for the one status that matters most. */
-  tone?: "accent";
+  tone?: BadgeProps["tone"];
 }
 
 export function Chips({ items }: { items: Chip[] }) {
   return (
     <div className="not-prose mt-4 flex flex-wrap gap-2">
       {items.map(({ label, tone }) => (
-        <span
-          key={label}
-          className={cn(
-            "rounded-[5px] border px-[9px] py-[5px] font-mono text-[11px] leading-none",
-            tone === "accent"
-              ? "border-accent/25 bg-accent/10 text-accent"
-              : "border-line bg-surface text-fg-muted",
-          )}
-        >
+        <Badge key={label} tone={tone}>
           {label}
-        </span>
+        </Badge>
       ))}
     </div>
   );
