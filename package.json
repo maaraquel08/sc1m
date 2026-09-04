@@ -2,6 +2,7 @@
   "name": "sc1m",
   "version": "0.1.0",
   "private": true,
+  "types": "dist/types/index.d.ts",
   "scripts": {
     "dev": "next dev -p 8127",
     "registry:build": "shadcn build",

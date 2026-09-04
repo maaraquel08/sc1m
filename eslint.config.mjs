@@ -15,6 +15,14 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // design-sync build artifacts and working state — all generated, all
+    // gitignored, none of it hand-edited. Flat config does not read
+    // .gitignore, so they have to be named here. See .design-sync/NOTES.md.
+    "dist/**",
+    "ds-bundle/**",
+    ".ds-sync/**",
+    ".design-sync/sb-reference/**",
+    ".design-sync/.cache/**",
   ]),
   ...storybook.configs["flat/recommended"],
   {
