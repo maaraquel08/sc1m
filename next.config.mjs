@@ -2,7 +2,12 @@ import { createMDX } from 'fumadocs-mdx/next';
 import { createNextStory } from '@fumadocs/story/next';
 
 /** @type {import('next').NextConfig} */
-const config = {};
+const config = {
+  // @phosphor-icons/react's entry points are barrels over ~9,000 icons.
+  // Without this, importing one glyph pulls the whole set through the dev
+  // compiler on every change.
+  experimental: { optimizePackageImports: ['@phosphor-icons/react'] },
+};
 
 const withMDX = createMDX();
 const withStory = createNextStory({

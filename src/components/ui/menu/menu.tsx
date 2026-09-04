@@ -82,19 +82,14 @@ export function MenuCheckboxItemIndicator({
       className={cn("flex size-4 items-center justify-center", className)}
       {...props}
     >
+      {/* phosphor: check regular */}
       <svg
-        viewBox="0 0 16 16"
-        fill="none"
-        className="size-3.5"
         aria-hidden="true"
+        viewBox="0 0 256 256"
+        fill="currentColor"
+        className="size-3.5"
       >
-        <path
-          d="M3.5 8.5L6.5 11.5L12.5 4.5"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
+        <path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z" />
       </svg>
     </BaseMenu.CheckboxItemIndicator>
   );
@@ -184,19 +179,14 @@ export function MenuSubmenuTrigger({
       {...props}
     >
       {children}
+      {/* phosphor: caret-right regular */}
       <svg
-        viewBox="0 0 16 16"
-        fill="none"
-        className="size-3.5 text-fg-subtle"
         aria-hidden="true"
+        viewBox="0 0 256 256"
+        fill="currentColor"
+        className="size-3.5 text-fg-subtle"
       >
-        <path
-          d="M6 3.5L10.5 8L6 12.5"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
+        <path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z" />
       </svg>
     </BaseMenu.SubmenuTrigger>
   );

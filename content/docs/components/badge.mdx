@@ -4,10 +4,11 @@ description: "Badge: a status chip carried by fill alone — a tint of the tone 
 ---
 
 import { Demo as ComponentDemo } from "@/components/ui/badge/badge.demo";
+import { CheckCircle, WarningCircle } from "@phosphor-icons/react/dist/ssr";
 import { Badge } from "@/components/ui/badge";
 import { propColumns, tokenColumns } from "@/components/site/docs-page";
 
-<Chips items={[{ label: "Stable", tone: "accent" }]} />
+<Chips items={[{ label: "Stable", tone: "success" }]} />
 
 ## Live preview
 
@@ -74,6 +75,8 @@ and every glyph you add is ink the tint had already earned. Reach for the slot
 when a badge has to survive greyscale, or sits somewhere the tint alone is
 ambiguous.
 
+Status glyphs take Phosphor's `fill` weight — see [Icons](/docs/foundations/icons).
+
 The slot fixes the box and stops the glyph shrinking, so a 16px or 24px source
 icon still lands at the label's optical weight. It inherits the tone's ink
 through `currentColor`, and is `aria-hidden` — the label is what gets read.
@@ -81,27 +84,16 @@ through `currentColor`, and is `aria-hidden` — the label is what gets read.
 <Demo>
 <DemoPreview>
   <div className="flex flex-wrap gap-2">
-    <Badge
-      tone="success"
-      icon={<svg viewBox="0 0 16 16" fill="currentColor" aria-hidden><path d="M6.5 11.4 3.2 8.1l1.1-1.1 2.2 2.2 5-5 1.1 1.1z" /></svg>}
-    >
-      Paid
-    </Badge>
-    <Badge
-      tone="danger"
-      icon={<svg viewBox="0 0 16 16" fill="currentColor" aria-hidden><path d="M7.2 3h1.6v6H7.2zM7.2 11h1.6v1.8H7.2z" /></svg>}
-    >
-      Overdue
-    </Badge>
+    <Badge tone="success" icon={<CheckCircle weight="fill" />}>Paid</Badge>
+    <Badge tone="danger" icon={<WarningCircle weight="fill" />}>Overdue</Badge>
   </div>
 </DemoPreview>
 <DemoCode>
 
 ```tsx lineNumbers
-<Badge
-  tone="success"
-  icon={<CheckIcon />}
->
+import { CheckCircle } from "@phosphor-icons/react/dist/ssr";
+
+<Badge tone="success" icon={<CheckCircle weight="fill" />}>
   Paid
 </Badge>
 ```

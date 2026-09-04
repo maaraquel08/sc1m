@@ -40,14 +40,14 @@ function SelectIcon({
       className={cn("flex text-fg-muted", className)}
       {...props}
     >
-      <svg viewBox="0 0 12 12" fill="none" className="size-3">
-        <path
-          d="M2.5 4.5L6 8L9.5 4.5"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
+      {/* phosphor: caret-up-down regular */}
+      <svg
+        aria-hidden
+        viewBox="0 0 256 256"
+        fill="currentColor"
+        className="size-3.5"
+      >
+        <path d="M181.66,170.34a8,8,0,0,1,0,11.32l-48,48a8,8,0,0,1-11.32,0l-48-48a8,8,0,0,1,11.32-11.32L128,212.69l42.34-42.35A8,8,0,0,1,181.66,170.34Zm-96-84.68L128,43.31l42.34,42.35a8,8,0,0,0,11.32-11.32l-48-48a8,8,0,0,0-11.32,0l-48,48A8,8,0,0,0,85.66,85.66Z" />
       </svg>
     </BaseSelect.Icon>
   );
@@ -109,14 +109,14 @@ function SelectItemIndicator({
       className={cn("flex text-accent", className)}
       {...props}
     >
-      <svg viewBox="0 0 12 10" fill="none" className="size-3">
-        <path
-          d="M1 5.5L4 8.5L11 1.5"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
+      {/* phosphor: check regular */}
+      <svg
+        aria-hidden
+        viewBox="0 0 256 256"
+        fill="currentColor"
+        className="size-3.5"
+      >
+        <path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z" />
       </svg>
     </BaseSelect.ItemIndicator>
   );

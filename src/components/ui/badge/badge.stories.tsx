@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
+import { CheckCircle, WarningCircle } from '@phosphor-icons/react/dist/ssr';
 import { Badge } from './badge';
 
 const meta = {
@@ -39,24 +40,10 @@ export const Danger: Story = { args: { tone: 'danger', children: 'Overdue' } };
 export const WithIcon: Story = {
   render: () => (
     <div className="flex flex-wrap gap-2">
-      <Badge
-        tone="success"
-        icon={
-          <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden>
-            <path d="M6.5 11.4 3.2 8.1l1.1-1.1 2.2 2.2 5-5 1.1 1.1z" />
-          </svg>
-        }
-      >
+      <Badge tone="success" icon={<CheckCircle weight="fill" />}>
         Paid
       </Badge>
-      <Badge
-        tone="danger"
-        icon={
-          <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden>
-            <path d="M7.2 3h1.6v6H7.2zM7.2 11h1.6v1.8H7.2z" />
-          </svg>
-        }
-      >
+      <Badge tone="danger" icon={<WarningCircle weight="fill" />}>
         Overdue
       </Badge>
     </div>

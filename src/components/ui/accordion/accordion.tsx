@@ -68,20 +68,25 @@ export function AccordionTrigger({
         {...props}
       >
         {children}
-        {/* chevron flips scaleY(-1) instead of morphing its path — the
-            flip passes through a flat line at the midpoint like a path
-            morph but animates in every browser (CSS `d:` is Chromium-only) */}
+        {/* the caret rotates 180° rather than flipping: rotation carries the
+            shape through the whole transition, where scaleY(-1) passes through
+            a degenerate flat state at the midpoint. Not a path morph either —
+            CSS `d:` interpolation is Chromium-only.
+
+            translate(0,-8) is what makes the rotation land: Phosphor's caret
+            ink is not centred in its 256 box (round caps put the bbox centre
+            at y=136), so rotating about the element centre would swing it 1px
+            off. The path data itself stays byte-identical to Phosphor. */}
+        {/* phosphor: caret-down regular */}
         <svg
           aria-hidden
-          viewBox="0 0 16 16"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.6"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="size-4 shrink-0 text-fg-subtle transition-transform duration-(--acc-chevron) ease-(--acc-ease) group-data-disabled:opacity-50 group-data-panel-open:-scale-y-100 motion-reduce:transition-none"
+          viewBox="0 0 256 256"
+          fill="currentColor"
+          className="size-4 shrink-0 text-fg-subtle transition-transform duration-(--acc-chevron) ease-(--acc-ease) group-data-disabled:opacity-50 group-data-panel-open:rotate-180 motion-reduce:transition-none"
         >
-          <path d="M4 6.5L8 10.5L12 6.5" vectorEffect="non-scaling-stroke" />
+          <g transform="translate(0,-8)">
+            <path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z" />
+          </g>
         </svg>
       </BaseAccordion.Trigger>
     </BaseAccordion.Header>

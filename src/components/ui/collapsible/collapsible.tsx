@@ -22,22 +22,21 @@ export function CollapsibleTrigger({
       {...props}
     >
       {children}
-      {/* chevron flips scaleY(-1) instead of morphing its path — the flip
-          passes through a flat line at the midpoint like a path morph but
-          animates in every browser (CSS `d:` is Chromium-only). The path is
-          symmetric about the viewBox centre so the flip lands on the "^", and
-          non-scaling-stroke keeps the stroke constant through the squash. */}
+      {/* the caret flips scaleY(-1) rather than morphing its path — CSS `d:`
+          interpolation is Chromium-only, and the flip passes through the same
+          flat midpoint. Phosphor's caret is NOT centred in its 256 box — round
+          caps put the bbox centre at y=136 — so the geometry is translated by
+          -8 to make the flip land on the "^" without a 1px jump. */}
+      {/* phosphor: caret-down regular */}
       <svg
         aria-hidden
-        viewBox="0 0 16 16"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
+        viewBox="0 0 256 256"
+        fill="currentColor"
         className="size-4 shrink-0 text-fg-subtle transition-transform duration-(--acc-chevron) ease-(--acc-spring) group-data-panel-open:-scale-y-100 motion-reduce:transition-none"
       >
-        <path d="M4 6.5L8 10.5L12 6.5" vectorEffect="non-scaling-stroke" />
+        <g transform="translate(0,-8)">
+          <path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z" />
+        </g>
       </svg>
     </BaseCollapsible.Trigger>
   );
