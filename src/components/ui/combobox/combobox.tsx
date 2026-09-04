@@ -106,7 +106,18 @@ export function ComboboxEmpty({
 }: React.ComponentProps<typeof BaseCombobox.Empty>) {
   return (
     <BaseCombobox.Empty
-      className={cn("px-2 py-1.5 text-sm text-fg-subtle", className)}
+      className={cn(
+        "px-2 py-1.5 text-sm text-fg-subtle",
+        // Base UI renders the CHILDREN only when the list is empty, but keeps
+        // the element mounted on purpose — it is a role="status" live region,
+        // and its docs are explicit that hiding it with display:none, hidden,
+        // aria-hidden or conditional rendering breaks the announcement. So
+        // collapse the padding rather than the element: with results present
+        // the div is childless and would otherwise sit above the list as a
+        // 12px strip of dead space (py-1.5 top and bottom, no content).
+        "empty:p-0",
+        className,
+      )}
       {...props}
     />
   );
