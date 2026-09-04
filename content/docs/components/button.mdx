@@ -3,8 +3,8 @@ title: "Button"
 description: "Button component built on Base UI, styled with sc1m tokens."
 ---
 
-import { Demo as ComponentDemo } from "@/components/ui/button/button.demo";
-import { tokenColumns } from "@/components/site/docs-page";
+import { Demo as ComponentDemo, ButtonStates } from "@/components/ui/button/button.demo";
+import { tokenColumns, propColumns } from "@/components/site/docs-page";
 
 <Chips items={[{ label: "Stable", tone: "accent" }]} />
 
@@ -45,6 +45,38 @@ the code and the thing it renders cannot drift apart.
 
 </DemoCode>
 </Demo>
+
+## States
+
+Every variant shares one focus ring and one disabled treatment; only the hover
+step is per-variant.
+
+{/* bg-bg, not the frame's default bg-surface: secondary and ghost hover ARE
+    bg-surface, so on a tinted frame those cells would be invisible. */}
+<Preview className="bg-bg">
+  <ButtonStates />
+</Preview>
+
+<SpecTable
+  columns={[
+    { label: "State", className: "font-mono text-xs text-fg" },
+    { label: "What changes", className: "font-mono text-xs text-info" },
+    { label: "Notes", className: "text-fg-muted" },
+  ]}
+  widths="0.8fr 1.6fr 2fr"
+  rows={[
+    ["hover", "primary → bg-accent-hover · secondary/ghost → bg-surface · danger → opacity-90", "The only per-variant state. Danger shifts opacity rather than hue so the red stays the danger token."],
+    ["focus-visible", "outline-2 outline-offset-2 outline-ring", "Shared by all four. Keyboard only — a pointer press never paints a ring."],
+    ["disabled", "opacity-50 + pointer-events-none", "Shared by all four. Native disabled, so the button leaves the tab order."],
+    ["active", "—", "There is no pressed style. A press reads only through the hover state and the 150ms colour transition."],
+  ]}
+/>
+
+<Callout title="How this table is rendered">
+  Hover and focus cannot be produced from a real pointer in a static page, so
+  those two columns force the state with the same utility the component applies
+  for it. Default and Disabled are unforced — `disabled` is the real prop.
+</Callout>
 
 ## Accessibility
 
