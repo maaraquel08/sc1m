@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { useTheme } from "next-themes";
+import { Moon, Sun } from "@phosphor-icons/react/dist/ssr";
 import { Button } from "@/components/ui/button";
 
 /** False during SSR and the first client paint, true once hydrated. */
@@ -32,7 +33,11 @@ export function ThemeToggle() {
       onClick={() => setTheme(dark ? "light" : "dark")}
       aria-label={dark ? "Switch to light theme" : "Switch to dark theme"}
     >
-      <span aria-hidden>{dark ? "☀︎" : "☾"}</span>
+      {dark ? (
+        <Sun weight="fill" aria-hidden className="size-3.5" />
+      ) : (
+        <Moon weight="fill" aria-hidden className="size-3.5" />
+      )}
       {dark ? "Light" : "Dark"}
     </Button>
   );

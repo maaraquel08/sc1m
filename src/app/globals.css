@@ -419,3 +419,48 @@ body {
   color: var(--color-fg);
   font-family: var(--font-sans), system-ui, sans-serif;
 }
+
+/* Landing study 3A ------------------------------------------------------- */
+
+/* The reel scrolls horizontally but never shows a bar — the timeline beneath
+   the cards already tells you there is more to the right. */
+.rail {
+  scrollbar-width: none;
+}
+.rail::-webkit-scrollbar {
+  display: none;
+}
+
+/* The footer byline rolls through name → roles → place and back. Five 20px
+   lines, first and last identical, so the loop has no seam. */
+@keyframes role-roll {
+  0%,
+  20% {
+    transform: translateY(0);
+  }
+  25%,
+  45% {
+    transform: translateY(-20px);
+  }
+  50%,
+  70% {
+    transform: translateY(-40px);
+  }
+  75%,
+  95% {
+    transform: translateY(-60px);
+  }
+  100% {
+    transform: translateY(-80px);
+  }
+}
+
+.role-roll {
+  animation: role-roll 11s cubic-bezier(0.7, 0, 0.3, 1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .role-roll {
+    animation: none;
+  }
+}
