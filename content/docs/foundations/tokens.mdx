@@ -3,19 +3,111 @@ title: "Tokens"
 description: "The semantic token contract — the fixed set of role names every brand must resolve."
 ---
 
-import { ColorTokens, TypeScale, Radii, Elevation } from "@/components/site/token-tables";
+import {
+  TokenGroup,
+  RootHues,
+  NeutralRamp,
+  SurfaceTokens,
+  TextTokens,
+  LineTokens,
+  ActionTokens,
+  StatusTokens,
+  TypeSpec,
+  RadiusSpec,
+  ElevationSpec,
+} from "@/components/site/token-spec";
 
 The contract is a fixed list of **role names**. A brand assigns values to them;
 components consume them through Tailwind utilities and never see the values.
 Add a name and every brand must answer for it — which is why the list is short
 and grows reluctantly.
 
+## The two namespaces
+
+Start here, because it decides where everything else lives. Brand files assign
+**bare** names; `globals.css` maps them into Tailwind's namespace:
+
+```css title="src/app/globals.css"
+@theme inline {
+  --color-accent: var(--accent);
+  --color-fg-muted: var(--fg-muted);
+  /* … */
+}
+```
+
+`inline` is load-bearing. It makes the generated CSS reference `var(--accent)`
+at the use site, so utilities re-resolve when `.dark` or `[data-brand]` flips.
+Remove it and dark mode stops working.
+
+## Root palette
+
+Tier one: the raw values a brand assigns *from*. Only a brand file reads these
+— the semantic roles in the next section point at them, and dark mode swaps
+the values under the same names.
+
+The **Current** column reads each token back out of the page, so it follows the
+theme and brand switchers rather than describing one fixed state.
+
+<TokenGroup
+  title="Hue"
+  caption="Brand-owned, and named per brand. Switch brands to see the other set."
+>
+  <RootHues />
+</TokenGroup>
+
+<TokenGroup
+  title="Neutral ramp"
+  caption="Nine steps. Surfaces, text and lines all come from here."
+>
+  <NeutralRamp />
+</TokenGroup>
+
+Only the ramp's *names* are shared across brands. The hue names are not — sc1m
+declares `--sc1m-orange`, Ledger declares `--brand-ink` and two money hues — so
+nothing outside a brand file may reference them. That is the whole reason the
+semantic tier exists.
+
 ## Colour
 
-Each swatch below is painted with its own utility class, so this table is also
-a live test: switch theme or brand and the colours follow.
+Tier two, and the only tier a component may touch: nineteen role names in five
+families, each resolved from the palette above. Every swatch is painted with
+its own utility class, so these tables are also a live test — switch theme or
+brand and they follow.
 
-<ColorTokens />
+<TokenGroup
+  title="Surfaces"
+  caption="Three depths, page to popup. Nothing else stacks."
+>
+  <SurfaceTokens />
+</TokenGroup>
+
+<TokenGroup
+  title="Text"
+  caption="Shown as type — the only thing they are used on."
+>
+  <TextTokens />
+</TokenGroup>
+
+<TokenGroup
+  title="Lines"
+  caption="Shown as hairlines, at the weight they actually paint."
+>
+  <LineTokens />
+</TokenGroup>
+
+<TokenGroup
+  title="Action"
+  caption="Everything interactive resolves to the brand hue."
+>
+  <ActionTokens />
+</TokenGroup>
+
+<TokenGroup
+  title="Status"
+  caption="Outcome, not decoration. Five roles, four of them hues."
+>
+  <StatusTokens />
+</TokenGroup>
 
 Two of these carry a rule rather than just a role:
 
@@ -29,15 +121,18 @@ Type is brand-driven through `--brand-font-sans` and `--brand-font-mono`. The
 fallback chain ends in a real generic family, so the chain still resolves
 outside Next.js — Storybook has no `next/font` variables.
 
-<TypeScale />
+<TypeSpec />
 
 ## Radius
 
-<Radii />
+Radius is brand-owned: sc1m is sharp, Ledger is softer. The sample column
+repaints with the brand, and **Current** reports what it resolved to.
+
+<RadiusSpec />
 
 ## Elevation
 
-<Elevation />
+<ElevationSpec />
 
 Brands may tint elevation through the optional `--brand-shadow-raised` and
 `--brand-shadow-overlay` slots; skip them and the structural defaults apply.
@@ -64,20 +159,3 @@ export const BRANDS = [
   token goes in all four. `scripts/check-tokens-parity.mjs` fails the build
   when they drift, so you will not get this wrong quietly.
 </Callout>
-
-## The two namespaces
-
-Brand files assign **bare** names; `globals.css` maps them into Tailwind's
-namespace:
-
-```css title="src/app/globals.css"
-@theme inline {
-  --color-accent: var(--accent);
-  --color-fg-muted: var(--fg-muted);
-  /* … */
-}
-```
-
-`inline` is load-bearing. It makes the generated CSS reference `var(--accent)`
-at the use site, so utilities re-resolve when `.dark` or `[data-brand]` flips.
-Remove it and dark mode stops working.
