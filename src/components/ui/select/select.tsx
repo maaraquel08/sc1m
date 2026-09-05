@@ -57,13 +57,30 @@ export function SelectContent({
   className,
   children,
   side = "bottom",
+  alignItemWithTrigger,
   ...props
 }: React.ComponentProps<typeof BaseSelect.Popup> & {
   side?: "top" | "right" | "bottom" | "left";
+  /**
+   * Base UI's default (`true`) overlaps the popup onto the trigger so the
+   * selected item's text lands on the trigger's value — native-select
+   * behaviour, and what `side`/`sideOffset` are ignored for.
+   *
+   * Pass `false` when the select sits inside a CSS-transformed ancestor. That
+   * alignment measures the trigger and the item to compute an overlap offset,
+   * and under a `scale()` the two measurements disagree, so the popup lands
+   * away from its trigger. Turning it off falls back to ordinary side/offset
+   * anchoring, which transforms correctly.
+   */
+  alignItemWithTrigger?: boolean;
 }) {
   return (
     <BaseSelect.Portal>
-      <BaseSelect.Positioner side={side} sideOffset={8}>
+      <BaseSelect.Positioner
+        side={side}
+        sideOffset={8}
+        alignItemWithTrigger={alignItemWithTrigger}
+      >
         <BaseSelect.Popup
           className={cn(
             "max-h-72 min-w-[var(--anchor-width)] overflow-y-auto rounded-md border border-line bg-surface-raised p-1 text-fg shadow-overlay",

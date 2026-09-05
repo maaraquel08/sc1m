@@ -143,6 +143,8 @@ for the inherited element props.
   columns={propColumns}
   widths="1.1fr 1.3fr 0.7fr 2fr"
   rows={[
+    ["side", '"top" | "right" | "bottom" | "left"', '"bottom"', "Which side of the trigger the popup is placed on. Ignored while alignItemWithTrigger is on."],
+    ["alignItemWithTrigger", "boolean", "true", "Overlaps the popup onto the trigger so the selected item's text lands on the trigger's value — native-select behaviour. Set false inside a CSS-transformed ancestor, where that overlap is measured wrong and the popup lands away from its trigger."],
     ["finalFocus", "boolean | React.RefObject<HTMLElement | null> | ((closeType: InteractionType) => boolean | HTMLElement | null | void)", "—", "Determines the element to focus when the select popup is closed."],
   ]}
 />
