@@ -21,8 +21,8 @@ a hex value, and never reach for a Tailwind palette class (`bg-slate-100`,
 | Type | `font-mono` · `font-normal` `font-medium` `font-semibold` |
 
 **The stylesheet is pre-compiled — there is no Tailwind running.** Only classes
-already emitted (~372 of them) work. Standard layout and spacing utilities are
-present (`flex`, `grid`, `items-center`, `gap-0`–`gap-5`/`gap-8`, `p-4`, `px-3`,
+already emitted (~459 of them) work. Standard layout and spacing utilities are
+present (`flex`, `grid`, `items-center`, `gap-0`–`gap-6`/`gap-8`, `p-4`, `px-3`,
 `mt-2`, `w-full`, `h-9`, `text-sm`…), so compose layouts with those. For
 anything outside that set, use an inline style against the token variable —
 `style={{ background: "var(--surface)" }}` — rather than inventing a class.
@@ -43,7 +43,8 @@ The variables are the same names without the utility prefix: `--bg`,
   write `dark:` variants of your own; the tokens flip underneath you.
 - **Brands**: the default (`:root`) brand is sc1m — orange accent, sharp radii.
   Setting `data-brand="luntian"` on `<html>` switches to the Luntian brand
-  (espresso ink accent, warmer neutrals) with no component changes.
+  (deep sage-green accent on a warm white, softer radii) with no component
+  changes.
 
 ### Where the truth lives
 

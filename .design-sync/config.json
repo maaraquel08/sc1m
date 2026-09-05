@@ -13,6 +13,8 @@
     "alert-dialog": "AlertDialog",
     "autocomplete": "Autocomplete",
     "avatar": "Avatar",
+    "badge": "Badge",
+    "banner": "Banner",
     "button": "Button",
     "checkbox": "Checkbox",
     "checkbox-group": "CheckboxGroup",
@@ -61,6 +63,9 @@
     "AlertDialog": {
       "cardMode": "single",
       "primaryStory": "InitiallyOpen"
+    },
+    "Banner": {
+      "cardMode": "column"
     },
     "Dialog": {
       "cardMode": "single",

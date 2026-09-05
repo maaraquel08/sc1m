@@ -13,6 +13,8 @@ export * from "../src/components/ui/ai-summary";
 export * from "../src/components/ui/alert-dialog";
 export * from "../src/components/ui/autocomplete";
 export * from "../src/components/ui/avatar";
+export * from "../src/components/ui/badge";
+export * from "../src/components/ui/banner";
 export * from "../src/components/ui/button";
 export * from "../src/components/ui/checkbox";
 export * from "../src/components/ui/checkbox-group";
