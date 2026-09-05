@@ -19,7 +19,7 @@ const preview: Preview = {
       toolbar: {
         title: 'Brand',
         icon: 'paintbrush',
-        items: ['sc1m', 'ledger'],
+        items: ['sc1m', 'luntian'],
         dynamicTitle: true,
       },
     },

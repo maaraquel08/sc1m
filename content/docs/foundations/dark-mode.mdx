@@ -18,9 +18,9 @@ A component writes `bg-surface-raised text-fg`. Those utilities resolve through
 `var(--surface-raised)` and `var(--fg)`, and the brand file redefines those
 variables under `.dark`:
 
-```css title="src/styles/brands/ledger.css"
-:root        { --surface-raised: #ffffff; --fg: #252017; }
-.dark        { --surface-raised: #1a1a18; --fg: #ececea; }
+```css title="src/styles/brands/luntian.css"
+[data-brand="luntian"]      { --surface-raised: #fffdf6; --fg: var(--sage-900); }
+[data-brand="luntian"].dark { --surface-raised: #19211d; --fg: #f2f6f4; }
 ```
 
 The `inline` on `@theme inline` is what makes this work — utilities reference

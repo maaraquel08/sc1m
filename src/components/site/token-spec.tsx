@@ -152,10 +152,12 @@ const BRAND_PALETTES: Record<string, { name: string; resolves: string }[]> = {
     { name: "--sc1m-orange", resolves: "accent, accent-hover, ring" },
     { name: "--sc1m-paper", resolves: "bg, surface-raised, accent-fg" },
   ],
-  ledger: [
-    { name: "--brand-ink", resolves: "accent, ring, fg" },
-    { name: "--brand-accent", resolves: "highlight, info" },
-    { name: "--brand-paper", resolves: "bg, surface-raised" },
+  luntian: [
+    { name: "--brand-accent", resolves: "accent, ring" },
+    { name: "--brand-ink", resolves: "fg, highlight-fg" },
+    { name: "--brand-paper", resolves: "bg, surface-raised, accent-fg" },
+    { name: "--brand-gold", resolves: "highlight" },
+    { name: "--brand-indigo", resolves: "info" },
     { name: "--money-in", resolves: "success" },
     { name: "--money-out", resolves: "danger" },
   ],

@@ -22,7 +22,7 @@
  *     (bg-accent). Names are fixed — never rename, never add
  *     product-specific names outside section 1 primitives.
  *   - Product/domain vocabulary lives ONLY in section 1 primitives
- *     (e.g. Ledger's --money-in) and is mapped to generic roles.
+ *     (e.g. Luntian's --money-in) and is mapped to generic roles.
  *   - Dark mode: flip the primitives, then override only the
  *     semantics that genuinely change. Comment the reason.
  *   - All brand files keep this exact section order so they read as
@@ -75,7 +75,7 @@
   --ring: var(--BRAND-primary);
 
   /* -- 4. status ----------------------------------------------------
-   * Generic roles. If the product attaches domain meaning (Ledger:
+   * Generic roles. If the product attaches domain meaning (Luntian:
    * success = money.in), say so here in a comment. */
   --success: <value>;
   --danger: <value>;

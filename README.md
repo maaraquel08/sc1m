@@ -1,6 +1,6 @@
 # sc1m
 
-A multi-brand design system: React 19 components built on [Base UI](https://base-ui.com) and styled with Tailwind CSS v4 semantic tokens. The default brand is **Ledger**; additional brands ship as swappable CSS layers scoped under `data-brand` attributes.
+A multi-brand design system: React 19 components built on [Base UI](https://base-ui.com) and styled with Tailwind CSS v4 semantic tokens. The default brand is **sc1m**; additional brands — currently **Luntian** — ship as swappable CSS layers scoped under `data-brand` attributes.
 
 Components are distributed through a [shadcn-compatible registry](https://ui.shadcn.com/docs/registry) — consumers copy source into their own codebase with the shadcn CLI. Component source is framework-agnostic (no `next/*` imports): it works in Next.js, Vite, or any React 19 + Tailwind v4 app.
 
@@ -54,7 +54,7 @@ npx shadcn@latest add @sc1m/switch
 
 Every component declares the `tokens` and `cn` items as registry dependencies **by absolute URL**, so a single `add` also:
 
-- merges the full token layer into your CSS file — the `@theme inline` contract, Ledger `:root` values, `.dark` overrides, the `dark` custom variant, and the `popup-motion` utility;
+- merges the full token layer into your CSS file — the `@theme inline` contract, sc1m `:root` values, `.dark` overrides, the `dark` custom variant, and the `popup-motion` utility;
 - installs `src/lib/cn.ts` and the npm deps (`@base-ui/react`, `clsx`, `tailwind-merge`).
 
 You cannot install a component without its tokens, and bare names never resolve against shadcn's own registry by accident.
@@ -74,7 +74,7 @@ Browse what's available: every item is listed in [`registry.json`](./registry.js
 - `npm run registry:build` (`shadcn build`) generates `public/r/*.json`. It runs automatically before `next build` via the `prebuild` script, so every deploy regenerates the JSON — `public/r/` is gitignored and never committed, which makes stale registry output structurally impossible.
 - CI (`.github/workflows/registry.yml`) builds the registry on every PR and push to main, then runs:
   - `scripts/check-registry.mjs` — validates file paths, build output, self-referencing registry-dependency URLs, `"use client"` directives, and the no-`next/*`-imports guarantee;
-  - `scripts/check-tokens-parity.mjs` — fails when `src/app/globals.css` / `src/styles/brands/ledger.css` drift from the `tokens` item in `registry.json` (the token maps are duplicated deliberately, in the exact JSON shape the shadcn CLI can merge; structural blocks like `popup-motion` are maintained manually).
+  - `scripts/check-tokens-parity.mjs` — fails when `src/app/globals.css` / `src/styles/brands/sc1m.css` drift from the `tokens` item in `registry.json` (the token maps are duplicated deliberately, in the exact JSON shape the shadcn CLI can merge; structural blocks like `popup-motion` are maintained manually).
 
 ### Registry gotchas (learned the hard way)
 

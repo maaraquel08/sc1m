@@ -49,5 +49,5 @@ export const SHAPE_TOKENS = [
  * the @import list in globals.css and the Storybook Brand toolbar. */
 export const BRANDS = [
   { key: "sc1m", attr: null },
-  { key: "ledger", attr: "ledger" },
+  { key: "luntian", attr: "luntian" },
 ] as const;

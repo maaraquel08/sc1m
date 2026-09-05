@@ -22,8 +22,8 @@ every other brand scopes itself to a `[data-brand]` attribute.
 }
 ```
 
-```css title="src/styles/brands/ledger.css"
-[data-brand="ledger"] {
+```css title="src/styles/brands/luntian.css"
+[data-brand="luntian"] {
   /* same section order, same names, different values */
 }
 ```
@@ -38,7 +38,7 @@ Set the attribute on `<html>`, so portalled popups (which render into `<body>`)
 rebrand along with everything else:
 
 ```tsx
-<html data-brand="ledger">
+<html data-brand="luntian">
 ```
 
 The default brand carries no attribute — it owns `:root`, and is also the
@@ -85,7 +85,7 @@ npx vitest --project storybook run src/styles/tokens.stories.tsx
 - Brand files assign **bare** semantic names (`--accent`); the `@theme` block
   maps them to utilities. Never rename a semantic name.
 - Product and domain vocabulary lives **only** in section 1 primitives —
-  Ledger's `--money-in` is legal there and nowhere else.
+  Luntian's `--money-in` is legal there and nowhere else.
 - For dark mode, flip the primitives, then override only the semantics that
   genuinely change. Comment the reason.
 

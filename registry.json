@@ -7,7 +7,7 @@
       "name": "tokens",
       "type": "registry:theme",
       "title": "sc1m Design Tokens",
-      "description": "Ledger brand tokens and the Tailwind v4 theme contract: semantic colors, radii, shadows, motion, dark mode via the .dark class, and the popup-motion, ai-wash and ai-pulse utilities.",
+      "description": "sc1m brand tokens and the Tailwind v4 theme contract: semantic colors, radii, shadows, motion, dark mode via the .dark class, and the popup-motion, ai-wash and ai-pulse utilities.",
       "cssVars": {
         "theme": {
           "--color-bg": "var(--bg)",

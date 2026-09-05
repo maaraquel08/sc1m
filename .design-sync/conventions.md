@@ -42,7 +42,7 @@ The variables are the same names without the utility prefix: `--bg`,
 - **Dark mode** is the `dark` class on an ancestor (usually `<html>`). Do not
   write `dark:` variants of your own; the tokens flip underneath you.
 - **Brands**: the default (`:root`) brand is sc1m — orange accent, sharp radii.
-  Setting `data-brand="ledger"` on `<html>` switches to the Ledger brand
+  Setting `data-brand="luntian"` on `<html>` switches to the Luntian brand
   (espresso ink accent, warmer neutrals) with no component changes.
 
 ### Where the truth lives

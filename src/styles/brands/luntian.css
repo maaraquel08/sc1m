@@ -1,0 +1,166 @@
+/* ==================================================================
+ * Brand: Luntian (v1) — "sage on warm white"
+ *
+ * Scoped to [data-brand="luntian"] on <html>: the default brand (sc1m)
+ * owns :root, additional brands activate via the attribute. Tokens a
+ * brand skips fall back to the default. All brand files follow the
+ * same template: primitives → surfaces & text → interactive → status
+ * → shape & type.
+ * ================================================================== */
+
+[data-brand="luntian"] {
+  /* -- 1. primitives: the sage ramp --------------------------------
+   * Five steps, named by lightness. Everything green in this brand —
+   * the ink, the accent, the whole neutral ramp — is one of these or a
+   * mix of two, which is why the surfaces read as tinted paper rather
+   * than grey with green bolted on. */
+  --sage-900: oklch(0.3148 0.0468 163.84); /* deep sage: ink */
+  --sage-600: oklch(0.5943 0.064 166.37); /* sage: the brand hue */
+  --sage-400: oklch(0.7063 0.0459 168.31); /* light sage */
+  --sage-200: oklch(0.8883 0.0171 168.45); /* pale sage */
+  --sage-0: oklch(1 0 0); /* white */
+
+  /* -- 1. primitives: brand hues -----------------------------------
+   * --brand-accent is --sage-600 dropped in lightness, with the chroma
+   * held a hair above the shade it came from. That is the only liberty
+   * taken with the ramp, and holding the chroma is the point: darkening
+   * by mixing toward --sage-900 would drag chroma down to ~0.054 and
+   * the green would go muddy exactly as it got deeper. Instead it gets
+   * deeper and slightly more saturated, so it reads as the sage with
+   * the volume up — and a paper label lands at 6.2:1.
+   *
+   * --brand-gold is the hue --brand-paper is a tint of (both sit at
+   * h≈94), lifted to full chroma — a warm pop that still belongs to
+   * the paper. --brand-indigo is the one cool hue in the brand: see
+   * --info below for why the AI signal needs one. */
+  --brand-ink: var(--sage-900); /* deep sage: primary text, dark CTAs */
+  --brand-accent: oklch(0.48 0.072 166.1); /* = sage-600, darker and a touch richer */
+  --brand-paper: #fffdf6; /* warm white: page and card fills */
+  --brand-gold: oklch(0.78 0.135 93.57); /* the add action */
+  --brand-indigo: oklch(0.55 0.11 265); /* AI authorship */
+  --money-in: oklch(0.52 0.13 148); /* income, gains, headroom */
+  --money-out: oklch(0.52 0.16 28); /* spend, losses, overspend */
+
+  /* -- 1. primitives: neutral ramp (named by lightness) ------------
+   * Pale sage bled into the paper at four strengths, then the ramp's
+   * own shades. The mixes are written as resolved oklch rather than
+   * color-mix(): the tokens page reads every value back out of the
+   * page, and a color-mix() reports itself there as an unresolved
+   * expression. The comment carries the recipe so the step is still
+   * traceable.
+   *
+   * Monotonic in lightness, so a line is always darker than the fill
+   * it separates. */
+  --n-0: var(--brand-paper); /* canvas */
+  --n-50: oklch(0.9726 0.0091 114.9); /* weak — sage-200 20% + paper */
+  --n-100: oklch(0.9631 0.0093 124.45); /* fill — sage-200 29% + paper */
+  --n-200: oklch(0.9536 0.0098 133.27); /* line — sage-200 38% + paper */
+  --n-300: oklch(0.9283 0.012 151.72); /* edge — sage-200 62% + paper */
+  --n-400: var(--sage-400); /* mute */
+  --n-500: var(--sage-600); /* quiet */
+  --n-700: oklch(0.4266 0.0537 165.05); /* body — sage-900 60% + sage-600 */
+  --n-900: var(--sage-900); /* ink */
+
+  /* -- 2. surfaces & text ------------------------------------------
+   * Cards sit on the paper like the page; borders do containment
+   * ("a border means a container, not a seam"). */
+  --bg: var(--brand-paper);
+  --surface: var(--n-50);
+  --surface-raised: var(--brand-paper);
+  --fg: var(--n-900); /* text.primary   — 12.4:1 on paper */
+  --fg-muted: var(--n-700); /* text.secondary —  7.9:1 */
+  --fg-subtle: var(--n-500); /* text.tertiary  —  3.8:1 */
+  --line: var(--n-200); /* border.hairline */
+  --line-strong: var(--n-300); /* border.strong */
+
+  /* -- 3. interactive ----------------------------------------------- */
+  --accent: var(--brand-accent); /* the sage is the product's voice */
+  --accent-hover: oklch(0.42 0.072 166.1); /* the accent, one step deeper */
+  --accent-fg: var(--brand-paper);
+  --highlight: var(--brand-gold);
+  /* --sage-900, not --brand-ink: the ink flips to white in dark mode and
+     the gold does not, so binding the glyph to the ink would put a 2:1
+     white mark on a gold chip. The glyph is deep sage in both modes. */
+  --highlight-fg: var(--sage-900);
+  --ring: var(--brand-accent); /* focus = the accent sage */
+
+  /* -- 4. status ----------------------------------------------------
+   * Generic roles; the product meaning lives in this brand:
+   * success = money.in, danger = money.out, info = AI authorship.
+   *
+   * The four are cut to one recipe — L≈0.52-0.60 with the chroma tuned
+   * per hue for even weight — so they read as one family sitting on the
+   * sage rather than four web defaults borrowed from elsewhere. Every
+   * one clears 4.5:1 as a tinted badge and as a solid fill.
+   *
+   * money.in is a leaf green at h≈148 against the accent's h≈166, and
+   * carries twice its chroma. In a green brand that separation is the
+   * whole tell between "this went up" and "this is a control" — do not
+   * flatten either one toward the other.
+   *
+   * AI authorship is the indigo, the only cool hue here. Ledger could
+   * spend its signature hue on the AI surfaces because nothing else
+   * claimed it; Luntian's is spent on the accent, and the add action
+   * owns the gold, so the AI signal takes the one direction no other
+   * role points in. Repointing --info is how you move it. */
+  --success: var(--money-in);
+  --danger: var(--money-out);
+  --danger-fg: var(--sage-0);
+  --info: var(--brand-indigo);
+  /* warning is NOT the brand gold: --brand-gold is spoken for by the
+     add action, and a caution edged in it would read as an invitation.
+     Burnt amber sits between the gold and money.out instead. */
+  --warning: oklch(0.6 0.12 62);
+
+  /* -- 5. shape & type ---------------------------------------------- */
+  --brand-radius-sm: 5px; /* chips, tags */
+  --brand-radius-md: 10px; /* tiles, inputs, small cards */
+  --brand-radius-lg: 14px; /* cards, CTAs, AI field */
+  --brand-radius-xl: 22px; /* sheets */
+  --brand-font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --brand-font-mono: ui-monospace, Menlo, monospace;
+}
+
+/* Dark: ink and paper trade places. The ramp reverses by role, not
+ * numerically, and takes its lightness structure from the sc1m brand's
+ * dark ramp — near-black at the floor — with the sage present only as
+ * a whisper: chroma 0.005-0.016, roughly a fifth of the light mode's.
+ * That is deliberate. An earlier cut built the canvas out of the deep
+ * sage itself and the whole page read as green; the ground's job is to
+ * be dark, and the green belongs to the accent and the status hues
+ * sitting on it, where it now has far more room to show.
+ *
+ * The status hues keep their hue and chroma and only lift in lightness,
+ * so the family survives the flip. Only tokens that change are listed. */
+[data-brand="luntian"].dark {
+  /* -- 1. primitives ------------------------------------------------ */
+  --brand-ink: var(--sage-0);
+  --brand-paper: oklch(0.1448 0.012 164); /* near-black, faintly sage */
+
+  --n-0: var(--brand-paper); /* canvas */
+  --n-50: oklch(0.2046 0.013 164); /* weak */
+  --n-100: oklch(0.2393 0.014 164); /* fill */
+  --n-200: oklch(0.2686 0.015 164); /* line */
+  --n-300: oklch(0.3211 0.016 164); /* edge */
+  --n-400: oklch(0.5278 0.014 164); /* mute */
+  --n-500: oklch(0.6334 0.012 164); /* quiet */
+  --n-700: oklch(0.7155 0.01 164); /* body */
+  --n-900: oklch(0.9702 0.005 164); /* ink — 18.2:1 on the canvas */
+
+  --money-in: oklch(0.76 0.13 150);
+  --money-out: oklch(0.72 0.14 28);
+  --brand-indigo: oklch(0.72 0.11 262);
+  /* --brand-gold needs no lift: it already holds on the sage-black */
+
+  /* -- 2–4. semantic overrides --------------------------------------
+   * The accent climbs the ramp instead of descending it: on paper the
+   * sage is dark enough to take a paper label, on sage-black it has to
+   * be light enough to take a dark one. Same hue, opposite end. */
+  --surface-raised: var(--n-100);
+  --accent: var(--sage-400); /* 7.7:1 on the dark canvas */
+  --accent-hover: var(--sage-200);
+  --accent-fg: var(--brand-paper); /* dark ink on a light sage CTA */
+  --ring: var(--sage-400);
+  --danger-fg: var(--brand-paper); /* lifted hue takes dark text */
+  --warning: oklch(0.78 0.12 70);
+}

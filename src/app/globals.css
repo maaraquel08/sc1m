@@ -41,7 +41,7 @@
  * fill it in, and add its @import here (after the default).
  * ------------------------------------------------------------------ */
 @import "../styles/brands/sc1m.css";
-@import "../styles/brands/ledger.css";
+@import "../styles/brands/luntian.css";
 
 /* ------------------------------------------------------------------
  * The contract: semantic tokens → Tailwind utilities.
@@ -181,8 +181,9 @@
  * Nothing here names a colour.
  *
  * The eyebrow and sparkle use --ai-hue-ink rather than the raw hue because
- * Ledger's brand yellow is ~1.6:1 on the pale wash — far under AA for 9.5px
- * text. The darkened mix lands near 4.6:1.
+ * a wash is a 4-9% tint of the same hue, so the raw hue on it can land
+ * anywhere: sc1m's blue clears AA, a pale --info would not. The mix toward
+ * --fg puts a floor under it — never below ~4.6:1, in either mode.
  * ------------------------------------------------------------------ */
 .ai-wash {
   background-image: linear-gradient(

@@ -68,9 +68,9 @@ export const Parity: Story = {
       }
 
       // brands must actually differ, or the switcher is wired to nothing
-      await expect(accents['ledger/light']).not.toBe(accents['sc1m/light']);
+      await expect(accents['luntian/light']).not.toBe(accents['sc1m/light']);
       // themes must actually differ within a brand
-      await expect(accents['ledger/light']).not.toBe(accents['ledger/dark']);
+      await expect(accents['luntian/light']).not.toBe(accents['luntian/dark']);
     } finally {
       if (saved.brand) html.dataset.brand = saved.brand;
       else delete html.dataset.brand;

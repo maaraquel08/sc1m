@@ -63,7 +63,7 @@ theme and brand switchers rather than describing one fixed state.
 </TokenGroup>
 
 Only the ramp's *names* are shared across brands. The hue names are not — sc1m
-declares `--sc1m-orange`, Ledger declares `--brand-ink` and two money hues — so
+declares `--sc1m-orange`, Luntian declares a `--sage-*` ramp and two money hues — so
 nothing outside a brand file may reference them. That is the whole reason the
 semantic tier exists.
 
@@ -125,7 +125,7 @@ outside Next.js — Storybook has no `next/font` variables.
 
 ## Radius
 
-Radius is brand-owned: sc1m is sharp, Ledger is softer. The sample column
+Radius is brand-owned: sc1m is sharp, Luntian is softer. The sample column
 repaints with the brand, and **Current** reports what it resolved to.
 
 <RadiusSpec />
@@ -148,7 +148,7 @@ export const COLOR_TOKENS = ["bg", "surface", "surface-raised", /* … */] as co
 export const SHAPE_TOKENS = ["brand-radius-sm", /* … */ "brand-font-mono"] as const;
 export const BRANDS = [
   { key: "sc1m", attr: null },      // default brand owns :root
-  { key: "ledger", attr: "ledger" },
+  { key: "luntian", attr: "luntian" },
 ] as const;
 ```
 

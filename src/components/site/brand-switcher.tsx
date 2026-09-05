@@ -9,7 +9,7 @@ const DEFAULT_BRAND = BRANDS[0].key;
 /** Brand keys are lowercase slugs; these are how they are written. */
 const LABELS: Record<string, string> = {
   sc1m: "sc1m",
-  ledger: "Ledger",
+  luntian: "Luntian",
 };
 
 /* --------------------------------------------------------------------------
