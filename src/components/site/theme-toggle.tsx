@@ -38,7 +38,10 @@ export function ThemeToggle() {
       ) : (
         <Moon weight="fill" aria-hidden className="size-3.5" />
       )}
-      {dark ? "Light" : "Dark"}
+      {/* Icon-only on a phone — the landing header has ~342px of usable
+          width and the label is 37px of it. aria-label already carries the
+          meaning, so nothing is lost but the word. */}
+      <span className="hidden sm:inline">{dark ? "Light" : "Dark"}</span>
     </Button>
   );
 }
