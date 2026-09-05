@@ -202,7 +202,35 @@ Diagnosis shortcut: `curl <page> | grep -o '<p[^>]*><p'` — a hit is this bug.
   only 3 components needed re-grading, and a no-anchor run simply uploads
   everything - but write the sidecar to `.design-sync/.cache/remote-sync.json`
   **complete** if you want the diff to scope the upload.
+- **Don't re-type the anchor at all - copy it.** After a successful sync,
+  `ds-bundle/_ds_sync.json` IS what was uploaded, so the next run can seed the
+  anchor with `cp ds-bundle/_ds_sync.json .design-sync/.cache/remote-sync.json`
+  (verified working on the 2026-09-05 button re-sync: complete envelope, diff
+  scoped correctly). Only unsafe if ANOTHER machine synced in between - then
+  fetch. A stale local copy can only cause over-verification and over-upload,
+  never under, because it describes the build this repo last shipped.
 - **Grades this run:** Badge `match` x8 and Banner `match` x6 (both image-judged
   in full - first sync for each), Collapsible re-graded `close` on the unchanged
   play() cause shared with Accordion. Everything else carried forward.
   41/41 components, validate clean, no deletes.
+
+## 2026-09-05 (later) - Button secondary re-sync
+
+- **What changed:** `shadow-raised` dropped from Button's `secondary` variant.
+  No component's `.jsx`/`.d.ts`/`.prompt.md` moved (`sourceHashes` diff empty) -
+  variant classes live in `_ds_bundle.js`, not in the per-component artifacts -
+  so `changed`/`added`/`removed` were all empty and only `renderHashes` moved.
+- **Nine components re-shipped, not one.** `styleSha` moved too (the repo's
+  uncommitted `modal-motion` utility and the landing page's own CSS both land
+  in the storybook-scraped stylesheet), so the render surface changed for
+  Button plus every overlay component: AlertDialog, Dialog, Drawer, Form, Menu,
+  Popover, Toast, Tooltip. Expected - a CSS delta fans out.
+- **Rebuild the reference before grading a component-source change.** Button's
+  storybook render is the oracle; a stale `sb-reference` would have graded the
+  new flat button against the old shadowed one and reported a false mismatch.
+- **The canary re-rolls on every driver run.** Fixing the conventions header and
+  re-running produced a SECOND, different `[SPOT_CHECK]` set. Both sets were
+  confirmed against recorded grades (9 components total, no divergence) - but
+  budget for it: the post-header rebuild is a fresh churn event.
+- **conventions.md drift:** only the emitted-class count (459 -> 466). Every
+  class, token, var and component it names still verifies against the build.

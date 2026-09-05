@@ -21,7 +21,7 @@ a hex value, and never reach for a Tailwind palette class (`bg-slate-100`,
 | Type | `font-mono` · `font-normal` `font-medium` `font-semibold` |
 
 **The stylesheet is pre-compiled — there is no Tailwind running.** Only classes
-already emitted (~459 of them) work. Standard layout and spacing utilities are
+already emitted (~466 of them) work. Standard layout and spacing utilities are
 present (`flex`, `grid`, `items-center`, `gap-0`–`gap-6`/`gap-8`, `p-4`, `px-3`,
 `mt-2`, `w-full`, `h-9`, `text-sm`…), so compose layouts with those. For
 anything outside that set, use an inline style against the token variable —
