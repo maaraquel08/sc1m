@@ -20,14 +20,14 @@ export function Checkbox({
       {...props}
     >
       <BaseCheckbox.Indicator className="text-accent-fg data-unchecked:hidden">
-        <svg viewBox="0 0 12 10" fill="none" className="size-3">
-          <path
-            d="M1 5.5L4 8.5L11 1.5"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
+        {/* phosphor: check regular */}
+        <svg
+          aria-hidden
+          viewBox="0 0 256 256"
+          fill="currentColor"
+          className="size-3.5"
+        >
+          <path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z" />
         </svg>
       </BaseCheckbox.Indicator>
     </BaseCheckbox.Root>

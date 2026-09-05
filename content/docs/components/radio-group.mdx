@@ -1,0 +1,87 @@
+---
+title: "Radio Group"
+description: "Radio Group component built on Base UI, styled with sc1m tokens."
+---
+
+import { Demo as ComponentDemo } from "@/components/ui/radio-group/radio-group.demo";
+import { propColumns } from "@/components/site/docs-page";
+
+<Chips items={[{ label: "Stable", tone: "success" }, { label: "Base UI" }]} />
+
+## Live preview
+
+<Preview>
+  <ComponentDemo />
+</Preview>
+
+## Installation
+
+<PMCommand exec="shadcn@latest add @sc1m/radio-group" />
+
+This also merges the [token layer](/docs/foundations/tokens) and installs
+`src/lib/cn.ts` plus `@base-ui/react`. For the manual route — prerequisites,
+`components.json`, and app-level setup — see [Installation](/docs/installation).
+
+## Usage
+
+```tsx lineNumbers
+import { RadioGroup } from "@/components/ui/radio-group";
+```
+
+## Example
+
+The preview above, with its source. This is the demo module verbatim, so
+the code and the thing it renders cannot drift apart.
+
+<Demo>
+<DemoPreview>
+  <ComponentDemo />
+</DemoPreview>
+<DemoCode>
+
+```tsx lineNumbers
+<RadioGroup defaultValue="small" aria-label="Size">
+  {options.map((size) => (
+    <label key={size} className="flex items-center gap-2 text-sm">
+      <Radio value={size} />
+      {size}
+    </label>
+  ))}
+</RadioGroup>
+```
+
+</DemoCode>
+</Demo>
+
+## API reference
+Each part forwards every prop of its Base UI counterpart; the tables list
+the ones declared on the part itself. See
+[Base UI's reference](https://base-ui.com/react/components/radio-group)
+for the inherited element props.
+
+### RadioGroup
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["disabled", "boolean", "false", "Whether the component should ignore user interaction."],
+    ["readOnly", "boolean", "false", "Whether the user should be unable to select a different radio button in the group."],
+    ["required", "boolean", "false", "Whether the user must choose a value before submitting a form."],
+    ["name", "string", "—", "Identifies the field when a form is submitted."],
+    ["form", "string", "—", "Identifies the form that owns the radio inputs."],
+    ["value", "Value", "—", "The controlled value of the radio item that should be currently selected."],
+    ["defaultValue", "Value", "—", "The uncontrolled value of the radio button that should be initially selected."],
+    ["onValueChange", "((value: Value, eventDetails: RadioGroup.ChangeEventDetails) => void)", "—", "Callback fired when the value changes."],
+    ["inputRef", "React.Ref<HTMLInputElement>", "—", "A ref to access the hidden input element."],
+  ]}
+/>
+
+## Accessibility
+
+Behaviour, focus management, and ARIA wiring come from [Base UI's Radio Group](https://base-ui.com/react/components/radio-group) — see its reference for the full keyboard map.
+
+## Source
+
+[`src/components/ui/radio-group/radio-group.tsx`](https://github.com/maaraquel08/sc1m/blob/main/src/components/ui/radio-group/radio-group.tsx) — no `next/*` imports, so it drops into any
+React 19 + Tailwind v4 app.

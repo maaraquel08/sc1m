@@ -1,0 +1,141 @@
+---
+title: "Popover"
+description: "Popover component built on Base UI, styled with sc1m tokens."
+---
+
+import { Demo as ComponentDemo } from "@/components/ui/popover/popover.demo";
+import { propColumns } from "@/components/site/docs-page";
+import { tokenColumns } from "@/components/site/docs-page";
+
+<Chips items={[{ label: "Stable", tone: "success" }, { label: "Base UI" }]} />
+
+## Live preview
+
+<Preview>
+  <ComponentDemo />
+</Preview>
+
+## Installation
+
+<PMCommand exec="shadcn@latest add @sc1m/popover" />
+
+This also merges the [token layer](/docs/foundations/tokens) and installs
+`src/lib/cn.ts` plus `@base-ui/react`. For the manual route — prerequisites,
+`components.json`, and app-level setup — see [Installation](/docs/installation).
+
+## Usage
+
+```tsx lineNumbers
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverTitle,
+  PopoverDescription,
+} from "@/components/ui/popover";
+```
+
+## Composition
+
+Every part is a separate export. `Popover` owns state; the rest are
+presentational and must appear in this order.
+
+<Composition>{`
+  Popover
+    PopoverTrigger
+    PopoverContent
+      PopoverTitle
+      PopoverDescription
+`}</Composition>
+
+## Example
+
+The preview above, with its source. This is the demo module verbatim, so
+the code and the thing it renders cannot drift apart.
+
+<Demo>
+<DemoPreview>
+  <ComponentDemo />
+</DemoPreview>
+<DemoCode>
+
+```tsx lineNumbers
+<Popover>
+  <PopoverTrigger render={<Button variant="secondary" />}>
+    Open popover
+  </PopoverTrigger>
+  <PopoverContent>
+    <PopoverTitle className="text-sm font-semibold">
+      Base UI Popover
+    </PopoverTitle>
+    <PopoverDescription className="mt-1 text-sm text-fg-muted">
+      Portalled into the body, escaping the isolated app root.
+    </PopoverDescription>
+  </PopoverContent>
+</Popover>
+```
+
+</DemoCode>
+</Demo>
+
+## API reference
+Each part forwards every prop of its Base UI counterpart; the tables list
+the ones declared on the part itself. See
+[Base UI's reference](https://base-ui.com/react/components/popover)
+for the inherited element props.
+
+### Popover
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["defaultOpen", "boolean", "false", "Whether the popover is initially open."],
+    ["open", "boolean", "—", "Whether the popover is currently open."],
+    ["onOpenChange", "((open: boolean, eventDetails: PopoverRoot.ChangeEventDetails) => void)", "—", "Event handler called when the popover is opened or closed."],
+    ["onOpenChangeComplete", "((open: boolean) => void)", "—", "Event handler called after any animations complete when the popover is opened or closed."],
+    ["actionsRef", "React.RefObject<PopoverRoot.Actions | null>", "—", "A ref to imperative actions."],
+    ["modal", "boolean | 'trap-focus'", "false", "Determines if the popover enters a modal state when open."],
+    ["triggerId", "string | null", "—", "ID of the trigger that the popover is associated with."],
+    ["defaultTriggerId", "string | null", "—", "ID of the trigger that the popover is associated with."],
+    ["handle", "PopoverHandle<Payload>", "—", "A handle to associate the popover with a trigger."],
+  ]}
+/>
+
+### PopoverContent
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["initialFocus", "boolean | React.RefObject<HTMLElement | null> | ((openType: InteractionType) => void | boolean | HTMLElement | null)", "—", "Determines the element to focus when the popover is opened."],
+    ["finalFocus", "boolean | React.RefObject<HTMLElement | null> | ((closeType: InteractionType) => void | boolean | HTMLElement | null)", "—", "Determines the element to focus when the popover is closed."],
+  ]}
+/>
+
+## Accessibility
+
+Behaviour, focus management, and ARIA wiring come from [Base UI's Popover](https://base-ui.com/react/components/popover) — see its reference for the full keyboard map.
+
+## Design tokens
+
+The component reads semantic tokens only — no raw colour, radius, or
+duration appears in its source. Override the token, not the component.
+
+<SpecTable
+  columns={[tokenColumns[0], tokenColumns[2]]}
+  widths="1.2fr 1.8fr"
+  minWidth={420}
+  rows={[
+    ["--brand-radius-lg", "PopoverContent"],
+    ["--fg", "PopoverContent"],
+    ["--line", "PopoverContent"],
+    ["--shadow-overlay", "PopoverContent"],
+    ["--surface-raised", "PopoverContent"],
+  ]}
+/>
+
+## Source
+
+[`src/components/ui/popover/popover.tsx`](https://github.com/maaraquel08/sc1m/blob/main/src/components/ui/popover/popover.tsx) — no `next/*` imports, so it drops into any
+React 19 + Tailwind v4 app.

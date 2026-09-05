@@ -1,0 +1,91 @@
+{
+  "projectId": "3f1ca156-32c6-4b3e-bbd4-17901d9978b0",
+  "shape": "storybook",
+  "pkg": "sc1m",
+  "globalName": "Sc1m",
+  "entry": ".design-sync/entry.ts",
+  "storybookConfigDir": ".storybook",
+  "storybookStatic": ".design-sync/sb-reference",
+  "buildCmd": "npx storybook build -c .storybook -o .design-sync/sb-reference",
+  "titleMap": {
+    "accordion": "Accordion",
+    "ai-summary": "AiSummary",
+    "alert-dialog": "AlertDialog",
+    "autocomplete": "Autocomplete",
+    "avatar": "Avatar",
+    "badge": "Badge",
+    "banner": "Banner",
+    "button": "Button",
+    "checkbox": "Checkbox",
+    "checkbox-group": "CheckboxGroup",
+    "collapsible": "Collapsible",
+    "combobox": "Combobox",
+    "context-menu": "ContextMenu",
+    "dialog": "Dialog",
+    "drawer": "Drawer",
+    "field": "Field",
+    "fieldset": "Fieldset",
+    "form": "Form",
+    "input": "Input",
+    "menu": "Menu",
+    "menubar": "Menubar",
+    "meter": "Meter",
+    "navigation-menu": "NavigationMenu",
+    "number-field": "NumberField",
+    "otp-field": "OTPField",
+    "popover": "Popover",
+    "preview-card": "PreviewCard",
+    "progress": "Progress",
+    "radio": "Radio",
+    "radio-group": "RadioGroup",
+    "scroll-area": "ScrollArea",
+    "select": "Select",
+    "separator": "Separator",
+    "slider": "Slider",
+    "switch": "Switch",
+    "tabs": "Tabs",
+    "toast": "Toast",
+    "toggle": "Toggle",
+    "toggle-group": "ToggleGroup",
+    "toolbar": "Toolbar",
+    "tooltip": "Tooltip",
+    "tokens": null
+  },
+  "provider": {
+    "component": "TooltipProvider",
+    "props": {}
+  },
+  "docsDir": "content/docs/components",
+  "overrides": {
+    "AiSummary": {
+      "cardMode": "column"
+    },
+    "AlertDialog": {
+      "cardMode": "single",
+      "primaryStory": "InitiallyOpen"
+    },
+    "Banner": {
+      "cardMode": "column"
+    },
+    "Dialog": {
+      "cardMode": "single",
+      "primaryStory": "Default"
+    },
+    "Drawer": {
+      "cardMode": "single",
+      "primaryStory": "InitiallyOpen"
+    },
+    "Meter": {
+      "cardMode": "single",
+      "primaryStory": "Default"
+    },
+    "Progress": {
+      "cardMode": "single",
+      "primaryStory": "Default"
+    },
+    "Select": {
+      "cardMode": "single"
+    }
+  },
+  "readmeHeader": ".design-sync/conventions.md"
+}

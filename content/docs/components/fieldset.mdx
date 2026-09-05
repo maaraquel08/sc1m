@@ -1,0 +1,92 @@
+---
+title: "Fieldset"
+description: "Fieldset component built on Base UI, styled with sc1m tokens."
+---
+
+import { Demo as ComponentDemo } from "@/components/ui/fieldset/fieldset.demo";
+import { tokenColumns } from "@/components/site/docs-page";
+
+<Chips items={[{ label: "Stable", tone: "success" }, { label: "Base UI" }]} />
+
+## Live preview
+
+<Preview>
+  <ComponentDemo />
+</Preview>
+
+## Installation
+
+<PMCommand exec="shadcn@latest add @sc1m/fieldset" />
+
+This also merges the [token layer](/docs/foundations/tokens) and installs
+`src/lib/cn.ts` plus `@base-ui/react`. For the manual route — prerequisites,
+`components.json`, and app-level setup — see [Installation](/docs/installation).
+
+## Usage
+
+```tsx lineNumbers
+import { Fieldset, FieldsetLegend } from "@/components/ui/fieldset";
+```
+
+## Composition
+
+Every part is a separate export. `Fieldset` owns state; the rest are
+presentational and must appear in this order.
+
+<Composition>{`
+  Fieldset
+    FieldsetLegend
+`}</Composition>
+
+## Example
+
+The preview above, with its source. This is the demo module verbatim, so
+the code and the thing it renders cannot drift apart.
+
+<Demo>
+<DemoPreview>
+  <ComponentDemo />
+</DemoPreview>
+<DemoCode>
+
+```tsx lineNumbers
+<Fieldset>
+  <FieldsetLegend>Shipping address</FieldsetLegend>
+  <Field name="street">
+    <FieldLabel>Street</FieldLabel>
+    <FieldControl placeholder="123 Main St" />
+  </Field>
+  <Field name="city">
+    <FieldLabel>City</FieldLabel>
+    <FieldControl placeholder="Metropolis" />
+  </Field>
+</Fieldset>
+```
+
+</DemoCode>
+</Demo>
+
+## Accessibility
+
+Behaviour, focus management, and ARIA wiring come from [Base UI's Fieldset](https://base-ui.com/react/components/fieldset) — see its reference for the full keyboard map.
+
+## Design tokens
+
+The component reads semantic tokens only — no raw colour, radius, or
+duration appears in its source. Override the token, not the component.
+
+<SpecTable
+  columns={[tokenColumns[0], tokenColumns[2]]}
+  widths="1.2fr 1.8fr"
+  minWidth={420}
+  rows={[
+    ["--brand-radius-lg", "Fieldset"],
+    ["--fg", "FieldsetLegend"],
+    ["--line", "Fieldset"],
+  ]}
+/>
+
+## Source
+
+[`src/components/ui/fieldset/fieldset.tsx`](https://github.com/maaraquel08/sc1m/blob/main/src/components/ui/fieldset/fieldset.tsx) — no `next/*` imports, so it drops into any
+React 19 + Tailwind v4 app.

@@ -1,0 +1,91 @@
+---
+title: "Slider"
+description: "Slider component built on Base UI, styled with sc1m tokens."
+---
+
+import { Demo as ComponentDemo } from "@/components/ui/slider/slider.demo";
+import { propColumns } from "@/components/site/docs-page";
+
+<Chips items={[{ label: "Stable", tone: "success" }, { label: "Base UI" }]} />
+
+## Live preview
+
+<Preview>
+  <ComponentDemo />
+</Preview>
+
+## Installation
+
+<PMCommand exec="shadcn@latest add @sc1m/slider" />
+
+This also merges the [token layer](/docs/foundations/tokens) and installs
+`src/lib/cn.ts` plus `@base-ui/react`. For the manual route — prerequisites,
+`components.json`, and app-level setup — see [Installation](/docs/installation).
+
+## Usage
+
+```tsx lineNumbers
+import { Slider, SliderLabel, SliderValue } from "@/components/ui/slider";
+```
+
+## Example
+
+The preview above, with its source. This is the demo module verbatim, so
+the code and the thing it renders cannot drift apart.
+
+<Demo>
+<DemoPreview>
+  <ComponentDemo />
+</DemoPreview>
+<DemoCode>
+
+```tsx lineNumbers
+<Slider defaultValue={40} className="w-72" />
+```
+
+</DemoCode>
+</Demo>
+
+## API reference
+Each part forwards every prop of its Base UI counterpart; the tables list
+the ones declared on the part itself. See
+[Base UI's reference](https://base-ui.com/react/components/slider)
+for the inherited element props.
+
+### Slider
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["defaultValue", "Value", "—", "The uncontrolled value of the slider when it's initially rendered."],
+    ["disabled", "boolean", "false", "Whether the slider should ignore user interaction."],
+    ["format", "Intl.NumberFormatOptions", "—", "Options to format the value."],
+    ["locale", "Intl.LocalesArgument", "—", "The locale used by Intl.NumberFormat when formatting the value."],
+    ["max", "number", "100", "The maximum allowed value of the slider."],
+    ["min", "number", "0", "The minimum allowed value of the slider."],
+    ["minStepsBetweenValues", "number", "0", "The minimum steps between values in a range slider."],
+    ["name", "string", "—", "Identifies the field when a form is submitted."],
+    ["form", "string", "—", "Identifies the form that owns the slider inputs."],
+    ["orientation", "Orientation", "'horizontal'", "The component orientation."],
+    ["step", "number", "1", "The granularity with which the slider can step through values. (A \"discrete\" slider.) The min prop serves as the origin for the valid values."],
+    ["largeStep", "number", "10", "The granularity with which the slider can step through values when using Page Up/Page Down or Shift + Arrow Up/Arrow Down."],
+    ["thumbAlignment", "'center' | 'edge' | 'edge-client-only'", "'center'", "How the thumb(s) are aligned relative to Slider.Control when the value is at min or max: - center: The center of the thumb is aligned with the control edge - edge: The thumb is inset within the control such that its edge is aligned with the control edge - edge-client-only: Same as edge but renders after React hydration on the client, reducing bundle size in return"],
+    ["thumbCollisionBehavior", "'push' | 'swap' | 'none'", "'push'", "Controls how thumbs behave when they collide during pointer interactions."],
+    ["value", "Value", "—", "The value of the slider."],
+    ["onValueChange", "((value: Value extends number ? number : Value, eventDetails: SliderRoot.ChangeEventDetails) => void)", "—", "Callback function that is fired when the slider's value changed."],
+    ["onValueCommitted", "((value: Value extends number ? number : Value, eventDetails: SliderRoot.CommitEventDetails) => void)", "—", "Callback function that is fired when a value change is committed."],
+  ]}
+/>
+
+## Accessibility
+
+Behaviour, focus management, and ARIA wiring come from [Base UI's Slider](https://base-ui.com/react/components/slider) — see its reference for the full keyboard map.
+
+- Keyboard focus draws a 2px ring in `--ring`, never removed — only shown on `:focus-visible`, so a pointer press does not paint one.
+- Disabled parts mute their contents rather than the element, keeping the focus ring at full strength where the part stays focusable.
+
+## Source
+
+[`src/components/ui/slider/slider.tsx`](https://github.com/maaraquel08/sc1m/blob/main/src/components/ui/slider/slider.tsx) — no `next/*` imports, so it drops into any
+React 19 + Tailwind v4 app.

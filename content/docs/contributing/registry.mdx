@@ -1,0 +1,60 @@
+---
+title: "Registry authoring"
+description: "How the shadcn registry is built and validated — including the CSS-encoding traps learned the hard way."
+---
+
+`registry.json` at the repo root is the manifest: one entry per component, plus
+`tokens` (`registry:theme`) and `cn` (`registry:lib`).
+
+```bash
+npm run registry:build   # shadcn build → public/r/*.json
+```
+
+It runs automatically before `next build` via the `prebuild` script, so every
+deploy regenerates the JSON. `public/r/` is gitignored and never committed,
+which makes stale registry output structurally impossible.
+
+## CI
+
+`.github/workflows/registry.yml` builds the registry on every PR and push to
+main, then runs two checks:
+
+- **`scripts/check-registry.mjs`** — validates file paths, build output,
+  self-referencing registry-dependency URLs, `"use client"` directives, and the
+  no-`next/*`-imports guarantee.
+- **`scripts/check-tokens-parity.mjs`** — fails when `src/app/globals.css` or
+  `src/styles/brands/sc1m.css` drift from the `tokens` item in
+  `registry.json`.
+
+The token maps are duplicated deliberately, in the exact JSON shape the shadcn
+CLI can merge. Structural blocks — the `popup-motion` utility, the toast
+keyframes, `@custom-variant dark`, the reduced-motion media queries — are
+maintained by hand and sit outside the parity check's scope.
+
+## CSS encoding traps
+
+The shadcn CLI's CSS merger (`shadcn@4.x`) is particular about how `css` and
+`cssVars` are encoded. All three of these were found by crashing it:
+
+<Callout type="warn" title="@theme mappings go in cssVars.theme">
+  They are emitted as `@theme inline`, which preserves the load-bearing
+  `inline`. A flat map under `css["@theme inline"]` crashes the merger.
+</Callout>
+
+<Callout type="warn" title="Parameterized at-rules go in the key">
+  With an empty object as the value:
+  `"@custom-variant dark (&:where(.dark, .dark *))": {}`. A string value is
+  parsed as a declaration body and crashes.
+</Callout>
+
+<Callout type="warn" title="Don't use cssVars.light / cssVars.dark for ---prefixed names">
+  The CLI double-prefixes them, producing `var(----n-0)`.
+</Callout>
+
+## Local verification
+
+```bash
+npm run registry:build
+node scripts/check-registry.mjs
+node scripts/check-tokens-parity.mjs
+```

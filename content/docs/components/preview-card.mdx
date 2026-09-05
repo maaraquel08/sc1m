@@ -1,0 +1,136 @@
+---
+title: "Preview Card"
+description: "Preview Card component built on Base UI, styled with sc1m tokens."
+---
+
+import { Demo as ComponentDemo } from "@/components/ui/preview-card/preview-card.demo";
+import { propColumns } from "@/components/site/docs-page";
+import { tokenColumns } from "@/components/site/docs-page";
+
+<Chips items={[{ label: "Stable", tone: "success" }, { label: "Base UI" }]} />
+
+## Live preview
+
+<Preview>
+  <ComponentDemo />
+</Preview>
+
+## Installation
+
+<PMCommand exec="shadcn@latest add @sc1m/preview-card" />
+
+This also merges the [token layer](/docs/foundations/tokens) and installs
+`src/lib/cn.ts` plus `@base-ui/react`. For the manual route — prerequisites,
+`components.json`, and app-level setup — see [Installation](/docs/installation).
+
+## Usage
+
+```tsx lineNumbers
+import { PreviewCard, PreviewCardTrigger, PreviewCardContent } from "@/components/ui/preview-card";
+```
+
+## Composition
+
+Every part is a separate export. `PreviewCard` owns state; the rest are
+presentational and must appear in this order.
+
+<Composition>{`
+  PreviewCard
+    PreviewCardTrigger
+    PreviewCardContent
+`}</Composition>
+
+## Example
+
+The preview above, with its source. This is the demo module verbatim, so
+the code and the thing it renders cannot drift apart.
+
+<Demo>
+<DemoPreview>
+  <ComponentDemo />
+</DemoPreview>
+<DemoCode>
+
+```tsx lineNumbers
+<PreviewCard>
+  <PreviewCardTrigger
+    href="#"
+    delay={0}
+    className="text-fg underline decoration-line-strong underline-offset-2 outline-none focus-visible:outline-2 focus-visible:outline-ring"
+  >
+    @sprout-team
+  </PreviewCardTrigger>
+  <PreviewCardContent>
+    <p className="text-sm font-semibold">Sprout Team</p>
+    <p className="mt-1 text-sm text-fg-muted">
+      Design system maintainers. Hover to preview, click to visit.
+    </p>
+  </PreviewCardContent>
+</PreviewCard>
+```
+
+</DemoCode>
+</Demo>
+
+## API reference
+Each part forwards every prop of its Base UI counterpart; the tables list
+the ones declared on the part itself. See
+[Base UI's reference](https://base-ui.com/react/components/preview-card)
+for the inherited element props.
+
+### PreviewCard
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["defaultOpen", "boolean", "false", "Whether the preview card is initially open."],
+    ["open", "boolean", "—", "Whether the preview card is currently open."],
+    ["onOpenChange", "((open: boolean, eventDetails: PreviewCardRoot.ChangeEventDetails) => void)", "—", "Event handler called when the preview card is opened or closed."],
+    ["onOpenChangeComplete", "((open: boolean) => void)", "—", "Event handler called after any animations complete when the preview card is opened or closed."],
+    ["actionsRef", "React.RefObject<PreviewCardRoot.Actions | null>", "—", "A ref to imperative actions."],
+    ["handle", "PreviewCardHandle<Payload>", "—", "A handle to associate the preview card with a trigger."],
+    ["triggerId", "string | null", "—", "ID of the trigger that the preview card is associated with."],
+    ["defaultTriggerId", "string | null", "—", "ID of the trigger that the preview card is associated with."],
+  ]}
+/>
+
+### PreviewCardTrigger
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["handle", "PreviewCardHandle<Payload>", "—", "A handle to associate the trigger with a preview card."],
+    ["payload", "Payload", "—", "A payload to pass to the preview card when it is opened."],
+    ["delay", "number", "600", "How long to wait before the preview card opens."],
+    ["closeDelay", "number", "300", "How long to wait before closing the preview card."],
+  ]}
+/>
+
+## Accessibility
+
+Behaviour, focus management, and ARIA wiring come from [Base UI's Preview Card](https://base-ui.com/react/components/preview-card) — see its reference for the full keyboard map.
+
+## Design tokens
+
+The component reads semantic tokens only — no raw colour, radius, or
+duration appears in its source. Override the token, not the component.
+
+<SpecTable
+  columns={[tokenColumns[0], tokenColumns[2]]}
+  widths="1.2fr 1.8fr"
+  minWidth={420}
+  rows={[
+    ["--brand-radius-lg", "PreviewCardContent"],
+    ["--fg", "PreviewCardContent"],
+    ["--line", "PreviewCardContent"],
+    ["--shadow-overlay", "PreviewCardContent"],
+    ["--surface-raised", "PreviewCardContent"],
+  ]}
+/>
+
+## Source
+
+[`src/components/ui/preview-card/preview-card.tsx`](https://github.com/maaraquel08/sc1m/blob/main/src/components/ui/preview-card/preview-card.tsx) — no `next/*` imports, so it drops into any
+React 19 + Tailwind v4 app.

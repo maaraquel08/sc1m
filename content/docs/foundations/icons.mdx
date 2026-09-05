@@ -1,0 +1,165 @@
+---
+title: "Icons"
+description: "Phosphor is the system's icon set. Regular weight carries structure, fill carries state, and the glyphs built into components are Phosphor's own paths inlined rather than imported."
+---
+
+import { CaretDown, Check, Info, WarningCircle, CheckCircle, XCircle } from "@phosphor-icons/react/dist/ssr";
+import { Badge } from "@/components/ui/badge";
+import { Banner } from "@/components/ui/banner";
+import { tokenColumns } from "@/components/site/docs-page";
+
+## The set
+
+[Phosphor](https://phosphoricons.com) is the official icon set. Around 9,000
+glyphs, six weights, drawn on a 256 grid — and the vocabulary the design
+studies this system was built from already speak.
+
+```package-install
+@phosphor-icons/react
+```
+
+Import from the SSR entry so glyphs render on the server and stay out of the
+client bundle:
+
+```tsx lineNumbers
+import { CheckCircle, WarningCircle } from "@phosphor-icons/react/dist/ssr";
+
+<CheckCircle weight="fill" />
+```
+
+Both entry points are barrels over the full set, so `next.config.mjs` lists the
+package under `optimizePackageImports`. Without it, one glyph pulls all nine
+thousand through the dev compiler on every change.
+
+## Two weights, two jobs
+
+<SpecTable
+  columns={[
+    { label: "Weight", className: "font-mono text-xs text-fg" },
+    { label: "Where", className: "text-fg" },
+    { label: "Why", className: "text-fg-muted" },
+  ]}
+  widths="0.7fr 1.3fr 2fr"
+  minWidth={520}
+  rows={[
+    ["regular", "Structure — carets, checks, submenu arrows", "Structural glyphs sit beside text and must not outweigh it. Regular is a 16-unit stroke on the 256 grid, which lands at about 1px on a 16px icon."],
+    ["fill", "State — banner and badge status marks", "A status glyph carries meaning on its own and is usually small. Solid holds at 12–15px where a stroke breaks up."],
+  ]}
+/>
+
+The other four weights — thin, light, bold, duotone — are not part of the
+system. Reach for one only with a reason you can write down.
+
+<Demo>
+<DemoPreview>
+  <div className="flex flex-col gap-4">
+    <div className="flex items-center gap-3 text-fg">
+      <CaretDown className="size-4" />
+      <Check className="size-4" />
+      <span className="text-xs text-fg-subtle">regular — structure</span>
+    </div>
+    <div className="flex items-center gap-3">
+      <Info weight="fill" className="size-4 text-info" />
+      <WarningCircle weight="fill" className="size-4 text-warning" />
+      <CheckCircle weight="fill" className="size-4 text-success" />
+      <XCircle weight="fill" className="size-4 text-danger" />
+      <span className="text-xs text-fg-subtle">fill — state</span>
+    </div>
+  </div>
+</DemoPreview>
+<DemoCode>
+
+```tsx lineNumbers
+<CaretDown className="size-4" />
+<Info weight="fill" className="size-4 text-info" />
+```
+
+</DemoCode>
+</Demo>
+
+## Components inline their glyphs
+
+The icons built into components — the accordion caret, the checkbox tick, the
+banner's status marks — are **Phosphor's path data inlined**, not imports.
+
+Two reasons, and both are load-bearing:
+
+- **A registry component has to install clean.** `shadcn add @sc1m/accordion`
+  copies one file. If that file imported an icon package, every consumer would
+  inherit a dependency to get a caret.
+- **The React icons are client components.** They read weight from context, so
+  importing one into Button, Banner or Badge would pull a server-safe component
+  into the client bundle for a static shape.
+
+The cost of inlining is drift — a hand-nudged path quietly stops being
+Phosphor. So every inline glyph carries a provenance marker:
+
+```tsx lineNumbers
+{/* phosphor: caret-down regular */}
+<svg aria-hidden viewBox="0 0 256 256" fill="currentColor" className="size-4">
+  <path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80…" />
+</svg>
+```
+
+`scripts/check-icon-parity.mjs` reads every marker and compares the path against
+`@phosphor-icons/core`, byte for byte. It fails on a single changed digit, which
+is what makes inlining safe rather than a slow leak away from the set.
+
+## Rules
+
+- **Always `currentColor`.** A glyph inherits its colour from the text or token
+  around it. No glyph names a hue.
+- **Always `aria-hidden`** unless the icon is the only content, in which case it
+  needs a label. Decorative by default; the text carries the meaning.
+- **Never icon-only status.** A tint plus a glyph with no words fails in
+  greyscale and fails for anyone who cannot separate the hues.
+- **Size with `size-*`, never `width`.** The 256 viewBox scales cleanly, and
+  utility sizing keeps glyphs on the spacing scale.
+
+## Icon slots
+
+Components that accept a glyph expose it as a prop rather than taking it from
+children, so the slot can fix the box and stop a 24px source icon from blowing
+out a 24px chip.
+
+<Demo>
+<DemoPreview>
+  <div className="flex flex-col gap-3">
+    <div className="flex flex-wrap gap-2">
+      <Badge tone="success" icon={<CheckCircle weight="fill" />}>Paid</Badge>
+      <Badge tone="danger" icon={<XCircle weight="fill" />}>Overdue</Badge>
+    </div>
+    <Banner tone="info">
+      The banner picks its own glyph from the tone — there is no slot to fill.
+    </Banner>
+  </div>
+</DemoPreview>
+<DemoCode>
+
+```tsx lineNumbers
+<Badge tone="success" icon={<CheckCircle weight="fill" />}>Paid</Badge>
+```
+
+</DemoCode>
+</Demo>
+
+The banner is the exception: its glyph is chosen by `tone`, because a warning
+banner with a smiling face would be a bug, not a choice.
+
+## Design tokens
+
+Glyphs take colour from whatever is around them, so they read the same tokens
+the text does.
+
+<SpecTable
+  columns={[tokenColumns[0], tokenColumns[2]]}
+  widths="1.2fr 1.8fr"
+  minWidth={420}
+  rows={[
+    ["--info", "info status glyphs"],
+    ["--warning", "warning status glyphs"],
+    ["--success", "success status glyphs"],
+    ["--danger", "danger status glyphs"],
+    ["--fg-subtle", "structural glyphs — carets, submenu arrows"],
+  ]}
+/>

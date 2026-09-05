@@ -1,0 +1,131 @@
+---
+title: "Scroll Area"
+description: "Scroll Area component built on Base UI, styled with sc1m tokens."
+---
+
+import { Demo as ComponentDemo } from "@/components/ui/scroll-area/scroll-area.demo";
+import { propColumns } from "@/components/site/docs-page";
+import { tokenColumns } from "@/components/site/docs-page";
+
+<Chips items={[{ label: "Stable", tone: "success" }, { label: "Base UI" }]} />
+
+## Live preview
+
+<Preview>
+  <ComponentDemo />
+</Preview>
+
+## Installation
+
+<PMCommand exec="shadcn@latest add @sc1m/scroll-area" />
+
+This also merges the [token layer](/docs/foundations/tokens) and installs
+`src/lib/cn.ts` plus `@base-ui/react`. For the manual route — prerequisites,
+`components.json`, and app-level setup — see [Installation](/docs/installation).
+
+## Usage
+
+```tsx lineNumbers
+import {
+  ScrollArea,
+  ScrollAreaViewport,
+  ScrollAreaScrollbar,
+  ScrollAreaThumb,
+  ScrollAreaContent,
+  ScrollAreaCorner,
+} from "@/components/ui/scroll-area";
+```
+
+## Composition
+
+Every part is a separate export. `ScrollArea` owns state; the rest are
+presentational and must appear in this order.
+
+<Composition>{`
+  ScrollArea
+    ScrollAreaViewport
+    ScrollAreaScrollbar
+      ScrollAreaThumb
+`}</Composition>
+
+## Example
+
+The preview above, with its source. This is the demo module verbatim, so
+the code and the thing it renders cannot drift apart.
+
+<Demo>
+<DemoPreview>
+  <ComponentDemo />
+</DemoPreview>
+<DemoCode>
+
+```tsx lineNumbers
+<ScrollArea className="h-48 w-64 rounded-md border border-line">
+  <ScrollAreaViewport>
+    <div className="p-4 text-sm text-fg">
+      {Array.from({ length: 20 }, (_, i) => (
+        <p key={i} className="py-1">
+          Row {i + 1}
+        </p>
+      ))}
+    </div>
+  </ScrollAreaViewport>
+  <ScrollAreaScrollbar orientation="vertical">
+    <ScrollAreaThumb />
+  </ScrollAreaScrollbar>
+</ScrollArea>
+```
+
+</DemoCode>
+</Demo>
+
+## API reference
+Each part forwards every prop of its Base UI counterpart; the tables list
+the ones declared on the part itself. See
+[Base UI's reference](https://base-ui.com/react/components/scroll-area)
+for the inherited element props.
+
+### ScrollArea
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["overflowEdgeThreshold", "number | Partial<{ xStart: number; xEnd: number; yStart: number; yEnd: number; }>", "0", "The threshold in pixels that must be passed before the overflow edge attributes are applied."],
+  ]}
+/>
+
+### ScrollAreaScrollbar
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["orientation", "'vertical' | 'horizontal'", "'vertical'", "Whether the scrollbar controls vertical or horizontal scroll."],
+    ["keepMounted", "boolean", "false", "Whether to keep the HTML element in the DOM when the viewport isn't scrollable."],
+  ]}
+/>
+
+## Accessibility
+
+Behaviour, focus management, and ARIA wiring come from [Base UI's Scroll Area](https://base-ui.com/react/components/scroll-area) — see its reference for the full keyboard map.
+
+## Design tokens
+
+The component reads semantic tokens only — no raw colour, radius, or
+duration appears in its source. Override the token, not the component.
+
+<SpecTable
+  columns={[tokenColumns[0], tokenColumns[2]]}
+  widths="1.2fr 1.8fr"
+  minWidth={420}
+  rows={[
+    ["--brand-radius-sm", "ScrollAreaThumb"],
+    ["--line-strong", "ScrollAreaThumb"],
+  ]}
+/>
+
+## Source
+
+[`src/components/ui/scroll-area/scroll-area.tsx`](https://github.com/maaraquel08/sc1m/blob/main/src/components/ui/scroll-area/scroll-area.tsx) — no `next/*` imports, so it drops into any
+React 19 + Tailwind v4 app.

@@ -1,0 +1,111 @@
+---
+title: "Checkbox"
+description: "Checkbox component built on Base UI, styled with sc1m tokens."
+---
+
+import { Demo as ComponentDemo } from "@/components/ui/checkbox/checkbox.demo";
+import { propColumns } from "@/components/site/docs-page";
+import { tokenColumns } from "@/components/site/docs-page";
+
+<Chips items={[{ label: "Stable", tone: "success" }, { label: "Base UI" }]} />
+
+## Live preview
+
+<Preview>
+  <ComponentDemo />
+</Preview>
+
+## Installation
+
+<PMCommand exec="shadcn@latest add @sc1m/checkbox" />
+
+This also merges the [token layer](/docs/foundations/tokens) and installs
+`src/lib/cn.ts` plus `@base-ui/react`. For the manual route — prerequisites,
+`components.json`, and app-level setup — see [Installation](/docs/installation).
+
+## Usage
+
+```tsx lineNumbers
+import { Checkbox } from "@/components/ui/checkbox";
+```
+
+## Example
+
+The preview above, with its source. This is the demo module verbatim, so
+the code and the thing it renders cannot drift apart.
+
+<Demo>
+<DemoPreview>
+  <ComponentDemo />
+</DemoPreview>
+<DemoCode>
+
+```tsx lineNumbers
+<label className="flex items-center gap-2 text-sm">
+  <Checkbox />
+  Accept terms
+</label>
+```
+
+</DemoCode>
+</Demo>
+
+## API reference
+Each part forwards every prop of its Base UI counterpart; the tables list
+the ones declared on the part itself. See
+[Base UI's reference](https://base-ui.com/react/components/checkbox)
+for the inherited element props.
+
+### Checkbox
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["id", "string", "—", "The id of the input element."],
+    ["name", "string", "undefined", "Identifies the field when a form is submitted."],
+    ["form", "string", "—", "Identifies the form that owns the hidden input."],
+    ["checked", "boolean", "undefined", "Whether the checkbox is currently ticked."],
+    ["defaultChecked", "boolean", "false", "Whether the checkbox is initially ticked."],
+    ["disabled", "boolean", "false", "Whether the component should ignore user interaction."],
+    ["onCheckedChange", "((checked: boolean, eventDetails: CheckboxRootChangeEventDetails) => void)", "—", "Event handler called when the checkbox is ticked or unticked."],
+    ["readOnly", "boolean", "false", "Whether the user should be unable to tick or untick the checkbox."],
+    ["required", "boolean", "false", "Whether the user must tick the checkbox before submitting a form."],
+    ["indeterminate", "boolean", "false", "Whether the checkbox is in a mixed state: neither ticked, nor unticked."],
+    ["inputRef", "React.Ref<HTMLInputElement>", "—", "A ref to access the hidden <input> element."],
+    ["parent", "boolean", "false", "Whether the checkbox controls a group of child checkboxes."],
+    ["uncheckedValue", "string", "—", "The value submitted with the form when the checkbox is unchecked."],
+    ["value", "string", "—", "The checkbox's value."],
+  ]}
+/>
+
+## Accessibility
+
+Behaviour, focus management, and ARIA wiring come from [Base UI's Checkbox](https://base-ui.com/react/components/checkbox) — see its reference for the full keyboard map.
+
+- Keyboard focus draws a 2px ring in `--ring`, never removed — only shown on `:focus-visible`, so a pointer press does not paint one.
+- Disabled parts mute their contents rather than the element, keeping the focus ring at full strength where the part stays focusable.
+
+## Design tokens
+
+The component reads semantic tokens only — no raw colour, radius, or
+duration appears in its source. Override the token, not the component.
+
+<SpecTable
+  columns={[tokenColumns[0], tokenColumns[2]]}
+  widths="1.2fr 1.8fr"
+  minWidth={420}
+  rows={[
+    ["--accent", "Checkbox"],
+    ["--accent-fg", "Checkbox"],
+    ["--brand-radius-sm", "Checkbox"],
+    ["--line-strong", "Checkbox"],
+    ["--ring", "Checkbox"],
+    ["--surface-raised", "Checkbox"],
+  ]}
+/>
+
+## Source
+
+[`src/components/ui/checkbox/checkbox.tsx`](https://github.com/maaraquel08/sc1m/blob/main/src/components/ui/checkbox/checkbox.tsx) — no `next/*` imports, so it drops into any
+React 19 + Tailwind v4 app.

@@ -1,0 +1,63 @@
+---
+title: "Components"
+description: "Every component in the registry, with what its docs page currently shows."
+---
+
+39 components, each built on a Base UI primitive and styled only
+through [semantic tokens](/docs/foundations/tokens).
+
+## Reading the Preview column
+
+- **controls** — the page renders the real component with live prop inputs
+  generated from its TypeScript props. 5 pages.
+- **preview** — the page renders a fixed, representative composition. Compound
+  components (`Dialog.Root` + `Trigger` + `Popup`, and friends) have no single
+  prop set to drive, so a composition is the honest thing to show. Vary them in
+  Storybook: `npm run storybook`. 34 pages.
+
+Previews are lifted from each component's Storybook `Default` story by
+`npm run docs:gen`, so they cannot drift from what is tested.
+
+## Catalog
+
+| Component | Install | Preview |
+|---|---|---|
+| [Accordion](/docs/components/accordion) | `@sc1m/accordion` | preview |
+| [AI Summary](/docs/components/ai-summary) | `@sc1m/ai-summary` | preview |
+| [Alert Dialog](/docs/components/alert-dialog) | `@sc1m/alert-dialog` | preview |
+| [Autocomplete](/docs/components/autocomplete) | `@sc1m/autocomplete` | preview |
+| [Avatar](/docs/components/avatar) | `@sc1m/avatar` | preview |
+| [Button](/docs/components/button) | `@sc1m/button` | controls |
+| [Checkbox](/docs/components/checkbox) | `@sc1m/checkbox` | preview |
+| [Checkbox Group](/docs/components/checkbox-group) | `@sc1m/checkbox-group` | preview |
+| [Collapsible](/docs/components/collapsible) | `@sc1m/collapsible` | preview |
+| [Combobox](/docs/components/combobox) | `@sc1m/combobox` | preview |
+| [Context Menu](/docs/components/context-menu) | `@sc1m/context-menu` | preview |
+| [Dialog](/docs/components/dialog) | `@sc1m/dialog` | preview |
+| [Drawer](/docs/components/drawer) | `@sc1m/drawer` | preview |
+| [Field](/docs/components/field) | `@sc1m/field` | preview |
+| [Fieldset](/docs/components/fieldset) | `@sc1m/fieldset` | preview |
+| [Form](/docs/components/form) | `@sc1m/form` | preview |
+| [Input](/docs/components/input) | `@sc1m/input` | controls |
+| [Menu](/docs/components/menu) | `@sc1m/menu` | preview |
+| [Menubar](/docs/components/menubar) | `@sc1m/menubar` | preview |
+| [Meter](/docs/components/meter) | `@sc1m/meter` | preview |
+| [Navigation Menu](/docs/components/navigation-menu) | `@sc1m/navigation-menu` | preview |
+| [Number Field](/docs/components/number-field) | `@sc1m/number-field` | preview |
+| [Otp Field](/docs/components/otp-field) | `@sc1m/otp-field` | preview |
+| [Popover](/docs/components/popover) | `@sc1m/popover` | preview |
+| [Preview Card](/docs/components/preview-card) | `@sc1m/preview-card` | preview |
+| [Progress](/docs/components/progress) | `@sc1m/progress` | preview |
+| [Radio](/docs/components/radio) | `@sc1m/radio` | preview |
+| [Radio Group](/docs/components/radio-group) | `@sc1m/radio-group` | preview |
+| [Scroll Area](/docs/components/scroll-area) | `@sc1m/scroll-area` | preview |
+| [Select](/docs/components/select) | `@sc1m/select` | preview |
+| [Separator](/docs/components/separator) | `@sc1m/separator` | preview |
+| [Slider](/docs/components/slider) | `@sc1m/slider` | controls |
+| [Switch](/docs/components/switch) | `@sc1m/switch` | controls |
+| [Tabs](/docs/components/tabs) | `@sc1m/tabs` | preview |
+| [Toast](/docs/components/toast) | `@sc1m/toast` | preview |
+| [Toggle](/docs/components/toggle) | `@sc1m/toggle` | preview |
+| [Toggle Group](/docs/components/toggle-group) | `@sc1m/toggle-group` | preview |
+| [Toolbar](/docs/components/toolbar) | `@sc1m/toolbar` | preview |
+| [Tooltip](/docs/components/tooltip) | `@sc1m/tooltip` | controls |

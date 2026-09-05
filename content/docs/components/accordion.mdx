@@ -1,0 +1,257 @@
+---
+title: "Accordion"
+description: "A vertically stacked set of headers that each reveal a section of content. Use it to compress secondary detail into a scannable list — not to hide anything a person needs to complete a task."
+---
+
+import { Demo as AccordionDemo } from "@/components/ui/accordion/accordion.demo";
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionPanel,
+} from "@/components/ui/accordion";
+import { propColumns, keyColumns, tokenColumns } from "@/components/site/docs-page";
+
+<Chips
+  items={[
+    { label: "Stable", tone: "success" },
+    { label: "Base UI" },
+    { label: "WAI-ARIA Disclosure" },
+  ]}
+/>
+
+Opening an item detaches it from the stack: it becomes its own card with air
+around it and a lift above the rest, so the section you are reading is visibly
+separate from the ones you are not. Closed items keep a shared border and
+collapse back together on close.
+
+## Live preview
+
+<Preview>
+  <AccordionDemo />
+</Preview>
+
+## Installation
+
+<PMCommand exec="shadcn@latest add @sc1m/accordion" />
+
+This also merges the [token layer](/docs/foundations/tokens) and installs
+`src/lib/cn.ts` plus `@base-ui/react`. For the manual route — prerequisites,
+`components.json`, and app-level setup — see [Installation](/docs/installation).
+
+## Usage
+
+```tsx lineNumbers
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionPanel,
+} from "@/components/ui/accordion";
+```
+
+```tsx lineNumbers
+<Accordion>
+  <AccordionItem value="access">
+    <AccordionTrigger>Is it accessible?</AccordionTrigger>
+    <AccordionPanel>
+      Yes. Base UI ships the WAI-ARIA disclosure pattern.
+    </AccordionPanel>
+  </AccordionItem>
+</Accordion>
+```
+
+## Composition
+
+Every part is a separate export. `Accordion` owns state; the rest are
+presentational and must appear in this order.
+
+<Composition>{`
+  Accordion
+    AccordionItem
+      AccordionTrigger
+      AccordionPanel
+    AccordionItem
+      AccordionTrigger
+      AccordionPanel
+`}</Composition>
+
+## Multiple
+
+Set `multiple` to let several items stay open at once. Open state is an array
+either way — `defaultValue` takes one even in single mode.
+
+Note that detached expansion was designed around a single open item: two cards
+detaching at once loses the sense that they belong to one group. Prefer the
+default single-open behaviour unless the sections are genuinely independent.
+
+<Demo>
+<DemoPreview>
+  <Accordion multiple defaultValue={["notifications"]} className="w-full">
+    <AccordionItem value="notifications">
+      <AccordionTrigger>Notification settings</AccordionTrigger>
+      <AccordionPanel>
+        Choose how updates reach you — email digests, push, or nothing at all.
+        Changes apply to every workspace you belong to.
+      </AccordionPanel>
+    </AccordionItem>
+    <AccordionItem value="privacy">
+      <AccordionTrigger>Privacy &amp; security</AccordionTrigger>
+      <AccordionPanel>
+        Two-factor authentication, active sessions, and who can find you by
+        email.
+      </AccordionPanel>
+    </AccordionItem>
+    <AccordionItem value="billing">
+      <AccordionTrigger>Billing &amp; subscription</AccordionTrigger>
+      <AccordionPanel>Plan, seats, invoices, and payment method.</AccordionPanel>
+    </AccordionItem>
+  </Accordion>
+</DemoPreview>
+<DemoCode>
+
+```tsx lineNumbers
+<Accordion multiple defaultValue={["notifications"]}>
+  <AccordionItem value="notifications">
+    <AccordionTrigger>Notification settings</AccordionTrigger>
+    <AccordionPanel>Choose how updates reach you.</AccordionPanel>
+  </AccordionItem>
+  <AccordionItem value="privacy">…</AccordionItem>
+  <AccordionItem value="billing">…</AccordionItem>
+</Accordion>
+```
+
+</DemoCode>
+</Demo>
+
+## Disabled
+
+Put `disabled` on an `AccordionItem` to lock a single row. It stays visible and
+stops responding; put `disabled` on the root to lock all of them.
+
+<Demo>
+<DemoPreview>
+  <Accordion className="w-full">
+    <AccordionItem value="history">
+      <AccordionTrigger>Can I access my account history?</AccordionTrigger>
+      <AccordionPanel>
+        Twelve months of activity is available under Account → History, and
+        exportable as CSV.
+      </AccordionPanel>
+    </AccordionItem>
+    <AccordionItem value="premium" disabled>
+      <AccordionTrigger>Premium feature information</AccordionTrigger>
+      <AccordionPanel>Locked until the workspace is upgraded.</AccordionPanel>
+    </AccordionItem>
+    <AccordionItem value="email">
+      <AccordionTrigger>How do I update my email address?</AccordionTrigger>
+      <AccordionPanel>
+        Change it in Account → Email. We send a confirmation link to the new
+        address before the switch takes effect.
+      </AccordionPanel>
+    </AccordionItem>
+  </Accordion>
+</DemoPreview>
+<DemoCode>
+
+```tsx lineNumbers
+<Accordion>
+  <AccordionItem value="history">…</AccordionItem>
+
+  {/* locked row — visible, not operable */}
+  <AccordionItem value="premium" disabled>…</AccordionItem>
+
+  <AccordionItem value="email">…</AccordionItem>
+</Accordion>
+```
+
+</DemoCode>
+</Demo>
+
+## API reference
+
+Each part forwards every prop of its Base UI counterpart. The table lists the
+ones you reach for; see [Base UI's accordion
+reference](https://base-ui.com/react/components/accordion) for the rest.
+
+### Accordion
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["multiple", "boolean", "false", "Whether more than one item can be open."],
+    ["defaultValue", "Value[]", "—", "Initially open items, uncontrolled."],
+    ["value", "Value[]", "—", <>Controlled open items. Pair with <code>onValueChange</code>.</>],
+    ["onValueChange", "(value, details) => void", "—", "Fires after each expand or collapse."],
+    ["disabled", "boolean", "false", "Locks every item in the group."],
+    ["keepMounted", "boolean", "false", "Keeps closed panels in the DOM."],
+    ["hiddenUntilFound", "boolean", "false", <>Lets browser find-in-page open a panel. Overrides <code>keepMounted</code>.</>],
+  ]}
+/>
+
+### AccordionItem
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["value", "any", "auto", "Identifies the item in open state. Generated if omitted."],
+    ["disabled", "boolean", "false", "Locks this row only."],
+    ["onOpenChange", "(open, details) => void", "—", "Fires when this item alone toggles."],
+  ]}
+/>
+
+## Accessibility
+
+Base UI implements the ARIA disclosure pattern. Each trigger is a real button
+inside a heading, labelled by its own text and pointing at its panel with
+`aria-controls`.
+
+<SpecTable
+  columns={keyColumns}
+  widths="0.8fr 2fr"
+  minWidth={420}
+  rows={[
+    ["Space / Enter", "Toggles the focused item."],
+    ["Tab", "Moves to the next trigger, then into an open panel's content."],
+  ]}
+/>
+
+Arrow keys do **not** move between triggers. Base UI dropped roving focus
+following the [APG guidance
+update](https://github.com/w3c/aria-practices/pull/3434) — every trigger is in
+the normal tab order instead, so `Tab` is the only traversal key.
+
+The focus ring is a 2px outline drawn inside the trigger, and the chevron is
+`aria-hidden`.
+
+## Design tokens
+
+The component reads semantic tokens only — no raw colour, radius, or duration
+appears in its source. Override the token, not the component.
+
+<SpecTable
+  columns={tokenColumns}
+  widths="1.1fr 1fr 1.4fr"
+  rows={[
+    ["--surface-raised", "bg-surface-raised", "Item background"],
+    ["--line", "border-line", "Outer border and item dividers"],
+    ["--surface", "hover:bg-surface", "Trigger hover"],
+    ["--fg", "text-fg", "Trigger label"],
+    ["--fg-muted", "text-fg-muted", "Panel body"],
+    ["--fg-subtle", "text-fg-subtle", "Chevron"],
+    ["--ring", "outline-ring", "Focus ring"],
+    ["--shadow-raised", "shadow-raised", "Lift on the open item"],
+    ["--brand-radius-lg", "rounded-lg", "Root corners"],
+    ["--acc-expand", "250ms", "Panel open"],
+    ["--acc-collapse", "250ms", "Panel close"],
+    ["--acc-chevron", "250ms", "Chevron flip"],
+    ["--acc-ease", "cubic-bezier(.22,1,.36,1)", "All three of the above"],
+  ]}
+/>
+
+## Source
+
+[`src/components/ui/accordion/accordion.tsx`](https://github.com/maaraquel08/sc1m/blob/main/src/components/ui/accordion/accordion.tsx) — no `next/*` imports, so it drops into any
+React 19 + Tailwind v4 app.

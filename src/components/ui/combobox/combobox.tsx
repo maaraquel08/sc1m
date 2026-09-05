@@ -87,14 +87,14 @@ function ComboboxItemIndicator({
       className={cn("flex text-accent", className)}
       {...props}
     >
-      <svg viewBox="0 0 12 10" fill="none" className="size-3">
-        <path
-          d="M1 5.5L4 8.5L11 1.5"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
+      {/* phosphor: check regular */}
+      <svg
+        aria-hidden
+        viewBox="0 0 256 256"
+        fill="currentColor"
+        className="size-3.5"
+      >
+        <path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z" />
       </svg>
     </BaseCombobox.ItemIndicator>
   );
@@ -106,7 +106,18 @@ export function ComboboxEmpty({
 }: React.ComponentProps<typeof BaseCombobox.Empty>) {
   return (
     <BaseCombobox.Empty
-      className={cn("px-2 py-1.5 text-sm text-fg-subtle", className)}
+      className={cn(
+        "px-2 py-1.5 text-sm text-fg-subtle",
+        // Base UI renders the CHILDREN only when the list is empty, but keeps
+        // the element mounted on purpose — it is a role="status" live region,
+        // and its docs are explicit that hiding it with display:none, hidden,
+        // aria-hidden or conditional rendering breaks the announcement. So
+        // collapse the padding rather than the element: with results present
+        // the div is childless and would otherwise sit above the list as a
+        // 12px strip of dead space (py-1.5 top and bottom, no content).
+        "empty:p-0",
+        className,
+      )}
       {...props}
     />
   );

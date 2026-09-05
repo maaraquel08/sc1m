@@ -5,7 +5,7 @@
  *   1. Copy to src/styles/brands/<brand>.css
  *   2. Replace every BRAND with the brand key (lowercase, no spaces)
  *      and every <value> with a real value — assign ALL tokens; any
- *      token skipped falls back to the default brand (ledger.css,
+ *      token skipped falls back to the default brand (sc1m.css,
  *      which owns :root instead of [data-brand]).
  *   3. Register it: add the @import in src/app/globals.css (AFTER the
  *      default brand — order matters), the brand key to BRANDS in
@@ -22,7 +22,7 @@
  *     (bg-accent). Names are fixed — never rename, never add
  *     product-specific names outside section 1 primitives.
  *   - Product/domain vocabulary lives ONLY in section 1 primitives
- *     (e.g. Ledger's --money-in) and is mapped to generic roles.
+ *     (e.g. Luntian's --money-in) and is mapped to generic roles.
  *   - Dark mode: flip the primitives, then override only the
  *     semantics that genuinely change. Comment the reason.
  *   - All brand files keep this exact section order so they read as
@@ -75,12 +75,13 @@
   --ring: var(--BRAND-primary);
 
   /* -- 4. status ----------------------------------------------------
-   * Generic roles. If the product attaches domain meaning (Ledger:
+   * Generic roles. If the product attaches domain meaning (Luntian:
    * success = money.in), say so here in a comment. */
   --success: <value>;
   --danger: <value>;
   --danger-fg: <value>;
   --info: <value>;
+  --warning: <value>;
 
   /* -- 5. shape & type ---------------------------------------------- */
   --brand-radius-sm: <value>;
@@ -120,4 +121,5 @@
   --success: <value>;
   --danger: <value>;
   --info: <value>;
+  --warning: <value>;
 }

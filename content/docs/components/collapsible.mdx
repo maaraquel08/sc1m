@@ -1,0 +1,126 @@
+---
+title: "Collapsible"
+description: "Collapsible component built on Base UI, styled with sc1m tokens."
+---
+
+import { Demo as ComponentDemo } from "@/components/ui/collapsible/collapsible.demo";
+import { propColumns } from "@/components/site/docs-page";
+import { tokenColumns } from "@/components/site/docs-page";
+
+<Chips items={[{ label: "Stable", tone: "success" }, { label: "Base UI" }]} />
+
+## Live preview
+
+<Preview>
+  <ComponentDemo />
+</Preview>
+
+## Installation
+
+<PMCommand exec="shadcn@latest add @sc1m/collapsible" />
+
+This also merges the [token layer](/docs/foundations/tokens) and installs
+`src/lib/cn.ts` plus `@base-ui/react`. For the manual route — prerequisites,
+`components.json`, and app-level setup — see [Installation](/docs/installation).
+
+## Usage
+
+```tsx lineNumbers
+import { Collapsible, CollapsibleTrigger, CollapsiblePanel } from "@/components/ui/collapsible";
+```
+
+## Composition
+
+Every part is a separate export. `Collapsible` owns state; the rest are
+presentational and must appear in this order.
+
+<Composition>{`
+  Collapsible
+    CollapsibleTrigger
+    CollapsiblePanel
+`}</Composition>
+
+## Example
+
+The preview above, with its source. This is the demo module verbatim, so
+the code and the thing it renders cannot drift apart.
+
+<Demo>
+<DemoPreview>
+  <ComponentDemo />
+</DemoPreview>
+<DemoCode>
+
+```tsx lineNumbers
+<Collapsible className="w-96">
+  <CollapsibleTrigger>What is a collapsible?</CollapsibleTrigger>
+  <CollapsiblePanel>
+    A single disclosure region that toggles between an open and closed
+    state.
+  </CollapsiblePanel>
+</Collapsible>
+```
+
+</DemoCode>
+</Demo>
+
+## API reference
+Each part forwards every prop of its Base UI counterpart; the tables list
+the ones declared on the part itself. See
+[Base UI's reference](https://base-ui.com/react/components/collapsible)
+for the inherited element props.
+
+### Collapsible
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["open", "boolean", "—", "Whether the collapsible panel is currently open."],
+    ["defaultOpen", "boolean", "false", "Whether the collapsible panel is initially open."],
+    ["onOpenChange", "((open: boolean, eventDetails: CollapsibleRootChangeEventDetails) => void)", "—", "Event handler called when the panel is opened or closed."],
+    ["disabled", "boolean", "false", "Whether the component should ignore user interaction."],
+  ]}
+/>
+
+### CollapsiblePanel
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["hiddenUntilFound", "boolean", "false", "Allows the browser's built-in page search to find and expand the panel contents."],
+    ["keepMounted", "boolean", "false", "Whether to keep the element in the DOM while the panel is hidden."],
+  ]}
+/>
+
+## Accessibility
+
+Behaviour, focus management, and ARIA wiring come from [Base UI's Collapsible](https://base-ui.com/react/components/collapsible) — see its reference for the full keyboard map.
+
+- Keyboard focus draws a 2px ring in `--ring`, never removed — only shown on `:focus-visible`, so a pointer press does not paint one.
+
+## Design tokens
+
+The component reads semantic tokens only — no raw colour, radius, or
+duration appears in its source. Override the token, not the component.
+
+<SpecTable
+  columns={[tokenColumns[0], tokenColumns[2]]}
+  widths="1.2fr 1.8fr"
+  minWidth={420}
+  rows={[
+    ["--brand-radius-md", "CollapsibleTrigger"],
+    ["--fg", "CollapsibleTrigger"],
+    ["--fg-muted", "CollapsiblePanel"],
+    ["--line", "CollapsibleTrigger"],
+    ["--ring", "CollapsibleTrigger"],
+    ["--surface", "CollapsibleTrigger"],
+    ["--surface-raised", "CollapsibleTrigger"],
+  ]}
+/>
+
+## Source
+
+[`src/components/ui/collapsible/collapsible.tsx`](https://github.com/maaraquel08/sc1m/blob/main/src/components/ui/collapsible/collapsible.tsx) — no `next/*` imports, so it drops into any
+React 19 + Tailwind v4 app.

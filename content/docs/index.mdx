@@ -1,0 +1,70 @@
+---
+title: "Introduction"
+description: "A multi-brand design system built on Base UI primitives, Tailwind v4 semantic tokens, and a shadcn-compatible registry."
+---
+
+sc1m is a design system for React 19. Accessible behaviour comes from
+[Base UI](https://base-ui.com); every visual decision comes from a three-layer
+token system; and components are distributed as **source you own**, not a
+package you depend on.
+
+## Three layers, one rule
+
+The rule the whole system rests on: **no component ever names a colour.**
+
+<div className="fd-steps [&_h3]:fd-step">
+
+### Primitives
+
+A brand file declares raw values — a neutral ramp (`--n-0` … `--n-900`) and a
+handful of brand hues (`--brand-ink`, `--money-in`). This is the only layer
+where product vocabulary is allowed to exist.
+
+### Semantic tokens
+
+The same brand file assigns those primitives to fixed role names: `--bg`,
+`--fg-muted`, `--accent`, `--danger`. The names never change between brands —
+that is what makes a brand swappable.
+
+### Tailwind utilities
+
+`@theme inline` in `globals.css` maps each semantic name into Tailwind's
+namespace, so `--accent` becomes `bg-accent`, `text-accent`, `border-accent`.
+Because the mapping is `inline`, utilities re-resolve at the use site whenever
+`.dark` or `[data-brand]` flips.
+
+</div>
+
+The payoff: a rebrand is one CSS import, and dark mode needs no `dark:`
+utilities anywhere in component code.
+
+<Callout title="See it happen">
+  The brand switcher at the bottom of the sidebar swaps the active token layer.
+  Every preview on this site — and the docs chrome itself — re-themes with it.
+</Callout>
+
+## What you get
+
+- **39 components** on Base UI primitives, each with a live preview, install
+  command and prop reference. Start at [Components](/docs/components).
+- **A token contract** that is machine-checked: a parity test proves every
+  registered brand resolves every token in both light and dark.
+  See [Tokens](/docs/foundations/tokens).
+- **A shadcn registry** so consumers copy source into their own codebase
+  rather than taking a dependency. See [Installation](/docs/installation).
+
+## Framework-agnostic on purpose
+
+Component source contains no `next/*` imports — a CI check enforces it. The
+same files run in Next.js, Vite, or any React 19 + Tailwind v4 app. This site
+happens to be Next.js; your app does not have to be.
+
+## Where things live
+
+| Path | What |
+|---|---|
+| `src/components/ui/<name>/` | component source, Storybook stories, docs preview |
+| `src/styles/brands/` | one CSS file per brand |
+| `src/styles/contract.ts` | the token contract, as data |
+| `src/app/globals.css` | `@theme inline` mapping + structural CSS |
+| `registry.json` | the shadcn registry manifest |

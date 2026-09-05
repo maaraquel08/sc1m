@@ -1,0 +1,236 @@
+# design-sync notes — sc1m
+
+Durable findings for future syncs. Read this and `config.json` before doing anything.
+
+## Repo shape — why the setup looks unusual
+
+- **This repo is a Next.js app, not a published package.** sc1m distributes
+  component *source* through a shadcn registry (`registry.json` → `public/r/*.json`),
+  so there is no `dist/` to bundle and no public export surface in `package.json`.
+- **`.design-sync/entry.ts`** is the bundle entry: a barrel re-exporting all 39
+  component modules plus `cn`. It is the real source, not a reimplementation —
+  the converter bundles it with esbuild exactly as it would a `dist/`. 168
+  exports, no name collisions. Regenerate it when a component is added (the
+  header carries the one-liner).
+- **`.d.ts` are emitted on demand.** The converter enumerates components from a
+  `.d.ts` tree, which this repo has none of. `.design-sync/tsconfig.dts.json`
+  emits declarations for `src/components/ui/**` + `src/lib/cn.ts` into
+  `dist/types/`. Run before every sync:
+  `npx tsc -p .design-sync/tsconfig.dts.json`
+- **`dist/types/index.d.ts` must exist and `package.json` must declare
+  `"types": "dist/types/index.d.ts"`.** `exportedNames()` resolves the package's
+  export surface through `pkgJson.types`; without it the scan returns 0 names,
+  every storybook title is reported `[TITLE_UNMAPPED]`, and the build emits
+  **0 components while still exiting 0**. That silent-zero is the single
+  biggest trap in this repo — check the `components: N` line, not the exit code.
+  `dist/` is gitignored, so the index does not survive a clone: regenerate it
+  with **`sh .design-sync/gen-dts-index.sh`** (committed, derives the export
+  list from `ls src/components/ui`). Earlier notes claimed the titleMap
+  generator wrote it — no such script ever existed; the file was hand-
+  maintained, which is how Badge and Banner went missing for a whole sync.
+
+## Config decisions
+
+- `titleMap` — storybook titles are `components/ui/<kebab>`; exports are Pascal.
+  All 41 are mapped explicitly. **`otp-field → OTPField`**, not `OtpField` —
+  the only entry that isn't a plain pascal-case of the directory name.
+- `titleMap.tokens: null` — `styles/tokens` is the token *contract/parity test*
+  harness (`ContractGrid` + assertions), not a library component. Tokens ship
+  to designs through `styles.css` / `tokens/`, which is the right channel.
+- `provider: TooltipProvider` — set because the decorator bundle fails with
+  `Could not resolve "tailwindcss"`: `.storybook/preview.tsx` imports
+  `src/app/globals.css`, whose `@import "tailwindcss"` esbuild cannot resolve.
+  `TooltipProvider` is the only React context the decorators supplied; the rest
+  of that decorator is styling (`.root bg-bg p-8 text-fg`) and theme/brand
+  attributes on `<html>`.
+- `docsDir: content/docs/components` — the repo's own MDX component pages
+  become each `<Name>.prompt.md`. 39/39 matched by slug. `menu.mdx` is
+  truncated to the 8000-char cap; everything else fits.
+- `cssEntry` is deliberately **unset**. Tailwind v4 source cannot be read
+  directly; `[CSS_FROM_STORYBOOK]` scrapes the compiled CSS out of
+  `sb-reference` (74 KB), which is the correct path for this pipeline.
+- `overrides` — grid-overflow remedies exactly as validate named them:
+  `AiSummary: column` and `Banner: column` (wide), and `single` +
+  `primaryStory` for AlertDialog, Dialog, Drawer, Meter, Progress
+  (portal/fixed escape).
+
+## Known warnings — triaged, do not re-chase
+
+- **`[TOKENS_MISSING]` (12 vars)** — `--accordion-panel-height`,
+  `--collapsible-panel-height`, `--toast-index`, `--toast-height`,
+  `--toast-offset-y`, `--toast-swipe-movement-*`, `--drawer-swipe-movement-y`
+  and friends are set by **Base UI at runtime** via inline style, never in a
+  stylesheet. Expected absent. Do not add a `tokensPkg` for these.
+- **Orange focus ring on the storybook side only** — storybook autofocuses the
+  canvas root, so triggers photograph focused there and unfocused in the
+  preview. Harness artifact, not a component delta. `[GENERAL]`
+- **Portal stories: the reference side is unreliable.** For Dialog, both
+  stories produced **byte-identical** reference shots (873×105, backdrop, no
+  popup) — the storybook capture is clipped above the portal and does not
+  reflect per-story open state. The preview renders these correctly. Judge the
+  preview on its own for portal components and say so in the grade note.
+  `[GENERAL]`
+- **No remote assets anywhere in the stories** (no `http(s)://` in any
+  `*.stories.tsx`), so `[ASSETS_BLOCKED]` cannot bite this repo.
+
+## Re-sync risks
+
+- **`dist/types` and `package.json` `types` are load-bearing.** A fresh clone
+  has neither the emitted types nor `dist/`. Re-run the tsc emit + regenerate
+  `dist/types/index.d.ts` before the converter, or the build silently produces
+  zero components (exit 0).
+- **`titleMap` is enumerated, not derived — and this HAS bitten.** Adding a
+  component means touching **three** places:
+  1. `titleMap` in `.design-sync/config.json` (storybook title → export name)
+  2. a line in `.design-sync/entry.ts` (what actually gets bundled)
+  3. `dist/types/index.d.ts` — covered by `gen-dts-index.sh`, which derives it
+
+  A missing entry shows up as `[TITLE_UNMAPPED]` and the component is **silently
+  dropped from the sync while the build still exits 0**. Badge and Banner were
+  added to the repo after the first sync and were absent from Claude Design
+  until the 2026-09-05 re-sync caught the two dropped titles. **Every re-sync
+  should diff `ls src/components/ui | wc -l` against the build's
+  `components: N` line before trusting the run.**
+- ~~The runtime CSS vars were never seen in an *open* state.~~ **RESOLVED this
+  sync**: a temporary owned preview forced Accordion and Collapsible open, and
+  both `--accordion-panel-height` and `--collapsible-panel-height` resolved to
+  full panel height with correct detached-card styling. The temp files were
+  deleted. `--toast-*` remains unobserved in an open state (toasts are
+  click-driven) — confirm if a future run can capture one.
+- **Storybook reference and bundle must be rebuilt together.** `buildCmd` in
+  config rebuilds the reference; `[REFERENCE_STALE?]` means it was skipped.
+- **Button AND Badge are capped at 6 of 8 stories by default.** Both were
+  graded at `--max-stories 8`; a plain re-run captures only 6. The tail stories
+  carry real variants — Button's `Disabled`/`Css Check`, Badge's `With Icon`
+  (the optional leading-glyph slot) and `Css Check` — so keep the raised cap
+  when re-verifying either one.
+
+## THE finding of this sync — Storybook `play()` is never replayed in previews
+
+**28 of 39 components have at least one `play`-driven story, and 9 have _only_
+play-driven stories** (accordion, collapsible, form, menu, menubar, select,
+tabs, toast, toolbar). Compare photographs storybook **after** `play` runs; the
+compiled preview mounts the story module's static JSX and never replays it —
+`grep -rn '\bplay\b' .ds-sync/lib/*.mjs .ds-sync/storybook/*.mjs` finds no code
+path that touches `st.play`. All three wave-1 subagents converged on this
+independently.
+
+Symptoms: storybook shows an open menu / open accordion item / active tab /
+typed-in input / checked box; the preview shows the declared initial state.
+
+**It is not a component defect.** Every affected component's non-`play` sibling
+stories are pixel-identical, and a temporary owned preview with `defaultOpen`
+confirmed Accordion and Collapsible render open panels at full height with the
+correct detached-card styling. Graded `close` roster-wide with the cause named.
+
+**Do NOT fix it with owned previews.** Hardcoding `defaultOpen` / `defaultValue`
+falsifies the story's composition and — because nothing ever machine-deletes
+`.design-sync/previews/` — would permanently shadow the corrected generated
+preview if the harness ever learns to run `play`.
+
+**Why it wasn't fixed here.** The real fix needs two forks: `story-imports.mjs`
+(its `sb-stub` plugin swallows `storybook/test` on a filter with no
+`cfg.storyImports.bundle` escape, so `userEvent`/`within` are inert stubs) and
+`preview-gen-storybook.mjs` (to invoke `st.play` after mount). That would also
+ship `@testing-library` **into the preview cards themselves**, where a failing
+`expect` would break a product artifact rather than a grading run. Judged the
+wrong trade for a shipped card. A future run wanting it should start at those
+two files — and should make play opt-in per component, not global.
+
+**Split assertion-only from state-changing before grading.** A `play` that only
+asserts changes nothing and its story grades a true `match` — Toolbar's and
+Slider's are pure `expect(...)` calls, and Slider's Default correctly renders
+its declared `defaultValue: 40` on both sides. Read the story source before
+assuming a `close`; an earlier draft of these notes wrongly called Slider
+play-driven, which would have been a false downgrade.
+
+**Judge proportional fills by proportion, not pixels.** The preview card is
+slightly narrower than the storybook canvas, so Meter/Progress/Slider tracks
+photograph at different absolute widths while being proportionally identical.
+
+### Mitigation applied
+
+`cfg.overrides.<Name>.primaryStory` points AlertDialog and Drawer at their
+`InitiallyOpen` stories, which are real non-`play` stories that render the
+overlay — so their single-mode product cards show the actual overlay instead of
+a bare trigger. Menu, Menubar, Popover and PreviewCard have no such sibling;
+their cards show the closed trigger, and their `.prompt.md` (the repo's own MDX
+docs, with composition trees) carries the composition detail instead.
+
+## MDX hazard — never put multi-line JSX children inside a text component
+
+`AiSummaryFieldText` renders a `<p>`. Writing its children across several lines
+inside an `.mdx` file makes MDX parse them as a **markdown block** and wrap them
+in its own `<p>`, producing `<p><p>…</p></p>`. The HTML parser cannot nest
+paragraphs, so it auto-closes the outer one and the browser DOM stops matching
+React's tree. Symptoms, both from the same cause:
+
+- `Hydration failed because the server rendered HTML didn't match the client`
+  on that page only.
+- Highlight marks fragment into slivers: the `<mark>` ends up split across
+  three line boxes (a 10px sliver, the text, another sliver), so the sweep
+  paints the padding and not the words.
+
+The same JSX in a `.tsx` is fine — JSX strips whitespace-only lines, MDX does
+not. **So docs previews live in a `.tsx` demo module and the MDX just renders
+it** (`ai-summary-field.demo.tsx` → `<FieldDemo />`), which is the pattern the
+generator already uses everywhere else. Do not inline component JSX with prose
+children directly in MDX.
+
+Diagnosis shortcut: `curl <page> | grep -o '<p[^>]*><p'` — a hit is this bug.
+
+## 2026-09-05 re-sync — Luntian rebrand, and two components that were never synced
+
+- **Badge and Banner were missing from the design system entirely.** Both had
+  stories, docs and registry entries in the repo, but no `titleMap` entry — so
+  every sync since they landed dropped them with a `[TITLE_UNMAPPED]` warning
+  and a clean exit. Now registered in all three places; see the three-place
+  rule above. 39 components → 41.
+- **`cfg.overrides.Banner = {"cardMode": "column"}`** — Banner's `Default`
+  story stacks four full-width banners and `[GRID_OVERFLOW]` flagged it on the
+  first build that included it. Column mode is the remedy validate itself named.
+- **The brand is Luntian now, not Ledger** (`src/styles/brands/luntian.css`,
+  `data-brand="luntian"`, sage green on a warm white). `styleSha` moved, so
+  this sync re-shipped the bundle, the stylesheet and all 41 components.
+  `conventions.md` still described Ledger's espresso palette under Luntian's
+  name — corrected, along with the emitted-class count (372 → 459) and the
+  `gap-*` range (`gap-0`-`gap-6`/`gap-8`).
+- **A hand-written remote anchor is rejected.** `_ds_sync.json` fetched via
+  `DesignSync(get_file)` and re-typed without its `sourceHashes` map fails with
+  `! remote sidecar malformed - treating as no anchor`. Harmless here - the
+  local `.design-sync/.cache/compare/*.grade.json` files carried every grade, so
+  only 3 components needed re-grading, and a no-anchor run simply uploads
+  everything - but write the sidecar to `.design-sync/.cache/remote-sync.json`
+  **complete** if you want the diff to scope the upload.
+- **Don't re-type the anchor at all - copy it.** After a successful sync,
+  `ds-bundle/_ds_sync.json` IS what was uploaded, so the next run can seed the
+  anchor with `cp ds-bundle/_ds_sync.json .design-sync/.cache/remote-sync.json`
+  (verified working on the 2026-09-05 button re-sync: complete envelope, diff
+  scoped correctly). Only unsafe if ANOTHER machine synced in between - then
+  fetch. A stale local copy can only cause over-verification and over-upload,
+  never under, because it describes the build this repo last shipped.
+- **Grades this run:** Badge `match` x8 and Banner `match` x6 (both image-judged
+  in full - first sync for each), Collapsible re-graded `close` on the unchanged
+  play() cause shared with Accordion. Everything else carried forward.
+  41/41 components, validate clean, no deletes.
+
+## 2026-09-05 (later) - Button secondary re-sync
+
+- **What changed:** `shadow-raised` dropped from Button's `secondary` variant.
+  No component's `.jsx`/`.d.ts`/`.prompt.md` moved (`sourceHashes` diff empty) -
+  variant classes live in `_ds_bundle.js`, not in the per-component artifacts -
+  so `changed`/`added`/`removed` were all empty and only `renderHashes` moved.
+- **Nine components re-shipped, not one.** `styleSha` moved too (the repo's
+  uncommitted `modal-motion` utility and the landing page's own CSS both land
+  in the storybook-scraped stylesheet), so the render surface changed for
+  Button plus every overlay component: AlertDialog, Dialog, Drawer, Form, Menu,
+  Popover, Toast, Tooltip. Expected - a CSS delta fans out.
+- **Rebuild the reference before grading a component-source change.** Button's
+  storybook render is the oracle; a stale `sb-reference` would have graded the
+  new flat button against the old shadowed one and reported a false mismatch.
+- **The canary re-rolls on every driver run.** Fixing the conventions header and
+  re-running produced a SECOND, different `[SPOT_CHECK]` set. Both sets were
+  confirmed against recorded grades (9 components total, no divergence) - but
+  budget for it: the post-header rebuild is a fresh churn event.
+- **conventions.md drift:** only the emitted-class count (459 -> 466). Every
+  class, token, var and component it names still verifies against the build.

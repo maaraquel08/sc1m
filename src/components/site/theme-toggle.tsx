@@ -1,21 +1,43 @@
 "use client";
 
 import * as React from "react";
+import { useTheme } from "next-themes";
+import { Moon, Sun } from "@phosphor-icons/react/dist/ssr";
 import { Button } from "@/components/ui/button";
 
-export function ThemeToggle() {
-  const [dark, setDark] = React.useState(false);
+/** False during SSR and the first client paint, true once hydrated. */
+const subscribeNothing = () => () => {};
+function useHydrated() {
+  return React.useSyncExternalStore(
+    subscribeNothing,
+    () => true,
+    () => false,
+  );
+}
 
-  function toggle() {
-    const next = !dark;
-    setDark(next);
-    // .dark lives on <html> so portalled popups (in <body>) also theme
-    document.documentElement.classList.toggle("dark", next);
-  }
+/**
+ * Reads and writes next-themes (supplied by fumadocs' RootProvider), which
+ * puts .dark on <html> — so portalled popups theme too, and this button stays
+ * in sync with the toggle in the /docs chrome.
+ */
+export function ThemeToggle() {
+  const { resolvedTheme, setTheme } = useTheme();
+  // The theme is only knowable on the client, so show the stable label until
+  // hydration rather than letting the server and first paint disagree.
+  const dark = useHydrated() && resolvedTheme === "dark";
 
   return (
-    <Button variant="ghost" size="sm" onClick={toggle}>
-      <span aria-hidden>{dark ? "☀︎" : "☾"}</span>
+    <Button
+      variant="ghost"
+      size="sm"
+      onClick={() => setTheme(dark ? "light" : "dark")}
+      aria-label={dark ? "Switch to light theme" : "Switch to dark theme"}
+    >
+      {dark ? (
+        <Sun weight="fill" aria-hidden className="size-3.5" />
+      ) : (
+        <Moon weight="fill" aria-hidden className="size-3.5" />
+      )}
       {dark ? "Light" : "Dark"}
     </Button>
   );

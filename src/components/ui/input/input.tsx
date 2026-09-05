@@ -14,7 +14,7 @@ export function Input({
         "h-9 w-full rounded-md border border-line bg-surface-raised px-3 text-sm text-fg",
         "transition-colors duration-fast ease-out-quad",
         "placeholder:text-fg-subtle",
-        "focus:bg-surface focus:outline-2 focus:outline-offset-2 focus:outline-ring",
+        "focus:outline-2 focus:outline-offset-2 focus:outline-ring",
         "disabled:pointer-events-none disabled:opacity-50",
         className,
       )}

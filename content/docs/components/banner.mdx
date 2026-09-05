@@ -1,0 +1,164 @@
+---
+title: "Banner"
+description: "Banner: a borderless status note — a flat wash of the tone at 7–8%, a tone-coloured icon, and body copy inked toward the hue instead of muted grey. Four tones (info, warning, success, danger), each driven by three custom properties. No runtime dependencies."
+---
+
+import { Demo as ComponentDemo } from "@/components/ui/banner/banner.demo";
+import { Banner } from "@/components/ui/banner";
+import { propColumns, tokenColumns } from "@/components/site/docs-page";
+
+<Chips items={[{ label: "Stable", tone: "success" }]} />
+
+## Live preview
+
+<Preview>
+  <ComponentDemo />
+</Preview>
+
+## Installation
+
+<PMCommand exec="shadcn@latest add @sc1m/banner" />
+
+This also merges the [token layer](/docs/foundations/tokens) and installs
+`src/lib/cn.ts`. For the manual route — prerequisites,
+`components.json`, and app-level setup — see [Installation](/docs/installation).
+
+## Usage
+
+```tsx lineNumbers
+import { Banner } from "@/components/ui/banner";
+```
+
+## Composition
+
+One element, no parts. The icon and the screen-reader prefix are chosen by
+`tone`, so a banner is a tone and a sentence.
+
+<Composition>{`
+  Banner
+    (icon — chosen by tone, aria-hidden)
+    children
+`}</Composition>
+
+Children land in a `div`, not a `p`. MDX wraps multi-line JSX children in a
+paragraph of its own, and a `<p>` inside a `<p>` is unwrappable HTML — the
+subtree fragments and hydration fails. This is why prose, lists, and code all
+compose here without care.
+
+## Tones
+
+Four tones. The tint is the signal, so the tone is legible before a word is
+read.
+
+<Demo>
+<DemoPreview>
+  <div className="flex w-full flex-col gap-2.5">
+    <Banner tone="info">Generated against 0.0.9 — regenerate before citing it.</Banner>
+    <Banner tone="warning">Two props here are deprecated and removed in 0.2.</Banner>
+    <Banner tone="success">All 41 registry items validated.</Banner>
+    <Banner tone="danger">Three variants have changed since this was written.</Banner>
+  </div>
+</DemoPreview>
+<DemoCode>
+
+```tsx lineNumbers
+<Banner tone="info">Generated against 0.0.9 — regenerate before citing it.</Banner>
+<Banner tone="warning">Two props here are deprecated and removed in 0.2.</Banner>
+<Banner tone="success">All 41 registry items validated.</Banner>
+<Banner tone="danger">Three variants have changed since this was written.</Banner>
+```
+
+</DemoCode>
+</Demo>
+
+## Example
+
+The preview above, with its source. This is the demo module verbatim, so
+the code and the thing it renders cannot drift apart.
+
+<Demo>
+<DemoPreview>
+  <ComponentDemo />
+</DemoPreview>
+<DemoCode>
+
+```tsx lineNumbers
+<div className="flex w-[560px] flex-col gap-2.5">
+  <Banner tone="info">
+    Hover and focus can&rsquo;t come from a real pointer here, so those two
+    columns are forced with the same utility the component uses.
+  </Banner>
+  <Banner tone="warning">
+    Two props on this page are deprecated and removed in 0.2. The table
+    still documents them.
+  </Banner>
+  <Banner tone="success">
+    The registry rebuilt cleanly and all 41 items validated.
+  </Banner>
+  <Banner tone="danger">
+    This table was generated against 0.0.9. Three variants have changed
+    since &mdash; regenerate before citing it.
+  </Banner>
+</div>
+```
+
+</DemoCode>
+</Demo>
+
+## API reference
+
+`Banner` forwards every prop of a `div`.
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["tone", '"info" | "warning" | "success" | "danger"', '"info"', "Hue, icon, and spoken prefix. The tint is derived from it."],
+    ["role", "string", 'see note', <>Defaults to <code>alert</code> for <code>danger</code>, <code>status</code> otherwise.</>],
+  ]}
+/>
+
+## Accessibility
+
+- The banner is a live region: `role="status"` (polite) for `info`, `warning`
+  and `success`, and `role="alert"` (assertive) for `danger`. Only an error
+  earns the right to interrupt what a screen reader is already saying.
+- Colour is never the only carrier of tone. The icon is `aria-hidden`, so each
+  tone contributes a visually hidden prefix instead — "Warning: ", "Error: " —
+  and the tone survives greyscale, and anyone who cannot separate the hues.
+- Body copy is inked toward the tone rather than set in muted grey, which
+  raises contrast against the wash instead of lowering it.
+- Pass `role` explicitly if a banner is rendered on page load and should not
+  be announced at all.
+
+## Design tokens
+
+The component reads semantic tokens only — no raw colour, radius, or
+duration appears in its source. Override the token, not the component.
+
+Every tone is three custom properties: `--banner-tone` (the hue),
+`--banner-wash` (how much lands in the fill) and `--banner-ink` (how far the
+body copy is pulled from `--fg` toward the hue). The percentages differ per
+tone deliberately — yellow carries far less weight than blue at the same
+value, so warning washes harder and inks lighter to land at the same
+perceived strength.
+
+<SpecTable
+  columns={[tokenColumns[0], tokenColumns[2]]}
+  widths="1.2fr 1.8fr"
+  minWidth={420}
+  rows={[
+    ["--info", "info wash, icon, and body ink"],
+    ["--warning", "warning wash, icon, and body ink"],
+    ["--success", "success wash, icon, and body ink"],
+    ["--danger", "danger wash, icon, and body ink"],
+    ["--bg", "what the tone is washed into, and the icon knockout"],
+    ["--fg", "what the body ink is pulled from"],
+    ["--brand-radius-lg", "corner radius"],
+  ]}
+/>
+
+## Source
+
+[`src/components/ui/banner/banner.tsx`](https://github.com/maaraquel08/sc1m/blob/main/src/components/ui/banner/banner.tsx) — no `next/*` imports, so it drops into any
+React 19 + Tailwind v4 app.

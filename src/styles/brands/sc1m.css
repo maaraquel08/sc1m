@@ -1,14 +1,13 @@
 /* ==================================================================
- * Brand: JBL (demo) — orange-first, industrial
+ * Brand: sc1m — orange-first, industrial
  *
- * Scoped to [data-brand="jbl"] on <html>: the default brand (Ledger)
- * owns :root, additional brands activate via the attribute. Tokens a
- * brand skips fall back to the default. All brand files follow the
- * same template: primitives → surfaces & text → interactive → status
- * → shape & type.
+ * Default brand: owns :root, so it applies when <html> carries no
+ * data-brand attribute, and provides the fallback for any token
+ * another brand skips. All brand files follow the same template:
+ * primitives → surfaces & text → interactive → status → shape & type.
  * ================================================================== */
 
-[data-brand="jbl"] {
+:root {
   /* -- 1. primitives: neutral ramp (named by lightness) ------------ */
   --n-0: #ececec;   /* canvas */
   --n-50: #f5f5f5;  /* weak */
@@ -21,13 +20,13 @@
   --n-900: #0a0a0a; /* ink */
 
   /* -- 1. primitives: brand hues ----------------------------------- */
-  --jbl-orange: #ff5a00; /* ≈ Pantone 021 C: CTAs, focus, the brand voice */
-  --jbl-paper: #ffffff;  /* page and card fills */
+  --sc1m-orange: #ff5a00; /* ≈ Pantone 021 C: CTAs, focus, the brand voice */
+  --sc1m-paper: #ffffff;  /* page and card fills */
 
   /* -- 2. surfaces & text ------------------------------------------ */
-  --bg: var(--jbl-paper);
+  --bg: var(--sc1m-paper);
   --surface: var(--n-50);
-  --surface-raised: var(--jbl-paper);
+  --surface-raised: var(--sc1m-paper);
   --fg: var(--n-900);
   --fg-muted: var(--n-700);
   --fg-subtle: var(--n-500);
@@ -35,12 +34,12 @@
   --line-strong: var(--n-300);
 
   /* -- 3. interactive ----------------------------------------------- */
-  --accent: var(--jbl-orange); /* orange is the product's voice */
+  --accent: var(--sc1m-orange); /* orange is the product's voice */
   --accent-hover: #d94c00;
   --accent-fg: #ffffff;
-  --highlight: var(--n-900);   /* inverse of Ledger: ink chip */
+  --highlight: var(--n-900);   /* ink chip, inverse of the accent */
   --highlight-fg: #ffffff;
-  --ring: var(--jbl-orange);
+  --ring: var(--sc1m-orange);
 
   /* -- 4. status ----------------------------------------------------
    * Generic roles; no product-specific meaning attached — plain
@@ -49,6 +48,7 @@
   --danger: #dc2626;
   --danger-fg: #ffffff;
   --info: #2563eb;
+  --warning: #d4a017;
 
   /* -- 5. shape & type ---------------------------------------------- */
   --brand-radius-sm: 2px;  /* sharper, industrial */
@@ -64,7 +64,7 @@
 /* Dark: paper flips to near-black; the ramp reverses by role, cool
  * throughout; orange lifts so it holds on near-black. Only tokens
  * that change are listed. */
-[data-brand="jbl"].dark {
+.dark {
   /* -- 1. primitives ------------------------------------------------ */
   --n-0: #0a0a0a;
   --n-50: #171717;
@@ -76,8 +76,8 @@
   --n-700: #a3a3a3;
   --n-900: #f5f5f5;
 
-  --jbl-orange: #ff6a1a; /* lifted to hold on near-black */
-  --jbl-paper: #0a0a0a;
+  --sc1m-orange: #ff6a1a; /* lifted to hold on near-black */
+  --sc1m-paper: #0a0a0a;
 
   /* -- 2–4. semantic overrides -------------------------------------- */
   --surface-raised: var(--n-100);
@@ -88,4 +88,5 @@
   --success: #4ade80;
   --danger: #f87171;
   --info: #60a5fa;
+  --warning: #facc15; /* lifted to hold on near-black */
 }

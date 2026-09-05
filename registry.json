@@ -7,7 +7,7 @@
       "name": "tokens",
       "type": "registry:theme",
       "title": "sc1m Design Tokens",
-      "description": "Ledger brand tokens and the Tailwind v4 theme contract: semantic colors, radii, shadows, motion, dark mode via the .dark class, and the popup-motion, ai-wash and ai-pulse utilities.",
+      "description": "sc1m brand tokens and the Tailwind v4 theme contract: semantic colors, radii, shadows, motion, dark mode via the .dark class, and the popup-motion, ai-wash and ai-pulse utilities.",
       "cssVars": {
         "theme": {
           "--color-bg": "var(--bg)",
@@ -27,6 +27,7 @@
           "--color-danger": "var(--danger)",
           "--color-danger-fg": "var(--danger-fg)",
           "--color-info": "var(--info)",
+          "--color-warning": "var(--warning)",
           "--color-ring": "var(--ring)",
           "--font-sans": "var(--brand-font-sans, var(--font-geist-sans, ui-sans-serif))",
           "--font-mono": "var(--brand-font-mono, var(--font-geist-mono, ui-monospace))",
@@ -43,48 +44,47 @@
       "css": {
         "@custom-variant dark (&:where(.dark, .dark *))": {},
         ":root": {
-          "--n-0": "#eceae6",
-          "--n-50": "#f7f6f4",
-          "--n-100": "#ececea",
-          "--n-200": "#e6e4e0",
-          "--n-300": "#dcdad6",
-          "--n-400": "#a5a5a5",
-          "--n-500": "#8a8a8a",
-          "--n-700": "#5a5a5a",
-          "--n-900": "#252017",
-          "--brand-ink": "#252017",
-          "--brand-accent": "#fcc305",
-          "--brand-paper": "#ffffff",
-          "--money-in": "#0f7a45",
-          "--money-out": "#cf3a2c",
-          "--bg": "var(--brand-paper)",
+          "--n-0": "#ececec",
+          "--n-50": "#f5f5f5",
+          "--n-100": "#ebebeb",
+          "--n-200": "#e5e5e5",
+          "--n-300": "#d4d4d4",
+          "--n-400": "#a3a3a3",
+          "--n-500": "#8f8f8f",
+          "--n-700": "#525252",
+          "--n-900": "#0a0a0a",
+          "--sc1m-orange": "#ff5a00",
+          "--sc1m-paper": "#ffffff",
+          "--bg": "var(--sc1m-paper)",
           "--surface": "var(--n-50)",
-          "--surface-raised": "var(--brand-paper)",
+          "--surface-raised": "var(--sc1m-paper)",
           "--fg": "var(--n-900)",
           "--fg-muted": "var(--n-700)",
           "--fg-subtle": "var(--n-500)",
           "--line": "var(--n-200)",
           "--line-strong": "var(--n-300)",
-          "--accent": "var(--brand-ink)",
-          "--accent-hover": "#3d372d",
-          "--accent-fg": "var(--brand-paper)",
-          "--highlight": "var(--brand-accent)",
-          "--highlight-fg": "#252017",
-          "--ring": "var(--brand-ink)",
-          "--success": "var(--money-in)",
-          "--danger": "var(--money-out)",
+          "--accent": "var(--sc1m-orange)",
+          "--accent-hover": "#d94c00",
+          "--accent-fg": "#ffffff",
+          "--highlight": "var(--n-900)",
+          "--highlight-fg": "#ffffff",
+          "--ring": "var(--sc1m-orange)",
+          "--success": "#16a34a",
+          "--danger": "#dc2626",
           "--danger-fg": "#ffffff",
-          "--info": "var(--brand-accent)",
-          "--brand-radius-sm": "5px",
-          "--brand-radius-md": "10px",
-          "--brand-radius-lg": "14px",
-          "--brand-radius-xl": "22px",
-          "--brand-font-sans": "\"Helvetica Neue\", Helvetica, Arial, sans-serif",
-          "--brand-font-mono": "ui-monospace, Menlo, monospace",
+          "--info": "#2563eb",
+          "--warning": "#d4a017",
+          "--brand-radius-sm": "2px",
+          "--brand-radius-md": "4px",
+          "--brand-radius-lg": "8px",
+          "--brand-radius-xl": "12px",
+          "--brand-font-sans": "var(--font-geist-sans, ui-sans-serif)",
+          "--brand-font-mono": "var(--font-geist-mono, ui-monospace)",
           "--acc-expand": "250ms",
           "--acc-collapse": "250ms",
           "--acc-chevron": "250ms",
           "--acc-ease": "cubic-bezier(0.22, 1, 0.36, 1)",
+          "--acc-spring": "cubic-bezier(0.34, 1.36, 0.64, 1)",
           "--popup-open-dur": "250ms",
           "--popup-close-dur": "150ms",
           "--popup-pre-scale": "0.97",
@@ -94,23 +94,26 @@
           "--ai-hue-ink": "color-mix(in oklab, var(--ai-hue) 50%, var(--color-fg))"
         },
         ".dark": {
-          "--n-0": "#14120e",
-          "--n-50": "#1e1b16",
-          "--n-100": "#26221b",
-          "--n-200": "#302b23",
-          "--n-300": "#3d372d",
-          "--n-400": "#6d6963",
-          "--n-500": "#918d85",
-          "--n-700": "#bab6ae",
-          "--n-900": "#f4f2ee",
-          "--brand-ink": "#ffffff",
-          "--brand-paper": "#14120e",
-          "--money-in": "#3fbc7a",
-          "--money-out": "#ff7a6b",
+          "--n-0": "#0a0a0a",
+          "--n-50": "#171717",
+          "--n-100": "#1f1f1f",
+          "--n-200": "#262626",
+          "--n-300": "#333333",
+          "--n-400": "#6b6b6b",
+          "--n-500": "#8a8a8a",
+          "--n-700": "#a3a3a3",
+          "--n-900": "#f5f5f5",
+          "--sc1m-orange": "#ff6a1a",
+          "--sc1m-paper": "#0a0a0a",
           "--surface-raised": "var(--n-100)",
-          "--accent-hover": "#dcdad6",
-          "--accent-fg": "#252017",
-          "--danger-fg": "#14120e"
+          "--accent-hover": "#ff8547",
+          "--accent-fg": "#0a0a0a",
+          "--highlight-fg": "#0a0a0a",
+          "--danger-fg": "#0a0a0a",
+          "--success": "#4ade80",
+          "--danger": "#f87171",
+          "--info": "#60a5fa",
+          "--warning": "#facc15"
         },
         "@utility popup-motion": {
           "transform-origin": "var(--transform-origin)",
@@ -204,10 +207,44 @@
           },
           ".ai-pulse::before, .ai-pulse::after": {
             "animation": "none"
+          },
+          ".vf-drift, .vf-shimmer": {
+            "animation": "none"
           }
+        },
+        "@keyframes vf-drift": {
+          "from": {
+            "transform": "translate3d(-14px, 6px, 0) scale(1.04)"
+          },
+          "to": {
+            "transform": "translate3d(16px, -8px, 0) scale(1.09)"
+          }
+        },
+        "@keyframes vf-shimmer": {
+          "0%, 100%": {
+            "opacity": "0.45"
+          },
+          "50%": {
+            "opacity": "0.7"
+          }
+        },
+        ".vf-drift": {
+          "animation": "vf-drift 38s ease-in-out infinite alternate",
+          "transform-origin": "50% 50%",
+          "transform-box": "view-box"
+        },
+        ".vf-shimmer": {
+          "animation": "vf-shimmer 11s ease-in-out infinite"
+        },
+        ".ai-mark": {
+          "background-image": "linear-gradient(90deg, color-mix(in oklab, var(--accent) 82%, transparent), color-mix(in oklab, var(--accent) 62%, transparent))",
+          "background-repeat": "no-repeat",
+          "background-size": "100% 100%",
+          "box-decoration-break": "clone",
+          "-webkit-box-decoration-break": "clone"
         }
       },
-      "docs": "sc1m tokens installed. App-level setup: (1) dark mode toggles via the .dark class on <html> (next-themes compatible); (2) wrap app content in a container with `isolation: isolate` so Base UI portalled popups stack above it; (3) keep `position: relative` on <body> for correct Base UI backdrop behavior in iOS Safari 26+; (4) additional brands scope tokens under [data-brand=\"…\"] on <html>."
+      "docs": "sc1m tokens installed. App-level setup: (1) dark mode toggles via the .dark class on <html> (next-themes compatible); (2) wrap app content in a container with `isolation: isolate` so Base UI portalled popups stack above it; (3) keep `position: relative` on <body> for correct Base UI backdrop behavior in iOS Safari 26+; (4) additional brands scope tokens under [data-brand=\"\u2026\"] on <html>."
     },
     {
       "name": "cn",
@@ -248,7 +285,7 @@
       "name": "ai-summary",
       "type": "registry:ui",
       "title": "AI Summary",
-      "description": "AI Summary banner (AS1): a wash tinted with the brand AI hue to mark AI-authored copy, a sparkle eyebrow naming the angle, one sentence of plain-language body, and an inner glow pulsing at the edge. No runtime dependencies.",
+      "description": "AI Summary: the banner that marks AI-authored copy \u2014 one sentence of plain language on an animated vector field, in one of four palettes. The painting is a gradient plus colour masses under a fractal-noise warp, so a palette is a few hex values and three durations. No runtime dependencies.",
       "registryDependencies": [
         "https://sc1m.vercel.app/r/tokens.json",
         "https://sc1m.vercel.app/r/cn.json"
@@ -313,6 +350,38 @@
       "files": [
         {
           "path": "src/components/ui/avatar/avatar.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "badge",
+      "type": "registry:ui",
+      "title": "Badge",
+      "description": "Badge: a status chip carried by fill alone \u2014 a tint of the tone at 12\u201315%, label inked toward the hue, and a sharp radius from --brand-radius-sm. Five tones (neutral, info, success, warning, danger) plus an optional icon slot. No runtime dependencies.",
+      "registryDependencies": [
+        "https://sc1m.vercel.app/r/tokens.json",
+        "https://sc1m.vercel.app/r/cn.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/badge/badge.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "banner",
+      "type": "registry:ui",
+      "title": "Banner",
+      "description": "Banner: a borderless status note \u2014 a flat wash of the tone at 7\u20138%, a tone-coloured icon, and body copy inked toward the hue instead of muted grey. Four tones (info, warning, success, danger), each driven by three custom properties. No runtime dependencies.",
+      "registryDependencies": [
+        "https://sc1m.vercel.app/r/tokens.json",
+        "https://sc1m.vercel.app/r/cn.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/banner/banner.tsx",
           "type": "registry:ui"
         }
       ]

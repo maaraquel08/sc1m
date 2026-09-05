@@ -1,0 +1,141 @@
+---
+title: "Toast"
+description: "Toast component built on Base UI, styled with sc1m tokens."
+---
+
+import { Demo as ComponentDemo } from "@/components/ui/toast/toast.demo";
+import { propColumns } from "@/components/site/docs-page";
+import { tokenColumns } from "@/components/site/docs-page";
+
+<Chips items={[{ label: "Stable", tone: "success" }, { label: "Base UI" }]} />
+
+## Live preview
+
+<Preview>
+  <ComponentDemo />
+</Preview>
+
+## Installation
+
+<PMCommand exec="shadcn@latest add @sc1m/toast" />
+
+This also merges the [token layer](/docs/foundations/tokens) and installs
+`src/lib/cn.ts` plus `@base-ui/react`. For the manual route — prerequisites,
+`components.json`, and app-level setup — see [Installation](/docs/installation).
+
+## Usage
+
+```tsx lineNumbers
+import {
+  ToastProvider,
+  useToastManager,
+  createToastManager,
+  useToast,
+  ToastViewport,
+  Toast,
+  ToastTitle,
+  ToastDescription,
+  ToastClose,
+} from "@/components/ui/toast";
+```
+
+## Composition
+
+Every part is a separate export. `ToastProvider` owns state; the rest are
+presentational and must appear in this order.
+
+<Composition>{`
+  ToastViewport
+    Toast
+      ToastTitle
+      ToastDescription
+      ToastClose
+  ToastProvider
+`}</Composition>
+
+## Example
+
+The preview above, with its source. This is the demo module verbatim, so
+the code and the thing it renders cannot drift apart.
+
+<Demo>
+<DemoPreview>
+  <ComponentDemo />
+</DemoPreview>
+<DemoCode>
+
+```tsx lineNumbers
+<ToastProvider>
+  <StackingDemo />
+  <ToastList />
+</ToastProvider>
+```
+
+</DemoCode>
+</Demo>
+
+## API reference
+Each part forwards every prop of its Base UI counterpart; the tables list
+the ones declared on the part itself. See
+[Base UI's reference](https://base-ui.com/react/components/toast)
+for the inherited element props.
+
+### ToastProvider
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["timeout", "number", "5000", "The default amount of time (in ms) before a toast is auto dismissed."],
+    ["limit", "number", "3", "The maximum number of toasts that can be displayed at once."],
+    ["toastManager", "ToastManager", "—", "A global manager for toasts to use outside of a React component."],
+  ]}
+/>
+
+### Toast
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["toast", "ToastRootToastObject<any>", "—", "The toast to render."],
+    ["swipeDirection", "'up' | 'down' | 'left' | 'right' | ('up' | 'down' | 'left' | 'right')[]", "['down', 'right']", "Direction(s) in which the toast can be swiped to dismiss."],
+  ]}
+/>
+
+## Accessibility
+
+Behaviour, focus management, and ARIA wiring come from [Base UI's Toast](https://base-ui.com/react/components/toast) — see its reference for the full keyboard map.
+
+- Keyboard focus draws a 2px ring in `--ring`, never removed — only shown on `:focus-visible`, so a pointer press does not paint one.
+- Every transition is dropped under `prefers-reduced-motion`.
+
+## Design tokens
+
+The component reads semantic tokens only — no raw colour, radius, or
+duration appears in its source. Override the token, not the component.
+
+<SpecTable
+  columns={[tokenColumns[0], tokenColumns[2]]}
+  widths="1.2fr 1.8fr"
+  minWidth={420}
+  rows={[
+    ["--brand-radius-lg", "Toast"],
+    ["--brand-radius-sm", "ToastClose"],
+    ["--fg", "Toast, ToastTitle, ToastClose"],
+    ["--fg-muted", "ToastDescription"],
+    ["--fg-subtle", "ToastClose"],
+    ["--line", "Toast"],
+    ["--popup-ease", "Toast"],
+    ["--popup-open-dur", "Toast"],
+    ["--ring", "ToastClose"],
+    ["--shadow-overlay", "Toast"],
+    ["--surface", "ToastClose"],
+    ["--surface-raised", "Toast"],
+  ]}
+/>
+
+## Source
+
+[`src/components/ui/toast/toast.tsx`](https://github.com/maaraquel08/sc1m/blob/main/src/components/ui/toast/toast.tsx) — no `next/*` imports, so it drops into any
+React 19 + Tailwind v4 app.

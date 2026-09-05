@@ -1,0 +1,110 @@
+---
+title: "Adding a component"
+description: "The path from a Base UI primitive to a documented, registry-published component."
+---
+
+<div className="fd-steps [&_h3]:fd-step">
+
+### Create the folder
+
+```
+src/components/ui/<name>/
+├── <name>.tsx        the component
+├── <name>.stories.tsx Storybook — the test surface
+├── <name>.story.tsx   docs preview  (generated)
+├── <name>.demo.tsx    docs preview  (generated)
+└── index.ts          export * from "./<name>"
+```
+
+### Write the component
+
+Wrap the Base UI primitive. Two hard rules, both enforced by CI:
+
+- **No `next/*` imports.** Component source must run in Vite and plain React
+  too. `scripts/check-registry.mjs` fails the build otherwise.
+- **No literal colours.** Use semantic utilities — `bg-surface-raised`,
+  `text-fg-muted`, `border-line`. If no token fits the role, that is a
+  contract conversation, not a hex code.
+
+Add `"use client"` when the component uses Base UI's interactive primitives or
+React state. Leave it off when the component is genuinely presentational —
+`Button` has no directive so consumers can use it inside an RSC.
+
+For any anchored popup, apply the shared `popup-motion` utility to the Popup
+part rather than writing bespoke transitions.
+See [Motion](/docs/foundations/motion).
+
+### Write the stories
+
+`<name>.stories.tsx` is the test surface: a `Default` story, one per meaningful
+variant, and `play` functions asserting behaviour.
+
+This file is also the **source of the docs preview**, so make the first story
+representative — the generator lifts it.
+
+### Register it
+
+Add an entry to `registry.json`:
+
+```json
+{
+  "name": "<name>",
+  "type": "registry:ui",
+  "title": "<Title>",
+  "description": "<Name> component built on Base UI, styled with sc1m tokens.",
+  "dependencies": ["@base-ui/react"],
+  "registryDependencies": [
+    "https://sc1m.vercel.app/r/tokens.json",
+    "https://sc1m.vercel.app/r/cn.json"
+  ],
+  "files": [{ "path": "src/components/ui/<name>/<name>.tsx", "type": "registry:ui" }]
+}
+```
+
+`title` and `description` become the docs page's heading and subtitle, so write
+them for a reader.
+
+### Generate the docs page
+
+```bash
+npm run docs:gen
+```
+
+This reads `registry.json` and your stories file and writes the MDX page plus
+the preview modules. It never overwrites a file that already exists — hand
+edits always survive. Use `--force` to regenerate deliberately.
+
+### Verify
+
+```bash
+npm run registry:build
+node scripts/check-registry.mjs
+node scripts/check-tokens-parity.mjs
+npx vitest run --project=storybook
+npm run build
+```
+
+</div>
+
+## How the preview generation works
+
+The generator lifts the first story out of `<name>.stories.tsx` and shapes it
+one of two ways:
+
+- **`render: (args) => <Component … {...args} />`** — a single element, so it
+  becomes a controls story. `@fumadocs/story` derives the control set from the
+  component's TypeScript props, and the reader gets live inputs.
+- **`render: () => (…)`** — a composition, so it becomes a fixed preview
+  wrapped in a `Demo` component. Controls are not meaningful for a fixed
+  composition.
+
+<Callout title="Why two preview files">
+  `defineStory()` returns a plain object, so its module must **not** be
+  `"use client"` — marking it so turns the export into a client reference
+  proxy and `story.WithControl` comes back undefined. What has to be a client
+  component is the thing being previewed, so the composition lives in its own
+  `.demo.tsx`.
+</Callout>
+
+To hand-author a preview, just edit the generated `.demo.tsx`; the generator
+will leave it alone from then on.

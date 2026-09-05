@@ -44,12 +44,23 @@ export const Disabled: Story = {
 };
 
 // Proves the shared preview loaded globals.css: the primary button's
-// background resolves to --color-accent (Ledger brand.ink espresso, #252017).
+// background resolves to --color-accent. Compared against a probe painted
+// with the same token rather than a literal colour, so swapping which brand
+// owns :root does not break the check.
 export const CssCheck: Story = {
   args: { children: 'Css check' },
   play: async ({ canvas }) => {
     const button = canvas.getByRole('button', { name: /css check/i });
     const bg = getComputedStyle(button).backgroundColor;
-    await expect(bg).toBe('rgb(37, 32, 23)');
+
+    const probe = document.createElement('div');
+    probe.style.backgroundColor = 'var(--color-accent)';
+    document.body.appendChild(probe);
+    const accent = getComputedStyle(probe).backgroundColor;
+    probe.remove();
+
+    // guards the probe itself: an unloaded stylesheet leaves it transparent
+    await expect(accent).not.toBe('rgba(0, 0, 0, 0)');
+    await expect(bg).toBe(accent);
   },
 };

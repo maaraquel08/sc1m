@@ -1,0 +1,168 @@
+---
+title: "Toolbar"
+description: "Toolbar component built on Base UI, styled with sc1m tokens."
+---
+
+import { Demo as ComponentDemo } from "@/components/ui/toolbar/toolbar.demo";
+import { propColumns } from "@/components/site/docs-page";
+import { tokenColumns } from "@/components/site/docs-page";
+
+<Chips items={[{ label: "Stable", tone: "success" }, { label: "Base UI" }]} />
+
+## Live preview
+
+<Preview>
+  <ComponentDemo />
+</Preview>
+
+## Installation
+
+<PMCommand exec="shadcn@latest add @sc1m/toolbar" />
+
+This also merges the [token layer](/docs/foundations/tokens) and installs
+`src/lib/cn.ts` plus `@base-ui/react`. For the manual route — prerequisites,
+`components.json`, and app-level setup — see [Installation](/docs/installation).
+
+## Usage
+
+```tsx lineNumbers
+import {
+  Toolbar,
+  ToolbarButton,
+  ToolbarLink,
+  ToolbarSeparator,
+  ToolbarGroup,
+  ToolbarInput,
+} from "@/components/ui/toolbar";
+```
+
+## Composition
+
+Every part is a separate export. `Toolbar` owns state; the rest are
+presentational and must appear in this order.
+
+<Composition>{`
+  Toolbar
+    ToolbarGroup
+      ToolbarButton
+    ToolbarSeparator
+    ToolbarLink
+`}</Composition>
+
+## Example
+
+The preview above, with its source. This is the demo module verbatim, so
+the code and the thing it renders cannot drift apart.
+
+<Demo>
+<DemoPreview>
+  <ComponentDemo />
+</DemoPreview>
+<DemoCode>
+
+```tsx lineNumbers
+<Toolbar aria-label="Text formatting">
+  <ToolbarGroup>
+    <ToolbarButton>Bold</ToolbarButton>
+    <ToolbarButton>Italic</ToolbarButton>
+  </ToolbarGroup>
+  <ToolbarSeparator />
+  <ToolbarLink href="#">Docs</ToolbarLink>
+</Toolbar>
+```
+
+</DemoCode>
+</Demo>
+
+## API reference
+Each part forwards every prop of its Base UI counterpart; the tables list
+the ones declared on the part itself. See
+[Base UI's reference](https://base-ui.com/react/components/toolbar)
+for the inherited element props.
+
+### Toolbar
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["disabled", "boolean", "—", ""],
+    ["orientation", "ToolbarRoot.Orientation", "'horizontal'", "The orientation of the toolbar."],
+    ["loopFocus", "boolean", "true", "If true, using keyboard navigation will wrap focus to the other end of the toolbar once the end is reached."],
+  ]}
+/>
+
+### ToolbarButton
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["disabled", "boolean", "false", "When true the item is disabled."],
+    ["focusableWhenDisabled", "boolean", "true", "When true the item remains focusable when disabled."],
+  ]}
+/>
+
+### ToolbarSeparator
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["orientation", "Orientation", "—", "The orientation of the separator."],
+  ]}
+/>
+
+### ToolbarGroup
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["disabled", "boolean", "false", "When true all toolbar items in the group are disabled."],
+  ]}
+/>
+
+### ToolbarInput
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["disabled", "boolean", "false", "When true the item is disabled."],
+    ["focusableWhenDisabled", "boolean", "true", "When true the item remains focusable when disabled."],
+    ["defaultValue", "React.ComponentProps<'input'>['defaultValue']", "—", ""],
+  ]}
+/>
+
+## Accessibility
+
+Behaviour, focus management, and ARIA wiring come from [Base UI's Toolbar](https://base-ui.com/react/components/toolbar) — see its reference for the full keyboard map.
+
+- Keyboard focus draws a 2px ring in `--ring`, never removed — only shown on `:focus-visible`, so a pointer press does not paint one.
+
+## Design tokens
+
+The component reads semantic tokens only — no raw colour, radius, or
+duration appears in its source. Override the token, not the component.
+
+<SpecTable
+  columns={[tokenColumns[0], tokenColumns[2]]}
+  widths="1.2fr 1.8fr"
+  minWidth={420}
+  rows={[
+    ["--brand-radius-lg", "Toolbar"],
+    ["--brand-radius-md", "ToolbarButton, ToolbarLink, ToolbarInput"],
+    ["--fg", "ToolbarButton, ToolbarLink, ToolbarInput"],
+    ["--line", "Toolbar, ToolbarSeparator, ToolbarInput"],
+    ["--ring", "ToolbarButton, ToolbarLink, ToolbarInput"],
+    ["--shadow-raised", "Toolbar"],
+    ["--surface", "ToolbarButton, ToolbarLink, ToolbarInput"],
+    ["--surface-raised", "Toolbar"],
+  ]}
+/>
+
+## Source
+
+[`src/components/ui/toolbar/toolbar.tsx`](https://github.com/maaraquel08/sc1m/blob/main/src/components/ui/toolbar/toolbar.tsx) — no `next/*` imports, so it drops into any
+React 19 + Tailwind v4 app.

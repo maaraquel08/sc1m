@@ -1,0 +1,15 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "declarationMap": false,
+    "incremental": false,
+    "outDir": "../dist/types",
+    "rootDir": "..",
+    "types": ["react", "node"]
+  },
+  "include": ["../src/components/ui/**/*.tsx", "../src/components/ui/**/*.ts", "../src/lib/cn.ts"],
+  "exclude": ["../src/components/ui/**/*.stories.tsx", "../src/components/ui/**/*.story.tsx", "../src/components/ui/**/*.demo.tsx"]
+}

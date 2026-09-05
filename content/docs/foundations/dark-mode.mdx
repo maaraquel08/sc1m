@@ -1,0 +1,69 @@
+---
+title: "Dark mode"
+description: "One class on the html element — and no dark: utilities anywhere in component code."
+---
+
+Dark mode is a class on `<html>`:
+
+```html
+<html class="dark">
+```
+
+That is the whole integration surface. It is next-themes compatible, and this
+site uses next-themes to drive it.
+
+## Why components need no `dark:` utilities
+
+A component writes `bg-surface-raised text-fg`. Those utilities resolve through
+`var(--surface-raised)` and `var(--fg)`, and the brand file redefines those
+variables under `.dark`:
+
+```css title="src/styles/brands/luntian.css"
+[data-brand="luntian"]      { --surface-raised: #fffdf6; --fg: var(--sage-900); }
+[data-brand="luntian"].dark { --surface-raised: #19211d; --fg: #f2f6f4; }
+```
+
+The `inline` on `@theme inline` is what makes this work — utilities reference
+the variable at the use site rather than baking in a value at build time. So
+one class flip re-resolves the entire system, including anything rendered into
+a portal.
+
+```css title="src/app/globals.css"
+@custom-variant dark (&:where(.dark, .dark *));
+```
+
+## The class goes on `<html>`, not `<body>`
+
+Base UI renders popups — dialogs, menus, tooltips, selects — into a portal on
+`<body>`. Putting the class on `<body>` or an app wrapper leaves those popups
+in light mode. `<html>` is the only correct place. The same applies to
+`data-brand`.
+
+## Reading the theme in your own code
+
+```tsx
+"use client";
+import { useTheme } from "next-themes";
+
+export function ThemeToggle() {
+  const { resolvedTheme, setTheme } = useTheme();
+  return (
+    <button onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}>
+      Toggle
+    </button>
+  );
+}
+```
+
+<Callout type="warn" title="Guard the first paint">
+  `resolvedTheme` is undefined until the client mounts. Render a stable label
+  until then, or the server HTML and the first client paint disagree and React
+  logs a hydration mismatch.
+</Callout>
+
+## Contrast is a brand's responsibility
+
+Dark mode flips primitives; it does not fix ratios. Ledger's AI treatment, for
+instance, derives `--ai-hue-ink` by mixing the brand hue toward `--fg` rather
+than toward a fixed dark value — which is precisely what lets it invert
+correctly. See [AI authorship](/docs/foundations/ai-authorship).

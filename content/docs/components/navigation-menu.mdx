@@ -1,0 +1,177 @@
+---
+title: "Navigation Menu"
+description: "Navigation Menu component built on Base UI, styled with sc1m tokens."
+---
+
+import { Demo as ComponentDemo } from "@/components/ui/navigation-menu/navigation-menu.demo";
+import { propColumns } from "@/components/site/docs-page";
+import { tokenColumns } from "@/components/site/docs-page";
+
+<Chips items={[{ label: "Stable", tone: "success" }, { label: "Base UI" }]} />
+
+## Live preview
+
+<Preview>
+  <ComponentDemo />
+</Preview>
+
+## Installation
+
+<PMCommand exec="shadcn@latest add @sc1m/navigation-menu" />
+
+This also merges the [token layer](/docs/foundations/tokens) and installs
+`src/lib/cn.ts` plus `@base-ui/react`. For the manual route — prerequisites,
+`components.json`, and app-level setup — see [Installation](/docs/installation).
+
+## Usage
+
+```tsx lineNumbers
+import {
+  NavigationMenu,
+  NavigationMenuList,
+  NavigationMenuItem,
+  NavigationMenuTrigger,
+  NavigationMenuLink,
+  NavigationMenuContent,
+  NavigationMenuViewport,
+} from "@/components/ui/navigation-menu";
+```
+
+## Composition
+
+Every part is a separate export. `NavigationMenu` owns state; the rest are
+presentational and must appear in this order.
+
+<Composition>{`
+  NavigationMenu
+    NavigationMenuList
+      NavigationMenuItem
+        NavigationMenuTrigger
+        NavigationMenuContent
+        NavigationMenuLink
+    NavigationMenuViewport
+`}</Composition>
+
+## Example
+
+The preview above, with its source. This is the demo module verbatim, so
+the code and the thing it renders cannot drift apart.
+
+<Demo>
+<DemoPreview>
+  <ComponentDemo />
+</DemoPreview>
+<DemoCode>
+
+```tsx lineNumbers
+<NavigationMenu>
+  <NavigationMenuList>
+    <NavigationMenuItem>
+      <NavigationMenuTrigger>Products</NavigationMenuTrigger>
+      <NavigationMenuContent>
+        <p className="text-sm text-fg-muted">
+          Browse our product catalog.
+        </p>
+      </NavigationMenuContent>
+    </NavigationMenuItem>
+    <NavigationMenuItem>
+      <NavigationMenuTrigger>Resources</NavigationMenuTrigger>
+      <NavigationMenuContent>
+        <p className="text-sm text-fg-muted">
+          Guides, docs, and tutorials.
+        </p>
+      </NavigationMenuContent>
+    </NavigationMenuItem>
+    <NavigationMenuItem>
+      <NavigationMenuLink href="#pricing">Pricing</NavigationMenuLink>
+    </NavigationMenuItem>
+  </NavigationMenuList>
+  <NavigationMenuViewport />
+</NavigationMenu>
+```
+
+</DemoCode>
+</Demo>
+
+## API reference
+Each part forwards every prop of its Base UI counterpart; the tables list
+the ones declared on the part itself. See
+[Base UI's reference](https://base-ui.com/react/components/navigation-menu)
+for the inherited element props.
+
+### NavigationMenu
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["actionsRef", "React.RefObject<NavigationMenuRoot.Actions | null>", "—", "A ref to imperative actions."],
+    ["onOpenChangeComplete", "((open: boolean) => void)", "—", "Event handler called after any animations complete when the navigation menu is closed."],
+    ["value", "Value | null", "null", "The controlled value of the navigation menu item that should be currently open."],
+    ["defaultValue", "Value | null", "null", "The uncontrolled value of the item that should be initially selected."],
+    ["onValueChange", "((value: Value | null, eventDetails: NavigationMenuRoot.ChangeEventDetails) => void)", "—", "Callback fired when the value changes."],
+    ["delay", "number", "50", "How long to wait before opening the navigation popup."],
+    ["closeDelay", "number", "50", "How long to wait before closing the navigation popup."],
+    ["orientation", "'horizontal' | 'vertical'", "'horizontal'", "The orientation of the navigation menu."],
+  ]}
+/>
+
+### NavigationMenuItem
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["value", "any", "—", "A unique value that identifies this navigation menu item."],
+  ]}
+/>
+
+### NavigationMenuLink
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["active", "boolean", "false", "Whether the link is the currently active page."],
+    ["closeOnClick", "boolean", "false", "Whether to close the navigation menu when the link is clicked."],
+  ]}
+/>
+
+### NavigationMenuContent
+
+<SpecTable
+  columns={propColumns}
+  widths="1.1fr 1.3fr 0.7fr 2fr"
+  rows={[
+    ["keepMounted", "boolean", "false", "Whether to keep the content mounted in the DOM while the popup is closed."],
+  ]}
+/>
+
+## Accessibility
+
+Behaviour, focus management, and ARIA wiring come from [Base UI's Navigation Menu](https://base-ui.com/react/components/navigation-menu) — see its reference for the full keyboard map.
+
+## Design tokens
+
+The component reads semantic tokens only — no raw colour, radius, or
+duration appears in its source. Override the token, not the component.
+
+<SpecTable
+  columns={[tokenColumns[0], tokenColumns[2]]}
+  widths="1.2fr 1.8fr"
+  minWidth={420}
+  rows={[
+    ["--brand-radius-lg", "NavigationMenuViewport"],
+    ["--brand-radius-sm", "NavigationMenuTrigger, NavigationMenuLink"],
+    ["--fg", "NavigationMenuTrigger, NavigationMenuLink, NavigationMenuContent"],
+    ["--line", "NavigationMenuViewport"],
+    ["--shadow-overlay", "NavigationMenuViewport"],
+    ["--surface", "NavigationMenuTrigger, NavigationMenuLink"],
+    ["--surface-raised", "NavigationMenuViewport"],
+  ]}
+/>
+
+## Source
+
+[`src/components/ui/navigation-menu/navigation-menu.tsx`](https://github.com/maaraquel08/sc1m/blob/main/src/components/ui/navigation-menu/navigation-menu.tsx) — no `next/*` imports, so it drops into any
+React 19 + Tailwind v4 app.

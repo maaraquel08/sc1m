@@ -1,0 +1,104 @@
+---
+title: "Installation"
+description: "Add sc1m components to your own project with the shadcn CLI."
+---
+
+Components are distributed through a
+[shadcn-compatible registry](https://ui.shadcn.com/docs/registry). The CLI
+copies source into your codebase — you own the files, and you edit them
+directly.
+
+## Prerequisites
+
+- React 19 and Tailwind CSS v4 wired into your build
+  (`@tailwindcss/vite` or `@tailwindcss/postcss`), plus TypeScript.
+- A `@/*` path alias pointing at your source root, in **both** places:
+  - `tsconfig.json` → `"paths": { "@/*": ["./src/*"] }`
+  - your bundler — Vite needs `resolve: { alias: { "@": "/src" } }`;
+    Next.js reads `tsconfig` paths on its own.
+
+## Map the `@sc1m` namespace
+
+Add the registry to your project's `components.json`:
+
+```json title="components.json"
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "new-york",
+  "rsc": false,
+  "tsx": true,
+  "tailwind": {
+    "config": "",
+    "css": "src/index.css",
+    "baseColor": "neutral",
+    "cssVariables": true
+  },
+  "aliases": {
+    "components": "@/components",
+    "ui": "@/components/ui",
+    "lib": "@/lib",
+    "utils": "@/lib/cn",
+    "hooks": "@/hooks"
+  },
+  "registries": {
+    "@sc1m": "https://sc1m.vercel.app/r/{name}.json"
+  }
+}
+```
+
+Point `tailwind.css` at your global stylesheet — that is the file the token
+layer gets merged into. Set `"rsc": true` in Next.js App Router projects.
+
+## Add a component
+
+```bash
+npx shadcn@latest add @sc1m/switch
+```
+
+Every component declares `tokens` and `cn` as registry dependencies **by
+absolute URL**, so a single `add` also:
+
+- merges the full token layer into your CSS — the `@theme inline` contract,
+  the default brand's `:root` values, `.dark` overrides, the `dark` custom
+  variant, and the `popup-motion` utility;
+- installs `src/lib/cn.ts`;
+- installs the npm dependencies (`@base-ui/react`, `clsx`, `tailwind-merge`).
+
+Two consequences worth knowing: you cannot install a component without its
+tokens, and a bare name can never resolve against shadcn's own registry by
+accident.
+
+## App-level setup, once
+
+<div className="fd-steps [&_h3]:fd-step">
+
+### Dark mode
+
+Toggle the `.dark` class on `<html>`. This is next-themes compatible. Because
+components consume semantic tokens, you write no `dark:` utilities yourself.
+
+### Stacking context
+
+Wrap app content in a container with `isolation: isolate`, so Base UI's
+portalled popups always render above it.
+
+```css
+.root { isolation: isolate; }
+```
+
+### iOS Safari 26+
+
+Keep `position: relative` on `<body>` for correct Base UI backdrop behaviour.
+
+### Brands
+
+Additional brands define the same contract scoped under `[data-brand="…"]`;
+activate one by setting that attribute on `<html>`.
+See [Brands](/docs/foundations/brands).
+
+</div>
+
+## Browsing what's available
+
+Every item is listed in [`registry.json`](https://sc1m.vercel.app/r/registry.json),
+or in the [Components](/docs/components) section of these docs.
