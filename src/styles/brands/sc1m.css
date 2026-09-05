@@ -41,6 +41,15 @@
   --highlight-fg: #ffffff;
   --ring: var(--sc1m-orange);
 
+  /* -- 3b. identity -------------------------------------------------
+   * The favicon / app-icon colour. Written as a literal on purpose:
+   * --sc1m-orange is lifted to #ff6a1a in .dark, and the mark is one
+   * flat colour per brand regardless of theme. Keep in step with the
+   * light --sc1m-orange above; the token parity test asserts this
+   * resolves identically in both themes. */
+  --brand-icon: #ff5a00;
+  --brand-icon-fg: #ffffff;
+
   /* -- 4. status ----------------------------------------------------
    * Generic roles; no product-specific meaning attached — plain
    * green / red / blue. */

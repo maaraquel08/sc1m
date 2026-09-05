@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
-import { BRANDS, COLOR_TOKENS, SHAPE_TOKENS } from './contract';
+import { BRANDS, COLOR_TOKENS, IDENTITY_TOKENS, SHAPE_TOKENS } from './contract';
 
 /**
  * Token parity check: every registered brand must resolve every
@@ -48,7 +48,23 @@ export const Parity: Story = {
     const resolve = (name: string) =>
       getComputedStyle(html).getPropertyValue(`--${name}`).trim();
 
+    /* Identity tokens are checked through a probe element, not
+     * getPropertyValue: that is the path brand-favicon.tsx actually
+     * takes, and it returns a *used* colour rather than whatever
+     * var() chain happens to be authored. Comparing chains would let
+     * `--brand-icon: var(--accent)` pass while painting two different
+     * colours. */
+    const resolveUsed = (name: string) => {
+      const probe = document.createElement('span');
+      probe.style.color = `var(--${name})`;
+      html.appendChild(probe);
+      const used = getComputedStyle(probe).color;
+      probe.remove();
+      return used;
+    };
+
     const accents: Record<string, string> = {};
+    const identity: Record<string, string> = {};
     try {
       for (const brand of BRANDS) {
         if (brand.attr) html.dataset.brand = brand.attr;
@@ -56,7 +72,10 @@ export const Parity: Story = {
 
         for (const theme of ['light', 'dark'] as const) {
           html.classList.toggle('dark', theme === 'dark');
-          for (const token of [...COLOR_TOKENS, ...SHAPE_TOKENS]) {
+          for (const token of IDENTITY_TOKENS) {
+            identity[`${brand.key}/${theme}/${token}`] = resolveUsed(token);
+          }
+          for (const token of [...COLOR_TOKENS, ...SHAPE_TOKENS, ...IDENTITY_TOKENS]) {
             const value = resolve(token);
             await expect(
               value,
@@ -71,6 +90,24 @@ export const Parity: Story = {
       await expect(accents['luntian/light']).not.toBe(accents['sc1m/light']);
       // themes must actually differ within a brand
       await expect(accents['luntian/light']).not.toBe(accents['luntian/dark']);
+
+      /* The identity mark is one flat colour per brand: it carries the
+       * brand across the swap, and does NOT follow the dark-mode lift.
+       * A brand whose dark block overrides --brand-icon, or binds it to
+       * a primitive that flips, fails here. */
+      for (const brand of BRANDS) {
+        for (const token of IDENTITY_TOKENS) {
+          await expect(
+            identity[`${brand.key}/dark/${token}`],
+            `--${token} must not change with theme for brand "${brand.key}"`,
+          ).toBe(identity[`${brand.key}/light/${token}`]);
+        }
+      }
+
+      // …and must still distinguish the brands from one another
+      await expect(identity['luntian/light/brand-icon']).not.toBe(
+        identity['sc1m/light/brand-icon'],
+      );
     } finally {
       if (saved.brand) html.dataset.brand = saved.brand;
       else delete html.dataset.brand;
