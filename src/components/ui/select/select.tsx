@@ -84,6 +84,11 @@ export function SelectContent({
         <BaseSelect.Popup
           className={cn(
             "max-h-72 min-w-[var(--anchor-width)] overflow-y-auto rounded-md border border-line bg-surface-raised p-1 text-fg shadow-overlay",
+            // The popup takes focus for keyboard navigation, so without this
+            // the browser paints its own blue ring around the whole panel.
+            // The visible affordance belongs on the option (data-highlighted),
+            // not the container — same as Menu, Menubar and ContextMenu.
+            "outline-none",
             "popup-motion",
             className,
           )}

@@ -36,12 +36,12 @@ const SWAP_MS = 520;
  * openly out of date, which the footer says.
  */
 const CCY = [
-  { code: "PHP", symbol: "₱", label: "Philippine peso", per: 1 },
-  { code: "USD", symbol: "$", label: "US dollar", per: 58.2 },
-  { code: "EUR", symbol: "€", label: "Euro", per: 63.1 },
-  { code: "JPY", symbol: "¥", label: "Japanese yen", per: 0.39 },
-  { code: "SGD", symbol: "S$", label: "Singapore dollar", per: 43.4 },
-  { code: "AUD", symbol: "A$", label: "Australian dollar", per: 38.6 },
+  { code: "PHP", label: "Philippine peso", per: 1 },
+  { code: "USD", label: "US dollar", per: 58.2 },
+  { code: "EUR", label: "Euro", per: 63.1 },
+  { code: "JPY", label: "Japanese yen", per: 0.39 },
+  { code: "SGD", label: "Singapore dollar", per: 43.4 },
+  { code: "AUD", label: "Australian dollar", per: 38.6 },
 ];
 
 const SEED: Record<string, number> = Object.fromEntries(
@@ -204,20 +204,40 @@ function CurrencySelect({
         onValueChange={(v) => v && onValueChange(v as string)}
         onOpenChange={onOpenChange}
       >
-        <SelectTrigger className="w-[124px]" aria-label={label}>
+        <SelectTrigger className="w-[150px]" aria-label={label}>
           <SelectValue />
         </SelectTrigger>
-        {/* The reel scales this card, and the default item-over-trigger
-            alignment does not survive a transformed ancestor. */}
-        <SelectContent className="min-w-[220px]" alignItemWithTrigger={false}>
+        {/* Study 2B — code first.
+            The mono code is the scan column and the name reads beside it. No
+            symbol: the code already identifies the currency, and a symbol slot
+            would only push the thing people actually scan off the left edge.
+            alignItemWithTrigger is off because the reel scales this card, and
+            the default item-over-trigger overlap does not survive a transform. */}
+        <SelectContent
+          className="min-w-[280px] rounded-lg p-1.5"
+          alignItemWithTrigger={false}
+        >
           {CCY.map((c) => (
-            <SelectItem key={c.code} value={c.code}>
-              {/* Fixed-width mono slot so ₱ $ € ¥ and the two-character S$ / A$
-                  all land on the same left edge and the codes stay in a column. */}
-              <span className="inline-block w-6 shrink-0 text-center font-mono text-fg-muted">
-                {c.symbol}
+            <SelectItem
+              key={c.code}
+              value={c.code}
+              className={cn(
+                "gap-4 rounded-md px-3 py-2.5",
+                // The selected row tints toward the accent and pulls its code
+                // with it; the name stays muted either way, so the code holds
+                // the emphasis on its own.
+                "data-selected:bg-[color-mix(in_oklab,var(--color-accent)_10%,var(--color-surface-raised))]",
+                "data-selected:text-accent",
+              )}
+            >
+              <span className="flex w-full min-w-[246px] items-center gap-4">
+                <span className="w-11 flex-none font-mono text-[13px] font-semibold tracking-[0.02em]">
+                  {c.code}
+                </span>
+                <span className="min-w-0 flex-1 truncate text-[12.5px] text-fg-muted">
+                  {c.label}
+                </span>
               </span>
-              {c.code} · {c.label}
             </SelectItem>
           ))}
         </SelectContent>
