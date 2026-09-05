@@ -465,3 +465,38 @@ body {
     animation: none;
   }
 }
+
+/* Currency converter (reel study 1B) ------------------------------------- */
+
+/* Swapping animates ONLY the two currency selects: they arc past each other
+ * — one out and down, one out and up — while the amount fields hold still.
+ * 88px is the vertical gap between them (78px field + 10px stack gap); the
+ * ±62px lateral drift is what keeps them from passing through one another. */
+@keyframes sel-down {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(62px, 44px) scale(1.05);
+  }
+  100% {
+    transform: translate(0, 88px) scale(1);
+  }
+}
+@keyframes sel-up {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-62px, -44px) scale(1.05);
+  }
+  100% {
+    transform: translate(0, -88px) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fx-select {
+    animation: none !important;
+  }
+}

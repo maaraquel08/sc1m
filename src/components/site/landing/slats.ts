@@ -3,7 +3,9 @@
  *
  * Every entry is one miniature screen *and* one node on the timeline — the
  * reel doubles as the journal of how the system was built, so the list is
- * ordered by `date`, not by importance.
+ * ordered by `date`, not by importance. It runs oldest first here; the reel
+ * reverses it for display, which is why a new screen is APPENDED to the end
+ * of this array and shows up at the left of the rail.
  *
  * `w`/`h` are the miniature's *natural* size. The reel never resizes a card:
  * it renders each one at its own dimensions and scales the whole thing so the
@@ -19,7 +21,8 @@ export type SlatKind =
   | "send"
   | "chips"
   | "insights"
-  | "switches";
+  | "switches"
+  | "converter";
 
 export interface Slat {
   kind: SlatKind;
@@ -45,17 +48,6 @@ export const SLATS: Slat[] = [
     h: 260,
     date: "Feb 04",
     note: "Fifteen colour roles agreed before a single component existed.",
-  },
-  {
-    kind: "plate",
-    name: "Dialog",
-    parts: "Base UI portal",
-    w: 400,
-    h: 280,
-    date: "Feb 21",
-    note: "Dialog was the first thing to need a portal and an elevation pair.",
-    kicker: "Overlay",
-    title: "Confirm payout run",
   },
   {
     kind: "buttons",
@@ -94,15 +86,6 @@ export const SLATS: Slat[] = [
     note: "Transfer composer: the screen that proved the contract survives a rebrand.",
   },
   {
-    kind: "chips",
-    name: "Status",
-    parts: "4 tones",
-    w: 320,
-    h: 300,
-    date: "May 15",
-    note: "Status cut from five colours to three roles.",
-  },
-  {
     kind: "insights",
     name: "Payout runs",
     parts: "Progress · Chip",
@@ -112,68 +95,13 @@ export const SLATS: Slat[] = [
     note: "Progress, Meter and Toast landed as one feedback family.",
   },
   {
-    kind: "switches",
-    name: "Controls",
-    parts: "Switch · Slider",
-    w: 340,
-    h: 340,
-    date: "Jun 22",
-    note: "Slider was the last control to give up its own colours.",
-  },
-  {
-    kind: "plate",
-    name: "Toast",
-    parts: "queue of 3",
-    w: 380,
-    h: 220,
-    date: "Jul 07",
-    note: "Toast queue capped at three; anything more is a log, not a toast.",
-    kicker: "Feedback",
-    title: "Transfer sent",
-  },
-  {
-    kind: "plate",
-    name: "Tabs",
-    parts: "Toolbar · Tabs",
+    kind: "converter",
+    name: "Currency converter",
+    parts: "Select · Input",
     w: 420,
-    h: 300,
-    date: "Jul 24",
-    note: "Tabs and Toolbar merged their focus-ring logic.",
-    kicker: "Navigation",
-    title: "Accounts / Cards / Limits",
-  },
-  {
-    kind: "plate",
-    name: "Table",
-    parts: "ScrollArea",
-    w: 480,
-    h: 300,
-    date: "Aug 11",
-    note: "Table moved onto ScrollArea and stopped inventing borders.",
-    kicker: "Data",
-    title: "412 transactions",
-  },
-  {
-    kind: "plate",
-    name: "Command",
-    parts: "Autocomplete",
-    w: 420,
-    h: 260,
-    date: "Aug 29",
-    note: "Command palette prototyped on Autocomplete.",
-    kicker: "Search",
-    title: "Jump to anything",
-  },
-  {
-    kind: "plate",
-    name: "Avatars",
-    parts: "Avatar · PreviewCard",
-    w: 300,
-    h: 240,
+    h: 336,
     date: "Sep 05",
-    note: "Avatars and PreviewCard — identity was the last gap.",
-    kicker: "Identity",
-    title: "Six people, one account",
+    note: "The swap card: two stacked fields, either one editable, and the only screen so far whose title is set in the accent.",
   },
 ];
 

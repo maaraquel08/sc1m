@@ -8,6 +8,49 @@ import { BOTTOM, SLATS, TILE_H, TILE_H_OPEN } from "./slats";
 const EASE = "cubic-bezier(.22,1,.36,1)";
 
 /**
+ * The reel runs newest first, left to right — today's screen leads and the
+ * timeline reads backwards into February. SLATS itself stays chronological so
+ * that adding a screen is still "append to the end", which is the gesture
+ * anyone will reach for; the reversal happens once, here, at the boundary
+ * between the journal and its display.
+ */
+const REEL = [...SLATS].reverse();
+
+/**
+ * Breathing room at each end of the rail. The end cards no longer need it —
+ * they are anchored (see `anchorOf`) and grow inward — but their NEIGHBOURS
+ * still grow symmetrically, and the second card in from either edge reaches
+ * `g / 2` past the first one. Sized from the widest tile, so it stays correct
+ * when a wider card is added.
+ */
+const EDGE_SLACK = Math.ceil(
+  Math.max(...SLATS.map((s) => (s.w * (TILE_H_OPEN - TILE_H)) / s.h)) / 2,
+);
+
+const Slack = () => (
+  <div aria-hidden className="flex-none" style={{ width: EDGE_SLACK }} />
+);
+
+/**
+ * Where a tile grows from.
+ *
+ * A middle card grows from its own centre, which is the reel's whole gesture:
+ * the row parts around the thing you are pointing at. The two end cards can't
+ * — half their growth would go off the rail, where there is nothing to reflow
+ * into and nothing to scroll to. So each end card is pinned by its outer edge
+ * and grows inward: the first from its bottom-left, the last from its
+ * bottom-right. At rest all three are identical (the box fills its column), so
+ * this only ever shows while a card is open.
+ */
+type Anchor = "left" | "center" | "right";
+const anchorOf = (i: number): Anchor =>
+  i === 0 ? "left" : i === REEL.length - 1 ? "right" : "center";
+
+/** How much wider a tile gets when it opens. */
+const growthOf = (slat: (typeof REEL)[number]) =>
+  Math.round((slat.w * (TILE_H_OPEN - TILE_H)) / slat.h);
+
+/**
  * The reel (landing study 3A).
  *
  * Every screen the system has produced, as a 200px-tall miniature that is as
@@ -29,19 +72,37 @@ const EASE = "cubic-bezier(.22,1,.36,1)";
  */
 export function Reel() {
   const [open, setOpen] = React.useState<number | null>(null);
+  /**
+   * A miniature that opens a portalled popup (the converter's currency
+   * selects) renders it into <body>, outside this tile — so moving the pointer
+   * onto it would otherwise read as leaving the tile and collapse the card out
+   * from under the menu. While such a popup is up, the tile is pinned.
+   */
+  const held = React.useRef(false);
+  const release = React.useCallback(() => {
+    if (!held.current) setOpen(null);
+  }, []);
 
-  const openSlat = open === null ? null : SLATS[open];
+  const openSlat = open === null ? null : REEL[open];
   const label = openSlat
     ? `${openSlat.name} · ${openSlat.parts}`
     : "Hover to zoom";
 
-  const trackShift = openSlat
-    ? -Math.round(
-        (openSlat.w * (TILE_H_OPEN / openSlat.h) -
-          openSlat.w * (TILE_H / openSlat.h)) /
-          2,
-      )
-    : 0;
+  /**
+   * The column always widens rightward — that is just flex — so the track
+   * slides left to place the growth where the anchor says it belongs: not at
+   * all for a left-anchored card (it already grows the right way), by the full
+   * growth for a right-anchored one (pinning its right edge), and by half for
+   * everything in between.
+   */
+  const trackShift = (() => {
+    if (open === null || !openSlat) return 0;
+    const g = growthOf(openSlat);
+    const anchor = anchorOf(open);
+    if (anchor === "left") return 0;
+    if (anchor === "right") return -g;
+    return -Math.round(g / 2);
+  })();
 
   return (
     <>
@@ -64,7 +125,7 @@ export function Reel() {
 
       <div
         className="rail relative flex h-[582px] items-end overflow-x-auto overflow-y-hidden px-6 pb-6 sm:px-11"
-        onMouseLeave={() => setOpen(null)}
+        onMouseLeave={release}
       >
         <div
           className="flex min-w-max items-end gap-4"
@@ -73,12 +134,14 @@ export function Reel() {
             transition: `transform .45s ${EASE}`,
           }}
         >
-          {SLATS.map((slat, i) => {
+          <Slack />
+          {REEL.map((slat, i) => {
             const isOpen = i === open;
             const h = isOpen ? TILE_H_OPEN : TILE_H;
             const k = h / slat.h;
             const w = Math.round(slat.w * k);
             const wRest = Math.round(slat.w * (TILE_H / slat.h));
+            const anchor = anchorOf(i);
 
             return (
               <div
@@ -86,9 +149,9 @@ export function Reel() {
                 tabIndex={0}
                 aria-label={`${slat.name} — ${slat.parts}. ${slat.note}`}
                 onMouseEnter={() => setOpen(i)}
-                onMouseLeave={() => setOpen(null)}
+                onMouseLeave={release}
                 onFocus={() => setOpen(i)}
-                onBlur={() => setOpen(null)}
+                onBlur={release}
                 className="relative flex min-w-0 cursor-pointer flex-col items-start gap-2.5 outline-none"
                 style={{
                   flex: `0 0 ${isOpen ? w : wRest}px`,
@@ -101,10 +164,17 @@ export function Reel() {
                 <div className="w-full flex-none" style={{ height: TILE_H }} />
 
                 <div
-                  className="absolute left-1/2 overflow-hidden rounded-lg border border-line bg-surface-raised"
+                  className="absolute overflow-hidden rounded-lg border border-line bg-surface-raised"
                   style={{
                     bottom: BOTTOM,
-                    transform: "translateX(-50%)",
+                    // The anchored edge is the one that stays put as `width`
+                    // animates; the box fills its column at rest, so all three
+                    // resolve to the same place until the card opens.
+                    ...(anchor === "left"
+                      ? { left: 0 }
+                      : anchor === "right"
+                        ? { right: 0 }
+                        : { left: "50%", transform: "translateX(-50%)" }),
                     width: w,
                     height: h,
                     boxShadow: isOpen ? "0 14px 34px rgb(0 0 0 / .14)" : "none",
@@ -121,7 +191,12 @@ export function Reel() {
                       pointerEvents: isOpen ? "auto" : "none",
                     }}
                   >
-                    <Miniature slat={slat} />
+                    <Miniature
+                      slat={slat}
+                      onHoldChange={(h) => {
+                        held.current = h;
+                      }}
+                    />
                   </div>
                 </div>
 
@@ -188,6 +263,7 @@ export function Reel() {
               </div>
             );
           })}
+          <Slack />
         </div>
       </div>
     </>

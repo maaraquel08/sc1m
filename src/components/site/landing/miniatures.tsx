@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/progress";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
+import { CurrencyConverter } from "./currency-converter";
 import type { Slat } from "./slats";
 
 /**
@@ -262,7 +263,14 @@ function Insights() {
   );
 }
 
-export function Miniature({ slat }: { slat: Slat }) {
+export function Miniature({
+  slat,
+  onHoldChange,
+}: {
+  slat: Slat;
+  /** Passed to miniatures that open a portalled popup — see the reel. */
+  onHoldChange?: (held: boolean) => void;
+}) {
   switch (slat.kind) {
     case "palette":
       return <Palette />;
@@ -280,6 +288,8 @@ export function Miniature({ slat }: { slat: Slat }) {
       return <Access />;
     case "insights":
       return <Insights />;
+    case "converter":
+      return <CurrencyConverter onHoldChange={onHoldChange} />;
     case "plate":
       return <Plate kicker={slat.kicker} title={slat.title} />;
   }
