@@ -53,11 +53,75 @@ function SelectIcon({
   );
 }
 
+/**
+ * The open trigger's scale, or `null` when there is no open trigger to
+ * measure — which is not the same as "unscaled", and is why this does not
+ * just return 1. Base UI mounts the popup before it opens, and keeps it
+ * mounted through the closing animation; in both of those states the answer
+ * is "don't know", and the caller holds whatever it last measured rather
+ * than snapping the popup back to full size mid-animation.
+ */
+function measureAnchorScale(): number | null {
+  const trigger = document.querySelector<HTMLElement>(
+    '[role="combobox"][aria-expanded="true"]',
+  );
+  if (!trigger?.offsetWidth) return null;
+  const scale = trigger.getBoundingClientRect().width / trigger.offsetWidth;
+  // Sub-1% is rounding, not a transform. Returning exactly 1 is what keeps
+  // every ordinary select from emitting a transform at all.
+  if (!Number.isFinite(scale) || Math.abs(scale - 1) <= 0.01) return 1;
+  return scale;
+}
+
+/**
+ * The scale the popup should render at: whatever its trigger renders at.
+ *
+ * A popup portals to <body>, so a `transform: scale()` anywhere above the
+ * trigger applies to the trigger and not to the popup — the two end up drawn
+ * at different sizes on the same surface. The reel does exactly this: every
+ * miniature is authored at its natural size and scaled to fit its card, so
+ * without this the currency select's popup lands at 1x on a card drawn at
+ * 0.75x, as wide as the whole card.
+ *
+ * `getBoundingClientRect()` is measured after transforms and `offsetWidth`
+ * before them, so their ratio is the cumulative scale — no matter how many
+ * ancestors contributed to it, and without anyone having to pass it down.
+ *
+ * The trigger is found rather than threaded through context: a select popup
+ * takes focus, so Base UI closes any other before opening this one and
+ * exactly one trigger in the document is expanded. Threading it would mean
+ * wrapping `Select`, which is `BaseSelect.Root` re-exported and generic over
+ * its value type — the props table in the docs is generated from that symbol.
+ *
+ * Hung off a ref callback rather than an effect, because this component does
+ * not re-render when its own popup opens — Base UI flips that state inside
+ * the parts, and the Portal mounts the popup element without anything here
+ * rendering again. An effect therefore only ever sees the closed state (and
+ * `useSyncExternalStore` never gets told to look twice). The ref *is* the
+ * open signal: React runs it when the popup element enters the DOM, in the
+ * same commit that expands the trigger, and before paint.
+ */
+function useAnchorScale() {
+  const [scale, setScale] = React.useState(1);
+
+  const measureOnMount = React.useCallback((el: HTMLElement | null) => {
+    // null is the popup leaving. Hold the last value so it keeps its size
+    // through the closing animation instead of snapping back to full.
+    if (!el) return;
+    const next = measureAnchorScale();
+    if (next !== null) setScale((prev) => (prev === next ? prev : next));
+  }, []);
+
+  return [scale, measureOnMount] as const;
+}
+
 export function SelectContent({
   className,
   children,
   side = "bottom",
   alignItemWithTrigger,
+  style,
+  ref,
   ...props
 }: React.ComponentProps<typeof BaseSelect.Popup> & {
   side?: "top" | "right" | "bottom" | "left";
@@ -74,6 +138,8 @@ export function SelectContent({
    */
   alignItemWithTrigger?: boolean;
 }) {
+  const [scale, measureAnchor] = useAnchorScale();
+
   return (
     <BaseSelect.Portal>
       <BaseSelect.Positioner
@@ -92,6 +158,18 @@ export function SelectContent({
             "popup-motion",
             className,
           )}
+          style={
+            // `popup-motion` animates the `scale` property and sets
+            // transform-origin to Base UI's --transform-origin, which points
+            // at the anchor. So this composes with the open/close animation
+            // instead of overwriting it, and shrinks toward the trigger.
+            scale === 1 ? style : { transform: `scale(${scale})`, ...style }
+          }
+          ref={(el: HTMLDivElement | null) => {
+            measureAnchor(el);
+            if (typeof ref === "function") ref(el);
+            else if (ref) ref.current = el;
+          }}
           {...props}
         >
           {children}

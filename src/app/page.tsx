@@ -16,12 +16,15 @@ export default function Home() {
   return (
     <div className="flex min-h-dvh flex-1 flex-col">
       <header className="flex items-center justify-between gap-6 px-6 py-6 sm:px-14 sm:py-8">
-        <span className="text-[19px] font-semibold tracking-[-0.01em] text-fg">
+        <span className="text-[17px] font-semibold tracking-[-0.01em] text-fg sm:text-[19px]">
           sc1m<span className="text-fg-subtle">/design</span>
         </span>
+        {/* Wordmark + both links + toggle is ~373px of content at 14.5px,
+            which is a 375px viewport with nothing to spare. Half a point
+            smaller and a tighter gap below sm buys the margin back. */}
         <nav
           aria-label="Primary"
-          className="flex items-center gap-5 text-[14.5px] text-fg-muted sm:gap-7"
+          className="flex items-center gap-3.5 text-[13.5px] text-fg-muted sm:gap-7 sm:text-[14.5px]"
         >
           <span aria-current="page" className="text-fg">
             Designs
@@ -37,7 +40,10 @@ export default function Home() {
         <Reel />
       </main>
 
-      <footer className="mt-auto flex items-center justify-between gap-6 px-6 pt-6 pb-8 text-[13px] text-fg-subtle sm:px-14">
+      {/* Side by side there is not room for the repo line and the byline on a
+          phone, and neither can shrink — one is a URL, the other rolls. So
+          they stack until sm. */}
+      <footer className="mt-auto flex flex-col items-start gap-3 px-6 pt-6 pb-8 text-[13px] text-fg-subtle sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:px-14">
         <a
           href="https://github.com/maaraquel08/sc1m"
           target="_blank"

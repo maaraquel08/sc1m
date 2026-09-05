@@ -84,6 +84,14 @@
   --highlight-fg: var(--sage-900);
   --ring: var(--brand-accent); /* focus = the accent sage */
 
+  /* -- 3b. identity -------------------------------------------------
+   * The favicon / app-icon colour: sage ground, glyph knocked out.
+   * Bound to primitives the dark block leaves alone — --brand-accent
+   * and --sage-0 both survive the flip, unlike --brand-paper, which
+   * becomes near-black. One flat colour per brand, both themes. */
+  --brand-icon: var(--brand-accent);
+  --brand-icon-fg: var(--sage-0);
+
   /* -- 4. status ----------------------------------------------------
    * Generic roles; the product meaning lives in this brand:
    * success = money.in, danger = money.out, info = AI authorship.

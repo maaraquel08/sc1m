@@ -34,6 +34,21 @@ export const COLOR_TOKENS = [
   "ring",
 ] as const;
 
+/** Identity slots: the brand's flat tab/app-icon colour, read by
+ * src/components/site/brand-favicon.tsx to paint the favicon.
+ *
+ * Theme-stable by contract — a brand's dark block must NEVER override
+ * these, and must not bind them to a primitive it does override. The
+ * mark is one flat colour per brand (assets README: "one flat colour
+ * per instance"); the dark-mode accent lift exists to hold contrast on
+ * a near-black canvas, which is not what a browser tab is.
+ *
+ * Not mapped in globals.css @theme: JS reads these, no utility uses
+ * them, and a bg-brand-icon class would be dead surface area.
+ *
+ * The parity test asserts light and dark resolve identically. */
+export const IDENTITY_TOKENS = ["brand-icon", "brand-icon-fg"] as const;
+
 /** Required non-color brand slots. */
 export const SHAPE_TOKENS = [
   "brand-radius-sm",

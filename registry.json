@@ -69,6 +69,8 @@
           "--highlight": "var(--n-900)",
           "--highlight-fg": "#ffffff",
           "--ring": "var(--sc1m-orange)",
+          "--brand-icon": "#ff5a00",
+          "--brand-icon-fg": "#ffffff",
           "--success": "#16a34a",
           "--danger": "#dc2626",
           "--danger-fg": "#ffffff",

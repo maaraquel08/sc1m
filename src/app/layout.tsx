@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { RootProvider } from "fumadocs-ui/provider/next";
+import { BrandFavicon } from "@/components/site/brand-favicon";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -34,6 +35,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             docs search dialog. It wraps everything so the gallery's theme
             toggle and the docs' toggle read the same state. */}
         <RootProvider>
+          {/* Repaints the tab icon in the active brand colour. Renders
+              nothing; must sit inside RootProvider so it mounts on every
+              route, landing page included. */}
+          <BrandFavicon />
           {/* Base UI: .root creates the stacking context portals escape from */}
           <div className="root flex min-h-dvh flex-col">{children}</div>
         </RootProvider>

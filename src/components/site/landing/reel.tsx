@@ -3,6 +3,7 @@
 import * as React from "react";
 
 import { Miniature } from "./miniatures";
+import { ReelStack } from "./reel-stack";
 import { BOTTOM, SLATS, TILE_H, TILE_H_OPEN } from "./slats";
 
 const EASE = "cubic-bezier(.22,1,.36,1)";
@@ -112,7 +113,10 @@ export function Reel() {
             The reel
           </span>
           <span className="h-px flex-1 bg-line" />
-          <span className="font-mono text-[10.5px] tracking-[0.1em] text-fg-subtle uppercase">
+          {/* "Hover to zoom" is a promise only a pointer can keep. Below md
+              the stack shows every card open already, so there is nothing to
+              say and the rule simply runs to the edge. */}
+          <span className="hidden font-mono text-[10.5px] tracking-[0.1em] text-fg-subtle uppercase md:inline">
             {label}
           </span>
         </div>
@@ -123,8 +127,17 @@ export function Reel() {
         </h1>
       </div>
 
+      <ReelStack className="mt-9 px-6 pb-4 md:hidden" />
+
+      {/* The rail is a pointer instrument — hover to open, row reflows around
+          the open card, 677px wide at its widest. None of that fits a phone,
+          so below md it is not rendered at all and ReelStack tells the same
+          journal vertically. CSS makes that choice, not a JS media query: the
+          server cannot know the viewport, and a JS swap would render the rail
+          first and snap on hydration — the worst possible flash, on exactly
+          the devices least able to absorb it. */}
       <div
-        className="rail relative flex h-[582px] items-end overflow-x-auto overflow-y-hidden px-6 pb-6 sm:px-11"
+        className="rail relative hidden h-[582px] items-end overflow-x-auto overflow-y-hidden px-6 pb-6 sm:px-11 md:flex"
         onMouseLeave={release}
       >
         <div

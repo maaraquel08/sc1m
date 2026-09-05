@@ -77,6 +77,35 @@ const fmt = (n: number, code: string) =>
 const rateOf = (rates: Record<string, number>, a: string, b: string) =>
   rates[a] / rates[b];
 
+type Payload = { rates?: Record<string, number>; updated?: number };
+
+/**
+ * One request per page, however many converters are on it.
+ *
+ * The landing page renders the reel twice — the rail for pointers, the stack
+ * for phones — and CSS decides which one you see, so both mount and both ask
+ * for rates. The day's published rate is the same for everyone, so the
+ * request is memoised at module scope and every instance awaits the same
+ * promise.
+ *
+ * No AbortController: the promise is shared, so a component unmounting must
+ * not cancel a fetch its sibling is still waiting on. Each caller guards its
+ * own setState instead.
+ */
+let pending: Promise<Payload> | null = null;
+const fetchRates = () =>
+  (pending ??= fetch(RATES_URL)
+    .then((res) => {
+      if (!res.ok) throw new Error(String(res.status));
+      return res.json() as Promise<Payload>;
+    })
+    // A failed request must not be cached as the answer — the next mount
+    // should be free to try again.
+    .catch((err) => {
+      pending = null;
+      throw err;
+    }));
+
 /**
  * Seeds from the static table, then swaps in live rates once /api/rates
  * answers. The route already returns pesos-per-unit, matching `per`, so
@@ -87,15 +116,11 @@ function useRates() {
   const [feed, setFeed] = React.useState<Feed>({ status: "seed" });
 
   React.useEffect(() => {
-    const abort = new AbortController();
+    let live = true;
     (async () => {
       try {
-        const res = await fetch(RATES_URL, { signal: abort.signal });
-        if (!res.ok) throw new Error(String(res.status));
-        const data = (await res.json()) as {
-          rates?: Record<string, number>;
-          updated?: number;
-        };
+        const data = await fetchRates();
+        if (!live) return;
         const next: Record<string, number> = {};
         for (const c of CCY) {
           const q = data.rates?.[c.code];
@@ -111,12 +136,13 @@ function useRates() {
             { month: "short", day: "numeric" },
           ),
         });
-      } catch (err) {
-        if ((err as Error)?.name === "AbortError") return;
-        setFeed({ status: "failed" });
+      } catch {
+        if (live) setFeed({ status: "failed" });
       }
     })();
-    return () => abort.abort();
+    return () => {
+      live = false;
+    };
   }, []);
 
   return { rates, feed };
